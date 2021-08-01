@@ -1,18 +1,22 @@
 {
-  "name": "studo.js-frontend",
+  "name": "studo.js-web",
   "version": "0.0.0",
   "scripts": {
+    "netlify": "netlify dev",
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "serve": "vite preview"
   },
   "dependencies": {
+    "node-fetch": "^2.6.1",
     "vue": "^3.0.5"
   },
   "devDependencies": {
+    "@netlify/functions": "^0.7.2",
+    "@types/node-fetch": "^2.5.12",
     "@vitejs/plugin-vue": "^1.3.0",
-    "@vue/compiler-sfc": "^3.0.5",
-    "typescript": "^4.3.2",
+    "@vue/compiler-sfc": "^3.1.5",
+    "typescript": "^4.3.5",
     "vite": "^2.4.4",
     "vue-tsc": "^0.2.2"
   }

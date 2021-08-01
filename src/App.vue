@@ -1,18 +1,43 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png" />
   <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
+  <ChannelRow v-for="channel in channels" :key="channel.id" :channel="channel">
+  </ChannelRow>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import HelloWorld from './components/HelloWorld.vue'
+import { Channel, Client, RestManager } from 'studo.js';
+import HelloWorld from './components/HelloWorld.vue';
+import ChannelRow from './components/ChannelRow.vue';
 
-export default defineComponent({
+RestManager.proxyURL = `${location.origin}/api/proxy`;
+
+const sessionToken = localStorage.sessionToken;
+const client = new Client(sessionToken);
+Object.assign(window, { client });
+
+client.api.getLatest().then(console.log);
+
+export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
-})
+    HelloWorld,
+    ChannelRow,
+  },
+  mounted() {
+    client.connect();
+    client.chat.on('updateChannels', (rawChannels) => {
+      console.log(rawChannels);
+      this.channels = Array.from(client.channels.cache.values()).sort(
+        (a, b) => b.sortScore - a.sortScore || a.name.localeCompare(b.name)
+      );
+    });
+  },
+  data() {
+    const channels: Channel[] = [];
+    return { channels };
+  },
+};
 </script>
 
 <style>

@@ -1,14 +1,14 @@
 import { Handler } from '@netlify/functions';
 import fetch from 'node-fetch';
-import { RestManager } from 'studo.js';
+import { config, RestManager } from 'studo.js';
 
-export const handler: Handler = async (event, context) => {
+export const handler: Handler = async (event) => {
   const endpoint = event.path.split('/proxy/')[1];
 
   // remove host and add other necessary headers
   const { host, ...headers } = event.headers;
-  headers['user-agent'] = 'studo.js/android';
-  headers['application-id'] = 'com.moshbit.studo';
+  headers['user-agent'] = config.userAgent;
+  headers['application-id'] = config.applicationId;
 
   // validate
   if (!endpoint || !/^\w+(\/\w+)*\/?$/.test(endpoint)) {

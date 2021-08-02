@@ -1,41 +1,32 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
-  <ChannelRow v-for="channel in channels" :key="channel.id" :channel="channel">
-  </ChannelRow>
+  <TabMenu :model="tabs"></TabMenu>
+  <router-view />
 </template>
 
 <script lang="ts">
-import { Channel, Client, RestManager } from 'studo.js';
-import HelloWorld from './components/HelloWorld.vue';
-import ChannelRow from './components/ChannelRow.vue';
-
-RestManager.proxyURL = `${location.origin}/api/proxy`;
-
-const sessionToken = localStorage.sessionToken;
-const client = new Client(sessionToken);
-Object.assign(window, { client });
-
-client.api.getLatest().then(console.log);
-
 export default {
   name: 'App',
-  components: {
-    HelloWorld,
-    ChannelRow,
-  },
-  mounted() {
-    client.connect();
-    client.chat.on('updateChannels', (rawChannels) => {
-      console.log(rawChannels);
-      this.channels = Array.from(client.channels.cache.values()).sort(
-        (a, b) => b.sortScore - a.sortScore || a.name.localeCompare(b.name)
-      );
-    });
-  },
-  data() {
-    const channels: Channel[] = [];
-    return { channels };
+  setup() {
+    const tabs = [
+      { label: 'Home', icon: 'pi pi-fw pi-home', to: '/' },
+      {
+        label: 'Calendar',
+        icon: 'pi pi-fw pi-calendar',
+        to: '/calendar',
+      },
+      {
+        label: 'Chat',
+        icon: 'pi pi-fw pi-comments',
+        to: '/chat',
+      },
+      { label: 'Settings', icon: 'pi pi-fw pi-cog', to: '/settings' },
+      {
+        label: 'GitHub',
+        icon: 'pi pi-fw pi-github',
+        url: 'https://github.com/j4k0xb/studo.js-web',
+      },
+    ];
+    return { tabs };
   },
 };
 </script>
@@ -45,8 +36,5 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 </style>

@@ -1,12 +1,11 @@
 <template>
-  <el-container>
-    <el-aside class="side">
+  <el-row :gutter="20">
+    <el-col :span="5">
       <ChannelList v-model:selected="selectedChannelId" />
-    </el-aside>
-    <el-main class="main">
-      <TopicList :tabId="selectedTabId" />
-    </el-main>
-  </el-container>
+    </el-col>
+    <el-col :span="7"><TopicList :tabId="selectedTabId" /></el-col>
+    <el-col :span="12"><TopicList :tabId="selectedTabId" /></el-col>
+  </el-row>
 </template>
 
 <script lang="ts">
@@ -49,16 +48,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.el-container {
-  column-gap: 20px;
-}
-
-.side,
-.main {
+.el-row {
+  flex-wrap: nowrap;
   height: calc(100vh - 80px);
-}
-
-.main {
-  padding: unset;
 }
 </style>

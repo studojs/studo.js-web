@@ -1,9 +1,13 @@
 <template>
   <el-scrollbar>
     <el-empty v-if="!hasTopics" description="No Topics" />
-    <h1 v-for="topic in filteredTopics" :key="topic.id">
+    <h3
+      v-for="topic in filteredTopics"
+      :key="topic.id"
+      style="word-break: break-word"
+    >
       {{ topic.text }}
-    </h1>
+    </h3>
   </el-scrollbar>
 </template>
 
@@ -19,6 +23,10 @@ export default {
   },
   setup(props) {
     const topics = ref(new Map<string, Topic>());
+    const hasTopics = computed(() => topics.value.size > 0);
+    const filteredTopics = computed(() => {
+      return [...topics.value.values()].filter((topic) => !topic.hidden);
+    });
     watch(props, () => topics.value.clear());
 
     client.on('topicUpdate', (topic) => {
@@ -26,11 +34,6 @@ export default {
         topics.value.set(topic.id, topic);
     });
 
-    const filteredTopics = computed(() => {
-      return [...topics.value.values()].filter((topic) => !topic.hidden);
-    });
-
-    const hasTopics = computed(() => topics.value.size > 0);
     return { filteredTopics, hasTopics };
   },
 };

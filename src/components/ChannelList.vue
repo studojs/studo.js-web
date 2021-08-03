@@ -7,6 +7,7 @@
       :clearable="true"
     />
     <el-divider />
+    <el-empty v-if="!hasChannels" description="No Channels" />
     <ChannelRow
       v-for="channel in filteredChannels"
       :key="channel.id"
@@ -14,13 +15,12 @@
       @click="selectChannel(channel)"
     >
     </ChannelRow>
-    <el-empty v-if="!filteredChannels.length" description="No Channels" />
   </el-scrollbar>
 </template>
 
 <script lang="ts">
 import { Channel } from 'studo.js';
-import { computed, onMounted, Ref, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { client } from '../client';
 import ChannelRow from '@/components/ChannelRow.vue';
 import { ElMessage } from 'element-plus';
@@ -35,9 +35,10 @@ export default {
     selected: String,
   },
   setup(props, ctx) {
-    const selectedChannel: Ref<Channel | undefined> = ref();
+    const selectedChannel = ref<Channel | undefined>();
     const channelSearch = ref('');
     const channels = ref(new Map<string, Channel>());
+    const hasChannels = computed(() => channels.value.size > 0);
 
     onMounted(() => {
       channels.value = client.channels.cache;
@@ -79,7 +80,7 @@ export default {
       });
     });
 
-    return { filteredChannels, channelSearch, selectChannel };
+    return { filteredChannels, channelSearch, selectChannel, hasChannels };
   },
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
-  <el-button class="btn" @click="subscribe">
+  <el-button>
+    <el-avatar>{{ channel.iconChar }}</el-avatar>
     <div class="text-holder">
-      {{ channel.iconChar }}
       <div class="p-ml-2 p-text-bold">{{ channel.name }}</div>
       <div class="p-ml-2">{{ channel.footer }}</div>
     </div>
@@ -29,27 +29,18 @@ export default {
       required: true,
     },
   },
-  setup(props) {
-    function subscribe() {
-      props.channel.subscribe();
-    }
-
-    return { subscribe };
-  },
 };
 </script>
 
 <style lang="scss" scoped>
-.btn {
+.el-button {
   width: 100%;
   margin-left: unset;
+  text-align: left;
 }
 
 .text-holder {
   width: 100%;
   text-align: left;
 }
-/* .pinned {
-  color: hsl(0, 75%, 50%);
-} */
 </style>

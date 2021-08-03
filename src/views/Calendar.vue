@@ -13,4 +13,7 @@ export default {
 </script>
 
 <style scoped>
+::v-deep(.el-calendar__body) {
+  padding-bottom: unset;
+}
 </style>

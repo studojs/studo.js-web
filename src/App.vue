@@ -3,7 +3,7 @@
     <el-header>
       <NavBar />
     </el-header>
-    <el-main>
+    <el-main id="view">
       <router-view />
     </el-main>
   </el-container>
@@ -23,6 +23,9 @@ html,
 body {
   height: 100%;
   margin: unset;
+}
+#view {
+  padding-bottom: 0px;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

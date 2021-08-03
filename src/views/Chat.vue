@@ -1,62 +1,39 @@
 <template>
   <el-container>
     <el-aside class="side">
-      <el-scrollbar>
-        <el-input
-          v-model="channelSearch"
-          placeholder="Search Channel"
-          prefix-icon="el-icon-search"
-          :clearable="true"
-        ></el-input>
-        <el-divider />
-        <ChannelRow
-          v-for="channel in filteredChannels"
-          :key="channel.id"
-          :channel="channel"
-        >
-        </ChannelRow>
-        <el-empty v-if="!filteredChannels.length" description="No Channels" />
-      </el-scrollbar>
+      <ChannelList v-model:selected="selectedChannelId" />
     </el-aside>
     <el-main class="main">
-      <el-scrollbar>
-        <p v-for="i in 20" :key="i">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nemo rerum
-          ut eveniet laborum doloremque possimus officia nisi consequuntur in
-          ducimus quae fugiat perferendis incidunt expedita doloribus, veritatis
-          pariatur autem quisquam?
-        </p>
-      </el-scrollbar>
+      <TopicList :tabId="selectedTabId" />
     </el-main>
   </el-container>
 </template>
 
 <script lang="ts">
-import { Channel } from 'studo.js';
-import { computed, onMounted, reactive, ref } from 'vue';
 import { client } from '../client';
-import ChannelRow from '@/components/ChannelRow.vue';
+import ChannelList from '@/components/ChannelList.vue';
 import { ElMessage } from 'element-plus';
+import TopicList from '../components/TopicList.vue';
+import { ref, watch } from 'vue';
 
 export default {
   name: 'Chat',
   components: {
-    ChannelRow,
+    ChannelList,
+    TopicList,
   },
   setup() {
-    const channelSearch = ref('');
-    const channels = ref([] as Channel[]);
+    const selectedChannelId = ref('');
+    const selectedTabId = ref('');
 
-    const filteredChannels = computed(() => {
-      return channels.value.filter(
-        (channel) =>
-          !channel.hidden &&
-          channel.name.toLowerCase().includes(channelSearch.value.toLowerCase())
-      );
+    watch(selectedChannelId, async () => {
+      client.channels.cache.get(selectedChannelId.value)?.subscribe();
+
+      const tab = await client.once('tabUpdate');
+      if (tab.channelId !== selectedChannelId.value) return;
+      tab.subscribe();
+      selectedTabId.value = tab.id;
     });
-
-    client.chat.on('updateChannels', () => updateChannels());
-    onMounted(() => updateChannels());
 
     client.connect().catch((error) => {
       ElMessage({
@@ -66,18 +43,7 @@ export default {
       });
     });
 
-    function updateChannels() {
-      channels.value = Array.from(client.channels.cache.values());
-      sortChannels();
-    }
-
-    function sortChannels() {
-      channels.value.sort(
-        (a, b) => b.sortScore - a.sortScore || a.name.localeCompare(b.name)
-      );
-    }
-
-    return { filteredChannels, channelSearch };
+    return { selectedChannelId, selectedTabId };
   },
 };
 </script>
@@ -89,20 +55,10 @@ export default {
 
 .side,
 .main {
-  height: calc(100vh - 100px);
+  height: calc(100vh - 80px);
 }
 
 .main {
   padding: unset;
-}
-
-.el-divider {
-  margin: 8px 0;
-}
-
-.channel-list {
-  padding-left: 0px;
-  margin-top: 0px;
-  list-style-type: none;
 }
 </style>

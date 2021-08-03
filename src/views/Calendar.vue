@@ -1,35 +1,13 @@
 <template>
-  <FullCalendar :options="calendarOptions" />
+  <el-calendar v-model="value"></el-calendar>
 </template>
 
 <script lang="ts">
-import timeGridPlugin from '@fullcalendar/timegrid';
-// import interactionPlugin from '@fullcalendar/interaction';
-import FullCalendar from '@fullcalendar/vue3';
-
 export default {
   name: 'Calendar',
-  components: {
-    FullCalendar,
-  },
+  components: {},
   setup() {
-    return {
-      calendarOptions: {
-        plugins: [timeGridPlugin],
-        initialView: 'timeGridWeek',
-        slotMinTime: '07:00:00',
-        slotMaxTime: '23:59:59',
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: '',
-        },
-        nowIndicator: true,
-        editable: true,
-        selectable: true,
-        dayMaxEvents: true,
-      },
-    };
+    return { value: new Date() };
   },
 };
 </script>

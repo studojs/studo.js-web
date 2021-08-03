@@ -18,4 +18,4 @@ environment = {NODE_VERSION = '14'}
 publish = 'dist'
 
 [dev]
-autoLaunch = true
+autoLaunch = false

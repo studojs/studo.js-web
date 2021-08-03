@@ -1,26 +1,42 @@
 <template>
-  <Splitter>
-    <SplitterPanel :size="25">
-      <span class="p-input-icon-left">
-        <i class="pi pi-search" />
-        <InputText placeholder="Search" />
-      </span>
-      <ul class="channel-list">
-        <li v-for="channel in channels" :key="channel.id">
-          <ChannelRow :channel="channel"> </ChannelRow>
-        </li>
-      </ul>
-    </SplitterPanel>
-
-    <SplitterPanel :size="75">.</SplitterPanel>
-  </Splitter>
+  <el-container>
+    <el-aside class="side">
+      <el-scrollbar>
+        <el-input
+          v-model="channelSearch"
+          placeholder="Search Channel"
+          prefix-icon="el-icon-search"
+          :clearable="true"
+        ></el-input>
+        <el-divider />
+        <ChannelRow
+          v-for="channel in filteredChannels"
+          :key="channel.id"
+          :channel="channel"
+        >
+        </ChannelRow>
+        <el-empty v-if="!filteredChannels.length" description="No Channels" />
+      </el-scrollbar>
+    </el-aside>
+    <el-main class="main">
+      <el-scrollbar>
+        <p v-for="i in 20" :key="i">
+          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nemo rerum
+          ut eveniet laborum doloremque possimus officia nisi consequuntur in
+          ducimus quae fugiat perferendis incidunt expedita doloribus, veritatis
+          pariatur autem quisquam?
+        </p>
+      </el-scrollbar>
+    </el-main>
+  </el-container>
 </template>
 
 <script lang="ts">
 import { Channel } from 'studo.js';
-import { reactive } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
 import { client } from '../client';
 import ChannelRow from '@/components/ChannelRow.vue';
+import { ElMessage } from 'element-plus';
 
 export default {
   name: 'Chat',
@@ -28,41 +44,65 @@ export default {
     ChannelRow,
   },
   setup() {
-    const channels: Channel[] = reactive([]);
-    client.connect();
-    client.on('channelCreate', (channel) => {
-      if (channel.hidden) return;
-      console.log(channel);
-      channels.push(channel);
-      sortChannels(channels);
-    });
-    client.on('channelUpdate', (channel) => {
-      channels[channels.findIndex((c) => c.id === channel.id)] = channel;
-      sortChannels(channels);
+    const channelSearch = ref('');
+    const channels = ref([] as Channel[]);
+
+    const filteredChannels = computed(() => {
+      return channels.value.filter(
+        (channel) =>
+          !channel.hidden &&
+          channel.name.toLowerCase().includes(channelSearch.value.toLowerCase())
+      );
     });
 
-    return { channels };
+    client.chat.on('updateChannels', () => updateChannels());
+    onMounted(() => updateChannels());
+
+    client.connect().catch((error) => {
+      ElMessage({
+        message: error.message,
+        type: 'error',
+        showClose: true,
+      });
+    });
+
+    function updateChannels() {
+      channels.value = Array.from(client.channels.cache.values());
+      sortChannels();
+    }
+
+    function sortChannels() {
+      channels.value.sort(
+        (a, b) => b.sortScore - a.sortScore || a.name.localeCompare(b.name)
+      );
+    }
+
+    return { filteredChannels, channelSearch };
   },
 };
-
-function sortChannels(channels: Channel[]) {
-  channels.sort(
-    (a, b) => b.sortScore - a.sortScore || a.name.localeCompare(b.name)
-  );
-}
 </script>
 
 <style lang="scss" scoped>
-.p-input-icon-left {
-  width: 100%;
+.el-container {
+  column-gap: 20px;
+}
+
+.side,
+.main {
+  height: calc(100vh - 100px);
+}
+
+.main {
+  padding: unset;
+}
+
+.el-divider {
+  margin: 8px 0;
 }
 
 .channel-list {
   padding-left: 0px;
+  margin-top: 0px;
   list-style-type: none;
-}
-
-::v-deep(.p-inputtext) {
-  width: 100%;
 }
 </style>

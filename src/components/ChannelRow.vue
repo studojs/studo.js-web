@@ -1,11 +1,11 @@
 <template>
-  <Button type="button" class="p-button-outlined">
-    <Avatar :label="channel.iconChar" shape="circle"></Avatar>
+  <el-button class="btn" @click="subscribe">
     <div class="text-holder">
+      {{ channel.iconChar }}
       <div class="p-ml-2 p-text-bold">{{ channel.name }}</div>
       <div class="p-ml-2">{{ channel.footer }}</div>
     </div>
-  </Button>
+  </el-button>
   <!-- <Panel :header="channel.name" :toggleable="false">
     {{ channel.footer }} -->
 
@@ -29,18 +29,20 @@ export default {
       required: true,
     },
   },
-  methods: {
-    subscribe() {
-      this.channel.subscribe();
-    },
+  setup(props) {
+    function subscribe() {
+      props.channel.subscribe();
+    }
+
+    return { subscribe };
   },
 };
 </script>
 
 <style lang="scss" scoped>
-button {
+.btn {
   width: 100%;
-  column-gap: 1rem;
+  margin-left: unset;
 }
 
 .text-holder {

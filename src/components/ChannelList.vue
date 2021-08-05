@@ -2,85 +2,55 @@
   <el-scrollbar>
     <el-input
       v-model="channelSearch"
-      placeholder="Search Channel"
+      placeholder="Search"
       prefix-icon="el-icon-search"
       :clearable="true"
     />
-    <el-divider />
     <el-empty v-if="!hasChannels" description="No Channels" />
-    <ChannelRow
-      v-for="channel in filteredChannels"
-      :key="channel.id"
-      :channel="channel"
-      @click="selectChannel(channel)"
-    >
-    </ChannelRow>
+    <el-radio-group v-model="selectedId">
+      <ChannelRow
+        v-for="channel in filteredChannels"
+        :key="channel.id"
+        :channel="channel"
+      >
+      </ChannelRow>
+    </el-radio-group>
   </el-scrollbar>
 </template>
 
 <script lang="ts">
-import { Channel } from 'studo.js';
-import { computed, onMounted, ref } from 'vue';
-import { client } from '../client';
+import { computed, onMounted, ref, watch } from 'vue';
+import { client, store } from '../store';
 import ChannelRow from '@/components/ChannelRow.vue';
-import { ElMessage } from 'element-plus';
+import { onBeforeRouteUpdate } from 'vue-router';
 
 export default {
   name: 'ChannelList',
   components: {
     ChannelRow,
   },
-  emits: ['update:selected'],
+  emits: ['click'],
   props: {
-    selected: String,
+    selectedId: String,
   },
   setup(props, ctx) {
-    const selectedChannel = ref<Channel | undefined>();
     const channelSearch = ref('');
-    const channels = ref(new Map<string, Channel>());
-    const hasChannels = computed(() => channels.value.size > 0);
-
-    onMounted(() => {
-      channels.value = client.channels.cache;
-      sortChannels();
-    });
+    const hasChannels = computed(() => store.channels.size > 0);
+    watch(props, () => ctx.emit('click', props.selectedId));
 
     const filteredChannels = computed(() => {
-      return [...channels.value.values()].filter(
+      return [...store.channels.values()].filter(
         (channel) =>
           !channel.hidden &&
           channel.name.toLowerCase().includes(channelSearch.value.toLowerCase())
       );
     });
 
-    function sortChannels() {
-      channels.value = new Map(
-        [...client.channels.cache.entries()].sort(
-          ([, a], [, b]) =>
-            b.sortScore - a.sortScore || a.name.localeCompare(b.name)
-        )
-      );
-    }
-
-    function selectChannel(channel: Channel) {
-      selectedChannel.value = channel;
-      ctx.emit('update:selected', channel.id);
-    }
-
-    client.chat.on('updateChannels', () => sortChannels());
-    client.on('channelUpdate', (channel) => {
-      channels.value.set(channel.id, channel);
-    });
-
-    client.connect().catch((error) => {
-      ElMessage({
-        message: error.message,
-        type: 'error',
-        showClose: true,
-      });
-    });
-
-    return { filteredChannels, channelSearch, selectChannel, hasChannels };
+    return {
+      filteredChannels,
+      channelSearch,
+      hasChannels,
+    };
   },
 };
 </script>

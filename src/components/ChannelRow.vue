@@ -1,21 +1,11 @@
 <template>
-  <el-button>
+  <el-radio border :label="channel.id">
     <el-avatar>{{ channel.iconChar }}</el-avatar>
-    <div class="text-holder">
-      <div class="p-ml-2 p-text-bold">{{ channel.name }}</div>
-      <div class="p-ml-2">{{ channel.footer }}</div>
+    <div>
+      <div>{{ channel.name }}</div>
+      <footer>{{ channel.footer }}</footer>
     </div>
-  </el-button>
-  <!-- <Panel :header="channel.name" :toggleable="false">
-    {{ channel.footer }} -->
-
-  <!-- <h3 @click="subscribe" :class="{ pinned: channel.pinned }">
-      {{ channel.iconChar }} {{ channel.name }}
-    </h3>
-    <p>
-      {{ channel.footer }}
-    </p> -->
-  <!-- </Panel> -->
+  </el-radio>
 </template>
 
 <script type="ts">
@@ -33,10 +23,42 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.el-button {
+.el-radio {
+  display: flex;
+  align-items: center;
+  height: 50px;
   width: 100%;
-  margin-left: unset;
-  text-align: left;
+  margin: 4px 0 0 0 !important;
+  padding: 4px;
+}
+
+.is-checked {
+  background: #d8fff5;
+}
+
+::v-deep(.el-radio__input) {
+  display: none;
+}
+
+::v-deep(.el-radio__label) {
+  display: flex;
+  align-items: center;
+  padding: 0px;
+}
+
+.el-divider {
+  margin: 5px 0;
+}
+
+footer {
+  font-size: 12px;
+  color: #909399;
+}
+
+.el-avatar {
+  color: white;
+  background: #1db992;
+  margin-right: 8px;
 }
 
 .text-holder {

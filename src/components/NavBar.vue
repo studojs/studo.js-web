@@ -5,22 +5,16 @@
     class="menu"
     mode="horizontal"
   >
-    <el-menu-item index="/">
-      <template #title>
-        <i class="el-icon-house"></i>
-        <span>Home</span>
+    <el-menu-item index="/chat"
+      ><template #title>
+        <i class="el-icon-chat-line-square"></i>
+        <span>Chat</span>
       </template>
     </el-menu-item>
     <el-menu-item index="/calendar"
       ><template #title>
         <i class="el-icon-date"></i>
         <span>Calendar</span>
-      </template>
-    </el-menu-item>
-    <el-menu-item index="/chat"
-      ><template #title>
-        <i class="el-icon-chat-line-square"></i>
-        <span>Chat</span>
       </template>
     </el-menu-item>
     <el-menu-item index="/settings">
@@ -36,7 +30,7 @@
 export default {
   name: 'NavBar',
   setup() {
-    return { activeRoute: '/' };
+    return { activeRoute: '/chat' };
   },
 };
 </script>

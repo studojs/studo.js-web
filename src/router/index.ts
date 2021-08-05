@@ -1,6 +1,5 @@
 import Calendar from '@/views/Calendar.vue';
 import Chat from '@/views/Chat.vue';
-import Home from '@/views/Home.vue';
 import Login from '@/views/Login.vue';
 import Settings from '@/views/Settings.vue';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
@@ -8,8 +7,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    name: 'Home',
-    component: Home,
+    redirect: { name: 'Chat' },
   },
   {
     path: '/login',
@@ -20,6 +18,13 @@ const routes: RouteRecordRaw[] = [
     path: '/chat',
     name: 'Chat',
     component: Chat,
+    children: [
+      {
+        path: ':channelId',
+        name: 'Channel',
+        component: Chat,
+      },
+    ],
   },
   {
     path: '/calendar',

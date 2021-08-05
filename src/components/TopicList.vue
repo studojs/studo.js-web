@@ -14,7 +14,7 @@
 <script lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import { Topic } from 'studo.js';
-import { client } from '../client';
+import { client, store } from '../store';
 
 export default {
   name: 'TopicList',
@@ -22,17 +22,18 @@ export default {
     tabId: String,
   },
   setup(props) {
-    const topics = ref(new Map<string, Topic>());
-    const hasTopics = computed(() => topics.value.size > 0);
+    // const topics = ref(new Map<string, Topic>());
+    const hasTopics = computed(() => store.topics.size > 0);
     const filteredTopics = computed(() => {
-      return [...topics.value.values()].filter((topic) => !topic.hidden);
+      return [...store.topics.values()].filter((topic) => !topic.hidden);
     });
-    watch(props, () => topics.value.clear());
 
-    client.on('topicUpdate', (topic) => {
-      if (topic.tabId === props.tabId && !topic.hidden)
-        topics.value.set(topic.id, topic);
-    });
+    // watch(props, () => topics.value.clear());
+
+    // client.on('topicUpdate', (topic) => {
+    //   if (topic.tabId === props.tabId && !topic.hidden)
+    //     topics.value.set(topic.id, topic);
+    // });
 
     return { filteredTopics, hasTopics };
   },

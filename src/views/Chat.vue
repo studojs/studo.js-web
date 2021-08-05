@@ -1,19 +1,23 @@
 <template>
   <el-row :gutter="20">
-    <el-col :span="5">
-      <ChannelList v-model:selected="selectedChannelId" />
+    <el-col :span="6">
+      <ChannelList
+        @click="channelSelected"
+        v-model:selectedId="store.channelId"
+      />
     </el-col>
-    <el-col :span="7"><TopicList :tabId="selectedTabId" /></el-col>
-    <el-col :span="12"><TopicList :tabId="selectedTabId" /></el-col>
+    <el-col :span="18"><TopicList :tabId="store.tabId" /></el-col>
   </el-row>
 </template>
 
 <script lang="ts">
-import { client } from '../client';
+import { client, store } from '../store';
 import ChannelList from '@/components/ChannelList.vue';
+import TopicList from '@/components/TopicList.vue';
+import router from '../router';
+import { onMounted } from '@vue/runtime-core';
+import { onBeforeRouteUpdate } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import TopicList from '../components/TopicList.vue';
-import { ref, watch } from 'vue';
 
 export default {
   name: 'Chat',
@@ -22,27 +26,30 @@ export default {
     TopicList,
   },
   setup() {
-    const selectedChannelId = ref('');
-    const selectedTabId = ref('');
-
-    watch(selectedChannelId, async () => {
-      client.channels.cache.get(selectedChannelId.value)?.subscribe();
-
-      const tab = await client.once('tabUpdate');
-      if (tab.channelId !== selectedChannelId.value) return;
-      tab.subscribe();
-      selectedTabId.value = tab.id;
-    });
-
-    client.connect().catch((error) => {
-      ElMessage({
-        message: error.message,
-        type: 'error',
-        showClose: true,
+    onMounted(async () => {
+      await client.connect().catch((error) => {
+        ElMessage({
+          message: error.message,
+          type: 'error',
+          showClose: true,
+        });
       });
+      store.channelId = router.currentRoute.value.params.channelId as string;
+      await store.loadTopics();
     });
 
-    return { selectedChannelId, selectedTabId };
+    onBeforeRouteUpdate(async (route) => {
+      store.channelId = route.params.channelId as string;
+      await store.loadTopics();
+    });
+
+    async function channelSelected(id: string) {
+      router.push({
+        name: 'Channel',
+        params: { channelId: id },
+      });
+    }
+    return { store, channelSelected };
   },
 };
 </script>

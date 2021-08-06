@@ -1,8 +1,8 @@
 <template>
-  <el-radio border :label="channel.id">
+  <el-radio :label="channel.id">
     <el-avatar>{{ channel.iconChar }}</el-avatar>
     <div>
-      <div>{{ channel.name }}</div>
+      <span class="name">{{ channel.name }}</span>
       <footer>{{ channel.footer }}</footer>
     </div>
   </el-radio>
@@ -23,17 +23,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .el-radio {
   display: flex;
   align-items: center;
   height: 50px;
-  width: 100%;
+  // width: 100%;
   margin: 4px 0 0 0 !important;
   padding: 4px;
+  border-radius: 8px;
+
+  &:hover:not(.is-checked) {
+    background: #161b22;
+  }
 }
 
 .is-checked {
-  background: #d8fff5;
+  background: $--color-primary-dark;
+
+  .name {
+    color: $--color-text-primary;
+  }
+
+  footer {
+    color: $--color-text-regular;
+  }
 }
 
 ::v-deep(.el-radio__input) {
@@ -50,19 +65,19 @@ export default {
   margin: 5px 0;
 }
 
-footer {
-  font-size: 12px;
-  color: #909399;
-}
-
 .el-avatar {
+  flex-shrink: 0;
   color: white;
-  background: #1db992;
+  background: #30363d;
   margin-right: 8px;
 }
 
-.text-holder {
-  width: 100%;
-  text-align: left;
+.name {
+  white-space: normal;
+}
+
+footer {
+  font-size: 12px;
+  color: $--color-text-secondary;
 }
 </style>

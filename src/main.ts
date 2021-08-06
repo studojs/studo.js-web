@@ -1,8 +1,8 @@
 import ElementPlus from 'element-plus';
 import { createApp } from 'vue';
 import App from './App.vue';
-import './element-plus.scss';
 import router from './router';
+import './styles/element-plus.scss';
 
 const app = createApp(App);
 

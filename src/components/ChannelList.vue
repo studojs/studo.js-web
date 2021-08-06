@@ -56,6 +56,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.el-radio-group {
+  width: 100%;
+}
+
 .el-divider {
   margin: 8px 0;
 }

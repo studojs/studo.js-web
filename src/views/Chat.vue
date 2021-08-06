@@ -6,7 +6,8 @@
         v-model:selectedId="store.channelId"
       />
     </el-col>
-    <el-col :span="18"><TopicList :tabId="store.tabId" /></el-col>
+    <el-col :span="8"><TopicList :tabId="store.tabId" /></el-col>
+    <el-col :span="10"><el-empty description="Messages" /></el-col>
   </el-row>
 </template>
 
@@ -34,12 +35,14 @@ export default {
           showClose: true,
         });
       });
-      store.channelId = router.currentRoute.value.params.channelId as string;
+      store.channelId =
+        (router.currentRoute.value.params.channelId as string) || '';
+
       await store.loadTopics();
     });
 
     onBeforeRouteUpdate(async (route) => {
-      store.channelId = route.params.channelId as string;
+      store.channelId = (route.params.channelId as string) || '';
       await store.loadTopics();
     });
 

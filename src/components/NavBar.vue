@@ -1,10 +1,5 @@
 <template>
-  <el-menu
-    :default-active="activeRoute"
-    :router="true"
-    class="menu"
-    mode="horizontal"
-  >
+  <el-menu :default-active="activeRoute" :router="true" mode="horizontal">
     <el-menu-item index="/chat"
       ><template #title>
         <i class="el-icon-chat-line-square"></i>
@@ -36,8 +31,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.menu {
+@import '@/styles/colors.scss';
+
+.el-menu {
   display: flex;
   justify-content: center;
+  border-bottom: unset !important;
+
+  ::v-deep(.el-menu-item:hover) {
+    background-color: $--color-primary-dark !important;
+  }
+
+  ::v-deep(.el-menu-item.is-active) {
+    font-weight: bold;
+  }
 }
 </style>

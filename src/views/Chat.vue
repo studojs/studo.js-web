@@ -41,9 +41,9 @@ export default {
       await store.loadTopics();
     });
 
-    onBeforeRouteUpdate(async (route) => {
+    onBeforeRouteUpdate((route) => {
       store.channelId = (route.params.channelId as string) || '';
-      await store.loadTopics();
+      store.loadTopics();
     });
 
     async function channelSelected(id: string) {

@@ -19,10 +19,9 @@
 </template>
 
 <script lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
-import { client, store } from '../store';
+import { computed, ref, watch } from 'vue';
+import { store } from '../store';
 import ChannelRow from '@/components/ChannelRow.vue';
-import { onBeforeRouteUpdate } from 'vue-router';
 
 export default {
   name: 'ChannelList',
@@ -56,6 +55,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.el-input {
+  margin-bottom: 4px;
+}
+
 .el-radio-group {
   width: 100%;
 }

@@ -1,25 +1,21 @@
 <template>
   <el-scrollbar>
     <el-empty v-if="!hasTopics" description="No Topics" />
-    <h4
-      v-for="topic in filteredTopics"
-      :key="topic.id"
-      style="word-break: break-word"
-    >
-      <div>{{ topic.header }}</div>
-      <div>{{ topic.text }}</div>
-      <div>{{ topic.footer }}</div>
-      <div>{{ topic.votes }}</div>
-    </h4>
+    <TopicRow v-for="topic in filteredTopics" :key="topic.id" :topic="topic">
+    </TopicRow>
   </el-scrollbar>
 </template>
 
 <script lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
-import { client, store } from '../store';
+import { computed } from 'vue';
+import { store } from '../store';
+import TopicRow from './TopicRow.vue';
 
 export default {
   name: 'TopicList',
+  components: {
+    TopicRow,
+  },
   props: {
     tabId: String,
   },

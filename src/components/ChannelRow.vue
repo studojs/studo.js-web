@@ -2,8 +2,8 @@
   <el-radio :label="channel.id">
     <el-avatar>{{ channel.iconChar }}</el-avatar>
     <div>
-      <span class="name">{{ channel.name }}</span>
-      <footer>{{ channel.footer }}</footer>
+      <div class="name">{{ channel.name }}</div>
+      <div class="footer">{{ channel.footer }}</div>
     </div>
   </el-radio>
 </template>
@@ -28,8 +28,6 @@ export default {
 .el-radio {
   display: flex;
   align-items: center;
-  height: 50px;
-  // width: 100%;
   margin: 4px 0 0 0 !important;
   padding: 4px;
   border-radius: 8px;
@@ -76,7 +74,7 @@ export default {
   white-space: normal;
 }
 
-footer {
+.footer {
   font-size: 12px;
   color: $--color-text-secondary;
 }

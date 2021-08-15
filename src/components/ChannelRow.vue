@@ -1,15 +1,18 @@
 <template>
-  <el-radio :label="channel.id">
-    <el-avatar>{{ channel.iconChar }}</el-avatar>
-    <div>
-      <div class="name">{{ channel.name }}</div>
-      <div class="footer">{{ channel.footer }}</div>
-    </div>
-  </el-radio>
+  <router-link :to="channelRoute">
+    <el-radio :label="channel.id">
+      <el-avatar>{{ channel.iconChar }}</el-avatar>
+      <div>
+        <div class="name">{{ channel.name }}</div>
+        <div class="footer">{{ channel.footer }}</div>
+      </div>
+    </el-radio>
+  </router-link>
 </template>
 
 <script type="ts">
 import { Channel } from 'studo.js';
+import { computed } from 'vue';
 
 export default {
   name: 'ChannelRow',
@@ -19,11 +22,25 @@ export default {
       required: true,
     },
   },
+  setup(props) {
+    const channelRoute = computed(() => ({
+      name: 'channel',
+      params: {
+        channelId: props.channel.id,
+      },
+    }));
+    return { channelRoute };
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 @import '@/styles/colors.scss';
+
+a {
+  color: initial;
+  text-decoration: none;
+}
 
 .el-radio {
   display: flex;

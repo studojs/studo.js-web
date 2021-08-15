@@ -1,13 +1,15 @@
 <template>
   <el-row :gutter="20">
     <el-col :span="6">
-      <ChannelList
-        @click="channelSelected"
-        v-model:selectedId="store.channelId"
-      />
+      <ChannelList />
     </el-col>
-    <el-col :span="8"><TopicList :tabId="store.tabId" /></el-col>
-    <el-col :span="10"><el-empty description="Messages" /></el-col>
+    <el-col :span="8"><TopicList /></el-col>
+    <el-col :span="10">
+      <p v-for="msg in [...store.messages.values()]" :key="msg.id">
+        {{ msg.text }}
+      </p>
+      <el-empty description="Messages" />
+    </el-col>
   </el-row>
 </template>
 
@@ -17,7 +19,7 @@ import ChannelList from '@/components/ChannelList.vue';
 import TopicList from '@/components/TopicList.vue';
 import router from '../router';
 import { onMounted } from '@vue/runtime-core';
-import { onBeforeRouteUpdate } from 'vue-router';
+import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
 import { ElMessage } from 'element-plus';
 
 export default {
@@ -28,22 +30,25 @@ export default {
   },
   setup() {
     onMounted(async () => {
-      await client.connect().catch((error) => {
+      try {
+        // await client.connect();
+      } catch (error) {
+        console.error(error);
         ElMessage({
-          message: error.message,
+          message: JSON.stringify(error),
           type: 'error',
           showClose: true,
         });
-      });
-      store.channelId =
-        (router.currentRoute.value.params.channelId as string) || '';
+      }
 
       await store.loadTopics();
     });
 
-    onBeforeRouteUpdate((route) => {
-      store.channelId = (route.params.channelId as string) || '';
-      store.loadTopics();
+    onBeforeRouteUpdate((to, from, next) => {
+      if (from.params.channelId !== to.params.channelId) {
+        store.loadTopics(to.params.channelId as string);
+      }
+      next();
     });
 
     async function channelSelected(id: string) {

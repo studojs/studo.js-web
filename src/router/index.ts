@@ -7,33 +7,40 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    redirect: { name: 'Chat' },
+    redirect: { name: 'chat' },
   },
   {
     path: '/login',
-    name: 'Login',
+    name: 'login',
     component: Login,
   },
   {
     path: '/chat',
-    name: 'Chat',
+    name: 'chat',
     component: Chat,
     children: [
       {
         path: ':channelId',
-        name: 'Channel',
+        name: 'channel',
         component: Chat,
+        children: [
+          {
+            path: ':topicId',
+            name: 'topic',
+            component: Chat,
+          },
+        ],
       },
     ],
   },
   {
     path: '/calendar',
-    name: 'Calendar',
+    name: 'calendar',
     component: Calendar,
   },
   {
     path: '/settings',
-    name: 'Settings',
+    name: 'settings',
     component: Settings,
   },
 ];

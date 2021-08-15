@@ -1,5 +1,7 @@
-import { Channel, Client, RestManager, Topic } from 'studo.js';
+import { computed } from '@vue/runtime-core';
+import { Channel, Client, Message, RestManager, Topic } from 'studo.js';
 import { reactive } from 'vue';
+import router from '../router/index';
 
 RestManager.proxyURL = `${location.origin}/api/proxy`;
 const sessionToken = localStorage.sessionToken;
@@ -14,12 +16,24 @@ client.chat.on('updateChannels', () => {
 client.on('topicUpdate', (topic) => {
   store.topics.set(topic.id, topic);
 });
+client.on('messageUpdate', (message) => {
+  store.messages.set(message.id, message);
+});
+
+export const channelIdRef = computed(() => {
+  const route = router.currentRoute.value;
+  return route.params.channelId as string;
+});
+
+export const topicIdRef = computed(() => {
+  const route = router.currentRoute.value;
+  return route.params.topicId as string;
+});
 
 export const store = reactive({
   channels: new Map<string, Channel>(),
   topics: new Map<string, Topic>(),
-  channelId: '',
-  tabId: '',
+  messages: new Map<string, Message>(),
   sortChannels() {
     this.channels = new Map(
       [...client.channels.entries()].sort(
@@ -28,14 +42,13 @@ export const store = reactive({
       )
     );
   },
-  async loadTopics() {
-    this.topics.clear();
-    if (!this.channelId) return;
-    await client.channels.subscribe(this.channelId);
+  async loadTopics(channelId = channelIdRef.value) {
+    if (!channelId) return;
+    await client.channels.subscribe(channelId);
     const tab = await client.once('tabUpdate');
     await tab.subscribe();
+    this.topics.clear();
   },
 });
 
-Object.assign(window, { store });
-Object.assign(window, { client });
+Object.assign(window, { store, client });

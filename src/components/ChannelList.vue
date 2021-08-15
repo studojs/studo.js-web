@@ -7,7 +7,7 @@
       :clearable="true"
     />
     <el-empty v-if="!hasChannels" description="No Channels" />
-    <el-radio-group v-model="selectedId">
+    <el-radio-group v-model="channelIdRef">
       <ChannelRow
         v-for="channel in filteredChannels"
         :key="channel.id"
@@ -19,8 +19,8 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, watch } from 'vue';
-import { store } from '../store';
+import { computed, ref } from 'vue';
+import { channelIdRef, store } from '../store';
 import ChannelRow from '@/components/ChannelRow.vue';
 
 export default {
@@ -28,14 +28,9 @@ export default {
   components: {
     ChannelRow,
   },
-  emits: ['click'],
-  props: {
-    selectedId: String,
-  },
-  setup(props, ctx) {
+  setup() {
     const channelSearch = ref('');
     const hasChannels = computed(() => store.channels.size > 0);
-    watch(props, () => ctx.emit('click', props.selectedId));
 
     const filteredChannels = computed(() => {
       return [...store.channels.values()].filter(
@@ -47,6 +42,7 @@ export default {
 
     return {
       filteredChannels,
+      channelIdRef,
       channelSearch,
       hasChannels,
     };

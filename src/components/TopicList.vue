@@ -3,8 +3,7 @@
     v-loading="loading"
     element-loading-background="rgba(0, 0, 0, 0)"
   >
-    <TopicRow v-for="topic in filteredTopics" :key="topic.id" :topic="topic">
-    </TopicRow>
+    <TopicRow v-for="topic in filteredTopics" :key="topic.id" :topic="topic" />
   </el-scrollbar>
 </template>
 

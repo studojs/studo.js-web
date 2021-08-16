@@ -11,6 +11,7 @@
       <el-image
         v-if="message.downloadUrl"
         :src="message.inlineImageUrl"
+        :alt="message.fileName"
         :preview-src-list="[message.downloadUrl]"
         :hide-on-click-modal="true"
         lazy
@@ -79,7 +80,7 @@ export default {
   color: $--color-text-primary;
 
   &:hover {
-    background: #161b22;
+    background: $--color-highlight;
   }
 
   &.selected {
@@ -97,6 +98,11 @@ export default {
 
 .text {
   margin-bottom: 5px;
+}
+
+:deep(.el-image__preview) {
+  max-height: 50vh;
+  border-radius: 3px;
 }
 
 .header,

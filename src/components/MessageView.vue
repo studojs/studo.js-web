@@ -7,8 +7,7 @@
       v-for="message in filteredMessages"
       :key="message.id"
       :message="message"
-    >
-    </MessageRow>
+    />
   </el-scrollbar>
 </template>
 

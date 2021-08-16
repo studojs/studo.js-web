@@ -49,7 +49,7 @@ export default {
   color: $--color-text-primary;
 
   &:hover {
-    background: #161b22;
+    background: $--color-highlight;
   }
 
   &.selected {

@@ -1,29 +1,38 @@
 <template>
-  <router-link :to="topicRoute" :class="['row', { selected: isSelected }]">
+  <div class="row">
     <div class="content">
       <div>
-        <el-tag v-for="tag in topic.tagIds" :key="tag" size="mini">{{
+        <el-tag v-for="tag in message.tagIds" :key="tag" size="mini">{{
           tag
         }}</el-tag>
       </div>
-      <div class="text">{{ topic.text }}</div>
-      <div class="header">{{ topic.header }}</div>
-      <div class="footer">{{ topic.footer }}</div>
+      <div class="header">{{ message.header }}</div>
+      <div class="text">{{ message.text }}</div>
+      <el-image
+        v-if="message.downloadUrl"
+        :src="message.inlineImageUrl"
+        :preview-src-list="[message.downloadUrl]"
+        :hide-on-click-modal="true"
+        lazy
+      />
+      <div class="footer">{{ message.footer }}</div>
     </div>
     <div class="votes">
       <el-button
-        v-if="topic.votingType.includes('UP')"
-        :class="{ voted: topic.voteState === 'UP' }"
+        v-if="message.topic?.votingType.includes('UP')"
+        :class="{ voted: message.voteState === 'UP' }"
         @click.prevent="toggleVote('UP')"
         icon="el-icon-arrow-up"
         circle
         size="mini"
         type="text"
       ></el-button>
-      <div>{{ topic.votes }}</div>
+      <div v-show="message.topic?.votingType !== 'NONE'">
+        {{ message.votes }}
+      </div>
       <el-button
-        v-if="topic.votingType.includes('DOWN')"
-        :class="{ voted: topic.voteState === 'DOWN' }"
+        v-if="message.topic?.votingType.includes('DOWN')"
+        :class="{ voted: message.voteState === 'DOWN' }"
         @click.prevent="toggleVote('DOWN')"
         icon="el-icon-arrow-down"
         circle
@@ -31,35 +40,27 @@
         type="text"
       ></el-button>
     </div>
-  </router-link>
+  </div>
 </template>
 
 <script lang="ts">
-import { Topic } from 'studo.js';
-import { computed } from 'vue';
-import { topicIdRef } from '../store';
+import { Message } from 'studo.js';
+
 export default {
-  name: 'TopicRow',
+  name: 'MessageRow',
   props: {
-    topic: {
-      type: Topic,
+    message: {
+      type: Message,
       required: true,
     },
   },
   setup(props) {
-    const isSelected = computed(() => topicIdRef.value === props.topic.id);
-    const topicRoute = computed(() => ({
-      name: 'topic',
-      params: {
-        topicId: props.topic.id,
-      },
-    }));
     function toggleVote(state: 'UP' | 'DOWN') {
-      if (props.topic.voteState === state) props.topic.vote('NONE');
-      else props.topic.vote(state);
+      if (props.message.voteState === state) props.message.vote('NONE');
+      else props.message.vote(state);
     }
 
-    return { isSelected, toggleVote, topicRoute };
+    return { toggleVote };
   },
 };
 </script>

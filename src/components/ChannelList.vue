@@ -6,21 +6,18 @@
       prefix-icon="el-icon-search"
       :clearable="true"
     />
-    <el-empty v-if="!hasChannels" description="No Channels" />
-    <el-radio-group v-model="channelIdRef">
-      <ChannelRow
-        v-for="channel in filteredChannels"
-        :key="channel.id"
-        :channel="channel"
-      >
-      </ChannelRow>
-    </el-radio-group>
+    <ChannelRow
+      v-for="channel in filteredChannels"
+      :key="channel.id"
+      :channel="channel"
+    >
+    </ChannelRow>
   </el-scrollbar>
 </template>
 
 <script lang="ts">
 import { computed, ref } from 'vue';
-import { channelIdRef, channelsRef } from '../store';
+import { channelsRef } from '../store';
 import ChannelRow from '@/components/ChannelRow.vue';
 
 export default {
@@ -30,8 +27,6 @@ export default {
   },
   setup() {
     const channelSearch = ref('');
-    const hasChannels = computed(() => channelsRef.size > 0);
-
     const filteredChannels = computed(() => {
       return [...channelsRef.values()].filter(
         (channel) =>
@@ -42,9 +37,7 @@ export default {
 
     return {
       filteredChannels,
-      channelIdRef,
       channelSearch,
-      hasChannels,
     };
   },
 };

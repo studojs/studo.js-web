@@ -1,10 +1,7 @@
 <template>
   <el-scrollbar>
-    <el-empty v-if="!hasTopics" description="No Topics" />
-    <el-radio-group v-model="topicIdRef">
-      <TopicRow v-for="topic in filteredTopics" :key="topic.id" :topic="topic">
-      </TopicRow>
-    </el-radio-group>
+    <TopicRow v-for="topic in filteredTopics" :key="topic.id" :topic="topic">
+    </TopicRow>
   </el-scrollbar>
 </template>
 
@@ -19,12 +16,11 @@ export default {
     TopicRow,
   },
   setup() {
-    const hasTopics = computed(() => topicsRef.size > 0);
     const filteredTopics = computed(() => {
       return [...topicsRef.values()].filter((topic) => !topic.hidden);
     });
 
-    return { filteredTopics, hasTopics, topicIdRef };
+    return { filteredTopics, topicIdRef };
   },
 };
 </script>

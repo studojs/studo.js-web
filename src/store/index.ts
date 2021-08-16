@@ -44,6 +44,9 @@ export const topicIdRef = computed(() => {
 export const channelsRef = reactive(new Collection<string, Channel>());
 export const topicsRef = reactive(new Collection<string, Topic>());
 export const messagesRef = reactive(new Collection<string, Message>());
+export const isPrivateChannel = computed(() =>
+  channelIdRef.value.startsWith('private')
+);
 
 export function sortChannels() {
   const clone = channelsRef
@@ -70,4 +73,15 @@ export async function loadTopics(channelId = channelIdRef.value) {
   await tab.subscribe();
   topicsRef.clear();
   messagesRef.clear();
+
+  if (isPrivateChannel.value) {
+    const topic = await client.once('topicUpdate');
+    router.replace({ params: { topicId: topic.id } });
+  }
+}
+
+export async function loadMessages(topicId = topicIdRef.value) {
+  if (!topicId) return;
+  messagesRef.clear();
+  await client.topics.subscribe(topicId);
 }

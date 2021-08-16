@@ -1,18 +1,17 @@
 <template>
-  <router-link :to="channelRoute">
-    <el-radio :label="channel.id">
-      <el-avatar>{{ channel.iconChar }}</el-avatar>
-      <div>
-        <div class="name">{{ channel.name }}</div>
-        <div class="footer">{{ channel.footer }}</div>
-      </div>
-    </el-radio>
+  <router-link :to="channelRoute" :class="['row', { selected: isSelected }]">
+    <el-avatar>{{ channel.iconChar }}</el-avatar>
+    <div>
+      <div class="name">{{ channel.name }}</div>
+      <div class="footer">{{ channel.footer }}</div>
+    </div>
   </router-link>
 </template>
 
 <script type="ts">
 import { Channel } from 'studo.js';
 import { computed } from 'vue';
+import { channelIdRef } from '../store';
 
 export default {
   name: 'ChannelRow',
@@ -23,13 +22,15 @@ export default {
     },
   },
   setup(props) {
+    const isSelected = computed(() => channelIdRef.value === props.channel.id);
     const channelRoute = computed(() => ({
       name: 'channel',
       params: {
         channelId: props.channel.id,
       },
     }));
-    return { channelRoute };
+
+    return { channelRoute, isSelected };
   },
 };
 </script>
@@ -37,43 +38,32 @@ export default {
 <style lang="scss" scoped>
 @import '@/styles/colors.scss';
 
-a {
-  color: initial;
-  text-decoration: none;
-}
-
-.el-radio {
+.row {
   display: flex;
   align-items: center;
-  margin: 4px 0 0 0 !important;
+  margin-top: 4px;
   padding: 4px;
   border-radius: 8px;
+  text-decoration: none;
+  font-size: 14px;
+  color: $--color-text-primary;
 
-  &:hover:not(.is-checked) {
+  &:hover {
     background: #161b22;
   }
-}
 
-.is-checked {
-  background: $--color-primary-dark;
-
-  .name {
-    color: $--color-text-primary;
-  }
-
-  footer {
-    color: $--color-text-regular;
+  &.selected {
+    background: $--color-primary-dark;
   }
 }
 
-::v-deep(.el-radio__input) {
-  display: none;
+.name {
+  white-space: normal;
 }
 
-::v-deep(.el-radio__label) {
-  display: flex;
-  align-items: center;
-  padding: 0px;
+.footer {
+  font-size: 12px;
+  color: $--color-text-secondary;
 }
 
 .el-divider {
@@ -85,14 +75,5 @@ a {
   color: white;
   background: #30363d;
   margin-right: 8px;
-}
-
-.name {
-  white-space: normal;
-}
-
-.footer {
-  font-size: 12px;
-  color: $--color-text-secondary;
 }
 </style>

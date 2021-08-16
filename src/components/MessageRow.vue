@@ -2,9 +2,13 @@
   <div class="row">
     <div class="content">
       <div>
-        <el-tag v-for="tag in message.tagIds" :key="tag" size="mini">{{
-          tag
-        }}</el-tag>
+        <el-tag
+          v-for="tag in message.tagIds"
+          :key="tag"
+          :type="tagType(tag)"
+          size="mini"
+          >{{ tag }}</el-tag
+        >
       </div>
       <div class="header">{{ message.header }}</div>
       <div class="text">{{ message.text }}</div>
@@ -46,6 +50,7 @@
 
 <script lang="ts">
 import { Message } from 'studo.js';
+import { tagType } from '../store';
 
 export default {
   name: 'MessageRow',
@@ -61,7 +66,7 @@ export default {
       else props.message.vote(state);
     }
 
-    return { toggleVote };
+    return { tagType, toggleVote };
   },
 };
 </script>

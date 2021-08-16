@@ -2,9 +2,13 @@
   <router-link :to="topicRoute" :class="['row', { selected: isSelected }]">
     <div class="content">
       <div>
-        <el-tag v-for="tag in topic.tagIds" :key="tag" size="mini">{{
-          tag
-        }}</el-tag>
+        <el-tag
+          v-for="tag in topic.tagIds"
+          :key="tag"
+          :type="tagType(tag)"
+          size="mini"
+          >{{ tag }}</el-tag
+        >
       </div>
       <div class="text">{{ topic.text }}</div>
       <div class="header">{{ topic.header }}</div>
@@ -37,7 +41,7 @@
 <script lang="ts">
 import { Topic } from 'studo.js';
 import { computed } from 'vue';
-import { topicIdRef } from '../store';
+import { tagType, topicIdRef } from '../store';
 export default {
   name: 'TopicRow',
   props: {
@@ -59,7 +63,7 @@ export default {
       else props.topic.vote(state);
     }
 
-    return { isSelected, toggleVote, topicRoute };
+    return { isSelected, tagType, toggleVote, topicRoute };
   },
 };
 </script>

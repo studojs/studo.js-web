@@ -85,3 +85,7 @@ export async function loadMessages(topicId = topicIdRef.value) {
   messagesRef.clear();
   await client.topics.subscribe(topicId);
 }
+
+export function tagType(tag: string) {
+  return ['ACCEPTEDANSWER', 'DONE'].includes(tag) ? 'success' : '';
+}

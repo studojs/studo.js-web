@@ -5,7 +5,7 @@
     </el-col>
     <el-col :span="8"><TopicList /></el-col>
     <el-col :span="10">
-      <p v-for="msg in [...store.messages.values()]" :key="msg.id">
+      <p v-for="msg in [...messagesRef.values()]" :key="msg.id">
         {{ msg.text }}
       </p>
       <el-empty description="Messages" />
@@ -14,13 +14,13 @@
 </template>
 
 <script lang="ts">
-import { client, store } from '../store';
+import { client, loadTopics } from '../store';
 import ChannelList from '@/components/ChannelList.vue';
 import TopicList from '@/components/TopicList.vue';
-import router from '../router';
 import { onMounted } from '@vue/runtime-core';
-import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
+import { onBeforeRouteUpdate } from 'vue-router';
 import { ElMessage } from 'element-plus';
+import { messagesRef } from '../store/index';
 
 export default {
   name: 'Chat',
@@ -41,23 +41,17 @@ export default {
         });
       }
 
-      await store.loadTopics();
+      await loadTopics();
     });
 
     onBeforeRouteUpdate((to, from, next) => {
       if (from.params.channelId !== to.params.channelId) {
-        store.loadTopics(to.params.channelId as string);
+        loadTopics(to.params.channelId as string);
       }
       next();
     });
 
-    async function channelSelected(id: string) {
-      router.push({
-        name: 'Channel',
-        params: { channelId: id },
-      });
-    }
-    return { store, channelSelected };
+    return { messagesRef };
   },
 };
 </script>

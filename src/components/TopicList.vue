@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { computed } from 'vue';
-import { store, topicIdRef } from '../store';
+import { topicIdRef, topicsRef } from '../store';
 import TopicRow from './TopicRow.vue';
 
 export default {
@@ -19,9 +19,9 @@ export default {
     TopicRow,
   },
   setup() {
-    const hasTopics = computed(() => store.topics.size > 0);
+    const hasTopics = computed(() => topicsRef.size > 0);
     const filteredTopics = computed(() => {
-      return [...store.topics.values()].filter((topic) => !topic.hidden);
+      return [...topicsRef.values()].filter((topic) => !topic.hidden);
     });
 
     return { filteredTopics, hasTopics, topicIdRef };

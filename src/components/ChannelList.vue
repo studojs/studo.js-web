@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import { computed, ref } from 'vue';
-import { channelIdRef, store } from '../store';
+import { channelIdRef, channelsRef } from '../store';
 import ChannelRow from '@/components/ChannelRow.vue';
 
 export default {
@@ -30,10 +30,10 @@ export default {
   },
   setup() {
     const channelSearch = ref('');
-    const hasChannels = computed(() => store.channels.size > 0);
+    const hasChannels = computed(() => channelsRef.size > 0);
 
     const filteredChannels = computed(() => {
-      return [...store.channels.values()].filter(
+      return [...channelsRef.values()].filter(
         (channel) =>
           !channel.hidden &&
           channel.name.toLowerCase().includes(channelSearch.value.toLowerCase())

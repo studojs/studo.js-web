@@ -1,6 +1,13 @@
 import { computed } from '@vue/runtime-core';
-import { Channel, Client, Message, RestManager, Topic } from 'studo.js';
-import { reactive } from 'vue';
+import {
+  Channel,
+  Client,
+  Collection,
+  Message,
+  RestManager,
+  Topic,
+} from 'studo.js';
+import { nextTick, reactive } from 'vue';
 import router from '../router/index';
 
 RestManager.proxyURL = `${location.origin}/api/proxy`;
@@ -8,16 +15,20 @@ const sessionToken = localStorage.sessionToken;
 export const client = new Client(sessionToken);
 
 client.on('channelUpdate', (channel) => {
-  store.channels.set(channel.id, channel);
-});
-client.chat.on('updateChannels', () => {
-  store.sortChannels();
+  channelsRef.set(channel.id, channel);
 });
 client.on('topicUpdate', (topic) => {
-  store.topics.set(topic.id, topic);
+  topicsRef.set(topic.id, topic);
 });
 client.on('messageUpdate', (message) => {
-  store.messages.set(message.id, message);
+  messagesRef.set(message.id, message);
+});
+
+client.chat.on('updateChannels', () => {
+  nextTick(() => sortChannels());
+});
+client.chat.on('updateMessages', () => {
+  nextTick(() => sortMessages());
 });
 
 export const channelIdRef = computed(() => {
@@ -30,25 +41,33 @@ export const topicIdRef = computed(() => {
   return route.params.topicId as string;
 });
 
-export const store = reactive({
-  channels: new Map<string, Channel>(),
-  topics: new Map<string, Topic>(),
-  messages: new Map<string, Message>(),
-  sortChannels() {
-    this.channels = new Map(
-      [...client.channels.entries()].sort(
-        ([, a], [, b]) =>
-          b.sortScore - a.sortScore || a.name.localeCompare(b.name)
-      )
-    );
-  },
-  async loadTopics(channelId = channelIdRef.value) {
-    if (!channelId) return;
-    await client.channels.subscribe(channelId);
-    const tab = await client.once('tabUpdate');
-    await tab.subscribe();
-    this.topics.clear();
-  },
-});
+export const channelsRef = reactive(new Collection<string, Channel>());
+export const topicsRef = reactive(new Collection<string, Topic>());
+export const messagesRef = reactive(new Collection<string, Message>());
 
-Object.assign(window, { store, client });
+export function sortChannels() {
+  const clone = channelsRef
+    .clone()
+    .sort((a, b) => b.sortScore - a.sortScore || a.name.localeCompare(b.name));
+  channelsRef.clear();
+  for (const [id, channel] of clone.entries()) {
+    channelsRef.set(id, channel);
+  }
+}
+
+export function sortMessages() {
+  const clone = messagesRef.clone().sort((a, b) => b.sortScore - a.sortScore);
+  messagesRef.clear();
+  for (const [id, message] of clone.entries()) {
+    messagesRef.set(id, message);
+  }
+}
+
+export async function loadTopics(channelId = channelIdRef.value) {
+  if (!channelId) return;
+  await client.channels.subscribe(channelId);
+  const tab = await client.once('tabUpdate');
+  await tab.subscribe();
+  topicsRef.clear();
+  messagesRef.clear();
+}

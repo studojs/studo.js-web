@@ -33,12 +33,12 @@ client.chat.on('updateMessages', () => {
 
 export const channelIdRef = computed(() => {
   const route = router.currentRoute.value;
-  return route.params.channelId as string;
+  return (route.params.channelId ?? '') as string;
 });
 
 export const topicIdRef = computed(() => {
   const route = router.currentRoute.value;
-  return route.params.topicId as string;
+  return (route.params.topicId ?? '') as string;
 });
 
 export const channelsRef = reactive(new Collection<string, Channel>());

@@ -6,7 +6,7 @@
         <span>Chat</span>
       </template>
     </el-menu-item>
-    <el-menu-item index="/calendar"
+    <el-menu-item index="/calendar" disabled
       ><template #title>
         <i class="el-icon-date"></i>
         <span>Calendar</span>

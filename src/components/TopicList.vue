@@ -1,5 +1,8 @@
 <template>
-  <el-scrollbar>
+  <el-scrollbar
+    v-loading="loading"
+    element-loading-background="rgba(0, 0, 0, 0)"
+  >
     <TopicRow v-for="topic in filteredTopics" :key="topic.id" :topic="topic">
     </TopicRow>
   </el-scrollbar>
@@ -7,7 +10,7 @@
 
 <script lang="ts">
 import { computed } from 'vue';
-import { topicIdRef, topicsRef } from '../store';
+import { channelIdRef, topicIdRef, topicsRef } from '../store';
 import TopicRow from './TopicRow.vue';
 
 export default {
@@ -17,10 +20,15 @@ export default {
   },
   setup() {
     const filteredTopics = computed(() => {
-      return [...topicsRef.values()].filter((topic) => !topic.hidden);
+      return [...topicsRef.values()].filter(
+        (topic) => !topic.hidden && topic.channelId === channelIdRef.value
+      );
     });
+    const loading = computed(
+      () => channelIdRef.value.length > 0 && filteredTopics.value.length === 0
+    );
 
-    return { filteredTopics, topicIdRef };
+    return { filteredTopics, loading, topicIdRef };
   },
 };
 </script>

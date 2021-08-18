@@ -1,5 +1,6 @@
 <template>
   <n-form :model="model">
+    <n-button @click="logOut">Log Out</n-button>
     <n-form-item path="token" label="Session Token">
       <n-input v-model:value="model.token" @keydown.enter.prevent />
     </n-form-item>
@@ -22,9 +23,10 @@
 </template>
 
 <script lang="ts">
-import { sessionTokenRef, themeNameRef } from '../store';
+import { client, sessionTokenRef, themeNameRef } from '../store';
 import { ref } from 'vue';
 import { useMessage } from 'naive-ui';
+import router from '../router';
 
 export default {
   name: 'Settings',
@@ -39,7 +41,14 @@ export default {
       themeNameRef.value = modelRef.value.theme;
       message.success('Saved');
     }
-    return { model: modelRef.value, save };
+    function logOut() {
+      message.info('Logged out');
+      sessionTokenRef.value = null;
+      client.disconnect();
+      router.push('/');
+    }
+
+    return { logOut, model: modelRef.value, save };
   },
 };
 </script>

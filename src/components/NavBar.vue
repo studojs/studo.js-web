@@ -1,54 +1,51 @@
 <template>
   <n-layout-header bordered>
-    <n-menu
-      :value="currentTabNameRef"
-      :options="menuOptions"
-      :render-label="renderMenuLabel"
-      :render-icon="renderMenuIcon"
-      mode="horizontal"
-    />
+    <n-menu :value="currentTabNameRef" :options="menuOptions" mode="horizontal" />
   </n-layout-header>
 </template>
 
 <script lang="ts">
 import { MenuOption, NIcon } from 'naive-ui';
-import { h } from 'vue';
+import { Component, h } from 'vue';
 import router from '../router';
 import { RouterLink } from 'vue-router';
 import {
   Comment24Regular,
   Settings24Regular,
 } from '@vicons/fluent';
+import { LogoGithub } from '@vicons/carbon';
 import { currentTabNameRef } from '../store';
 
-function renderMenuLabel(option: MenuOption) {
-  return h(
+function renderRoute(label: string, route: string) {
+  return () => h(
     RouterLink,
-    { to: option.path as string },
-    { default: () => option.label }
+    { to: router.resolve({ name: route }).path },
+    { default: () => label }
   );
 }
 
-function renderMenuIcon(option: MenuOption) {
-  const icon = {
-    chat: Comment24Regular,
-    settings: Settings24Regular,
-  }[option.key];
-
-  if (icon) return h(NIcon, null, { default: () => h(icon) });
+function renderIcon(icon: Component) {
+  return () => h(NIcon, null, { default: () => h(icon) });
 }
 
 const menuOptions: MenuOption[] = [
   {
-    label: 'Chat',
+    label: renderRoute('Chat', 'chat'),
     key: 'chat',
-    path: router.resolve({ name: 'chat' }).path,
+    icon: renderIcon(Comment24Regular)
   },
   {
-    label: 'Settings',
+    label: renderRoute('Settings', 'settings'),
     key: 'settings',
-    path: router.resolve({ name: 'settings' }).path,
+    icon: renderIcon(Settings24Regular)
   },
+  {
+    label: () => h('a', {
+      href: 'https://github.com/j4k0xb/studo.js-web', target: '_blank', rel: 'noopenner noreferrer'
+    }, 'GitHub'),
+    key: 'github',
+    icon: renderIcon(LogoGithub)
+  }
 ];
 
 export default {
@@ -57,8 +54,6 @@ export default {
     return {
       currentTabNameRef,
       menuOptions,
-      renderMenuIcon,
-      renderMenuLabel,
     };
   },
 };

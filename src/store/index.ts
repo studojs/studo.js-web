@@ -15,14 +15,15 @@ RestManager.proxyURL = `${location.origin}/api/proxy`;
 const sessionToken = localStorage.sessionToken;
 export const client = new Client(sessionToken);
 
-const savedTokenRef = ref(localStorage.getItem('sessionToken') ?? '');
+const savedTokenRef = ref(localStorage.getItem('sessionToken'));
 export const sessionTokenRef = computed({
   get() {
     return savedTokenRef.value;
   },
-  set(value: string) {
+  set(value: string | null) {
     savedTokenRef.value = value;
-    localStorage.setItem('sessionToken', value);
+    if (value) localStorage.setItem('sessionToken', value);
+    else localStorage.removeItem('sessionToken');
   },
 });
 

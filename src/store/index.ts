@@ -1,4 +1,5 @@
 import { computed } from '@vue/runtime-core';
+import { darkTheme, useOsTheme } from 'naive-ui';
 import {
   Channel,
   Client,
@@ -89,3 +90,22 @@ export async function loadMessages(topicId = topicIdRef.value) {
 export function tagType(tag: string) {
   return ['ACCEPTEDANSWER', 'DONE'].includes(tag) ? 'success' : '';
 }
+
+export const themeNameRef = computed(() => {
+  const themeOverride = localStorage.getItem('theme') as
+    | 'light'
+    | 'dark'
+    | null;
+  return themeOverride ?? useOsTheme().value;
+});
+export const themeRef = computed(() =>
+  themeNameRef.value === 'dark' ? darkTheme : null
+);
+
+export const currentTabNameRef = computed(() => {
+  const route = router.resolve({
+    path: '/' + router.currentRoute.value.path.split('/')[1],
+  });
+
+  return (route.name as string) || 'chat';
+});

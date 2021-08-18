@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import NavBar from '@/components/NavBar.vue';
-import { darkTheme } from 'naive-ui';
+import { themeRef } from './store';
 
 export default {
   name: 'App',
@@ -16,7 +16,7 @@ export default {
     NavBar,
   },
   setup() {
-    return { theme: darkTheme };
+    return { theme: themeRef };
   },
 };
 </script>

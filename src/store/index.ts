@@ -8,12 +8,23 @@ import {
   RestManager,
   Topic,
 } from 'studo.js';
-import { nextTick, reactive } from 'vue';
+import { nextTick, reactive, ref } from 'vue';
 import router from '../router/index';
 
 RestManager.proxyURL = `${location.origin}/api/proxy`;
 const sessionToken = localStorage.sessionToken;
 export const client = new Client(sessionToken);
+
+const savedTokenRef = ref(localStorage.getItem('sessionToken') ?? '');
+export const sessionTokenRef = computed({
+  get() {
+    return savedTokenRef.value;
+  },
+  set(value: string) {
+    savedTokenRef.value = value;
+    localStorage.setItem('sessionToken', value);
+  },
+});
 
 client.on('channelUpdate', (channel) => {
   channelsRef.set(channel.id, channel);
@@ -91,16 +102,21 @@ export function tagType(tag: string) {
   return ['ACCEPTEDANSWER', 'DONE'].includes(tag) ? 'success' : '';
 }
 
-export const themeNameRef = computed(() => {
-  const themeOverride = localStorage.getItem('theme') as
-    | 'light'
-    | 'dark'
-    | null;
-  return themeOverride ?? useOsTheme().value;
+export type Theme = 'light' | 'dark' | 'system';
+const savedThemeRef = ref((localStorage.getItem('theme') ?? 'system') as Theme);
+export const themeNameRef = computed({
+  get() {
+    return savedThemeRef.value;
+  },
+  set(value: Theme) {
+    savedThemeRef.value = value;
+    localStorage.setItem('theme', value);
+  },
 });
-export const themeRef = computed(() =>
-  themeNameRef.value === 'dark' ? darkTheme : null
-);
+export const themeRef = computed(() => {
+  const theme = themeNameRef.value === 'system' ? useOsTheme() : themeNameRef;
+  return theme.value === 'dark' ? darkTheme : null;
+});
 
 export const currentTabNameRef = computed(() => {
   const route = router.resolve({

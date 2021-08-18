@@ -2,7 +2,9 @@
   <n-config-provider :theme="theme" abstract>
     <n-global-style />
     <NavBar />
-    <router-view />
+    <n-message-provider>
+      <router-view />
+    </n-message-provider>
   </n-config-provider>
 </template>
 

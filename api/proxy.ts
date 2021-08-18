@@ -5,10 +5,12 @@ import { config, RestManager } from 'studo.js';
 export const handler: Handler = async (event) => {
   const endpoint = event.path.split('/proxy/')[1];
 
-  // remove host and add other necessary headers
-  const { host, ...headers } = event.headers;
-  headers['user-agent'] = config.userAgent;
-  headers['application-id'] = config.applicationId;
+  const headers: Record<string, string> = {
+    'user-agent': config.userAgent,
+    'application-id': config.applicationId,
+  };
+  if (event.headers['session-token'])
+    headers['session-token'] = event.headers['session-token'];
 
   // validate
   if (!endpoint || !/^\w+(\/\w+)*\/?$/.test(endpoint)) {

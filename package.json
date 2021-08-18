@@ -8,7 +8,6 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "element-plus": "^1.0.2-beta.55",
     "node-fetch": "^2.6.1",
     "studo.js": "file:../studo.js",
     "vue": "^3.0.5",
@@ -17,13 +16,15 @@
   "devDependencies": {
     "@netlify/functions": "^0.7.2",
     "@types/node-fetch": "^2.5.12",
+    "@vicons/fluent": "^0.11.0",
     "@vitejs/plugin-vue": "^1.3.0",
     "@vue/compiler-sfc": "^3.1.5",
+    "naive-ui": "^2.16.4",
     "sass": "^1.37.0",
     "sass-loader": "^12.1.0",
     "typescript": "^4.3.5",
+    "vfonts": "^0.1.0",
     "vite": "^2.4.4",
-    "vite-plugin-style-import": "^1.0.1",
     "vue-tsc": "^0.2.2"
   }
 }

@@ -1,20 +1,23 @@
 <template>
-  <el-container>
-    <el-header>
-      <NavBar />
-    </el-header>
-    <el-main id="view">
-      <router-view />
-    </el-main>
-  </el-container>
+  <n-config-provider :theme="theme" abstract>
+    <n-global-style />
+    <NavBar />
+    <router-view />
+  </n-config-provider>
 </template>
 
 <script lang="ts">
 import NavBar from '@/components/NavBar.vue';
+import { darkTheme } from 'naive-ui';
+
 export default {
   name: 'App',
-  components: { NavBar },
-  setup() {},
+  components: {
+    NavBar,
+  },
+  setup() {
+    return { theme: darkTheme };
+  },
 };
 </script>
 
@@ -22,20 +25,12 @@ export default {
 html,
 body {
   height: 100%;
-  margin: unset;
-  background: #0d1117;
-  color: #f0f0f0;
-}
-#view {
-  padding-bottom: 0px;
-}
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
 }
 
-.el-header {
-  padding: 0px !important;
+#app {
+  font-family: v-sans, Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 </style>

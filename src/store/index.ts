@@ -12,8 +12,8 @@ import { nextTick, reactive, ref } from 'vue';
 import router from '../router/index';
 
 RestManager.proxyURL = `${location.origin}/api/proxy`;
-const sessionToken = localStorage.sessionToken;
-export const client = new Client(sessionToken);
+// const sessionToken = localStorage.sessionToken;
+export const client = new Client('');
 
 const savedTokenRef = ref(localStorage.getItem('sessionToken'));
 export const sessionTokenRef = computed({

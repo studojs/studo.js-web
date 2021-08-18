@@ -1,8 +1,15 @@
 <template>
   <n-form :model="model">
-    <n-button @click="logOut">Log Out</n-button>
-    <n-form-item path="token" label="Session Token">
-      <n-input v-model:value="model.token" @keydown.enter.prevent />
+    <n-button @click="logOut">
+      Log Out
+      <template #icon>
+        <n-icon>
+          <LogoutIcon />
+        </n-icon>
+      </template>
+    </n-button>
+    <n-form-item label="Session Token">
+      <n-input v-model:value="token" :disabled="true" />
     </n-form-item>
     <n-form-item path="theme" label="Theme">
       <n-radio-group v-model:value="model.theme" name="theme">
@@ -11,15 +18,9 @@
         <n-radio-button value="system">System</n-radio-button>
       </n-radio-group>
     </n-form-item>
-    <n-row :gutter="[0, 24]">
-      <n-col :span="24">
-        <div style="display: flex; justify-content: flex-end;">
-          <n-button @click="save" round type="primary">Save</n-button>
-        </div>
-      </n-col>
-    </n-row>
   </n-form>
-  {{ model }}
+  <n-button @click="save" type="primary">Save</n-button>
+  <pre>{{ model }}</pre>
 </template>
 
 <script lang="ts">
@@ -27,28 +28,34 @@ import { client, sessionTokenRef, themeNameRef } from '../store';
 import { ref } from 'vue';
 import { useMessage } from 'naive-ui';
 import router from '../router';
+import { Logout as LogoutIcon } from '@vicons/carbon';
+import { RestManager } from 'studo.js';
 
 export default {
   name: 'Settings',
+  components: {
+    LogoutIcon,
+  },
   setup() {
     const message = useMessage();
     const modelRef = ref({
-      token: sessionTokenRef.value,
       theme: themeNameRef.value
     })
     function save() {
-      sessionTokenRef.value = modelRef.value.token;
       themeNameRef.value = modelRef.value.theme;
       message.success('Saved');
     }
-    function logOut() {
-      message.info('Logged out');
+    async function logOut() {
+      if (!sessionTokenRef.value) return;
+
+      await RestManager.signOut(sessionTokenRef.value);
       sessionTokenRef.value = null;
       client.disconnect();
+      message.info('Logged out');
       router.push('/');
     }
 
-    return { logOut, model: modelRef.value, save };
+    return { logOut, model: modelRef.value, save, token: sessionTokenRef.value };
   },
 };
 </script>

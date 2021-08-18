@@ -2,6 +2,7 @@ import Chat from '@/views/Chat.vue';
 import Login from '@/views/Login.vue';
 import Settings from '@/views/Settings.vue';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import { sessionTokenRef } from '../store/index';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -42,6 +43,11 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.name !== 'login' && !sessionTokenRef.value) next({ name: 'login' });
+  else next();
 });
 
 export default router;

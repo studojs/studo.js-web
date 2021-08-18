@@ -1,33 +1,43 @@
 <template>
-  {{ step }}
-  <n-form :model="model" :disabled="step !== 1">
-    <n-form-item label="Phone">
-      <n-input-group>
-        <n-input
-          v-model:value="model.prefix"
-          placeholder="+123"
-          maxlength="5"
-          show-count
-          :style="{ width: '30%' }"
-        />
-        <n-input
-          v-model:value="model.number"
-          placeholder="678 123456789"
-          maxlength="20"
-          show-count
-          :style="{ width: '70%' }"
-        />
-      </n-input-group>
-    </n-form-item>
-    <n-button @click="sendSMS" type="primary">Send</n-button>
-  </n-form>
+  <div class="container">
+    <n-space vertical>
+      <n-checkbox v-model:checked="tos">
+        I have read the
+        <a
+          @click.stop
+          href="https://studo.com/tos"
+          target="_blank"
+          rel="noopenner noreferrer"
+        >Terms Of Service</a>
+      </n-checkbox>
+      <n-form :model="model" :disabled="!tos || step !== 1" :style="{ maxWidth: '640px' }">
+        <n-form-item label="Phone">
+          <n-input-group>
+            <n-input
+              v-model:value="model.prefix"
+              placeholder="+123"
+              maxlength="5"
+              :style="{ width: '30%' }"
+            />
+            <n-input
+              v-model:value="model.number"
+              placeholder="678 123456789"
+              maxlength="20"
+              :style="{ width: '70%' }"
+            />
+          </n-input-group>
+        </n-form-item>
+        <n-button @click="sendSMS" :disabled="!tos || step !== 1" type="primary">Send</n-button>
+      </n-form>
 
-  <n-form>
-    <n-form-item label="Verification Code">
-      <n-input v-model:value="smsToken" placeholder="1234" maxlength="4" show-count />
-    </n-form-item>
-    <n-button @click="login" type="primary">Login</n-button>
-  </n-form>
+      <n-form :disabled="!tos || step !== 2" :style="{ maxWidth: '640px' }">
+        <n-form-item label="Verification Code">
+          <n-input v-model:value="smsToken" placeholder="1234" maxlength="4" />
+        </n-form-item>
+        <n-button @click="login" :disabled="!tos || step !== 2" type="primary">Login</n-button>
+      </n-form>
+    </n-space>
+  </div>
 </template>
 
 <script lang="ts">
@@ -40,6 +50,7 @@ import { sessionTokenRef } from '../store';
 export default {
   name: 'Login',
   setup() {
+    const tos = ref(false);
     const message = useMessage();
     const smsToken = ref('');
     const step = ref(1);
@@ -71,10 +82,14 @@ export default {
       }
     }
 
-    return { login, model: modelRef.value, sendSMS, smsToken, step };
+    return { login, model: modelRef.value, sendSMS, smsToken, step, tos };
   },
 };
 </script>
-
 <style lang="scss" scoped>
+.container {
+  display: flex;
+  justify-content: center;
+  margin: 30px;
+}
 </style>

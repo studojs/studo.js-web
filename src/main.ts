@@ -1,11 +1,16 @@
 import naive from 'naive-ui';
+import { RestManager } from 'studo.js';
 import 'vfonts/Inter.css';
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import * as store from './store';
 
-Object.assign(window, { client: store.client, store: { ...store } });
+Object.assign(window, {
+  client: store.client,
+  store: { ...store },
+  api: RestManager,
+});
 
 const app = createApp(App);
 app.use(router);

@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
-import { topicsRef } from '../store';
+import { channelIdRef, topicsRef } from '../store';
 import TopicRow from "@/components/TopicRow.vue";
 
 export default defineComponent({
@@ -15,7 +15,7 @@ export default defineComponent({
   setup() {
     const filteredTopics = computed(() => {
       return [...topicsRef.values()].filter(
-        (topic) => !topic.hidden
+        (topic) => !topic.hidden && topic.channelId === channelIdRef.value
       );
     });
 

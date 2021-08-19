@@ -48,6 +48,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if (to.name !== 'login' && !sessionTokenRef.value)
     return next({ name: 'login' });
+
   if (from.params.channelId !== to.params.channelId) {
     loadTopics(to.params.channelId as string);
   }

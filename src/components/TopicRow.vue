@@ -46,8 +46,8 @@ export default defineComponent({
   display: flex;
   align-items: center;
   border-radius: 8px;
-  margin: 0px 8px;
-  padding: 4px 4px 4px 0px;
+  margin: 8px 8px 0px 8px;
+  padding: 4px 8px;
   color: inherit;
   font-size: 14px;
   text-decoration: none;
@@ -55,6 +55,7 @@ export default defineComponent({
     background 0.3s var(--bezier);
 
   &:hover {
+    background: #18181c;
     color: #63e2b7;
   }
 

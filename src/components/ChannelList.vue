@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
-import { channelsRef } from '../store';
+import { channelIdRef, channelsRef } from '../store';
 import ChannelRow from "@/components/ChannelRow.vue";
 
 export default defineComponent({

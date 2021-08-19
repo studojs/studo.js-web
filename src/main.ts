@@ -10,6 +10,7 @@ Object.assign(window, {
   client: store.clientRef.value,
   store: { ...store },
   api: RestManager,
+  router,
 });
 
 const app = createApp(App);

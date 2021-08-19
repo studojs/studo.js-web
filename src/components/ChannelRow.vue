@@ -2,7 +2,7 @@
   <router-link :to="channelRoute" :class="['row', { selected: isSelected }]">
     <n-avatar round>{{ channel.iconChar }}</n-avatar>
     <div>
-      <div>{{ channel.name }}</div>
+      <div class="text">{{ channel.name }}</div>
       <div class="footer">{{ channel.footer }}</div>
     </div>
   </router-link>
@@ -43,7 +43,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   border-radius: 8px;
-  margin: 8px 8px 0px 8px;
+  margin: 8px 14px 0px 8px;
   padding: 4px 4px 4px 0px;
   color: inherit;
   font-size: 14px;
@@ -52,10 +52,12 @@ export default defineComponent({
     background 0.3s var(--bezier);
 
   &:hover {
-    color: #63e2b7;
     background: #101014;
-  }
 
+    .text {
+      color: #63e2b7;
+    }
+  }
   &.selected {
     background: rgba(99, 226, 183, 0.2);
     color: #63e2b7;
@@ -64,6 +66,7 @@ export default defineComponent({
 
 .footer {
   font-size: 0.8em;
+  color: #b1b1b1;
 }
 
 .n-avatar {

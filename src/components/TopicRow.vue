@@ -46,7 +46,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   border-radius: 8px;
-  margin: 8px 8px 0px 8px;
+  margin: 8px 14px 0px 8px;
   padding: 4px 8px;
   color: inherit;
   font-size: 14px;
@@ -56,7 +56,9 @@ export default defineComponent({
 
   &:hover {
     background: #18181c;
-    color: #63e2b7;
+    .text {
+      color: #63e2b7;
+    }
   }
 
   &.selected {
@@ -68,5 +70,6 @@ export default defineComponent({
 .header,
 .footer {
   font-size: 0.8em;
+  color: #b1b1b1;
 }
 </style>

@@ -8,8 +8,7 @@
         <TopicList />
       </n-layout>
       <n-layout :native-scrollbar="false" style="flex-basis: 60%">
-        <n-h3 v-for="i in 20" :key="i">i</n-h3>
-        <!-- <MessageList /> -->
+        <MessageList />
       </n-layout>
     </n-layout>
   </n-layout>
@@ -17,6 +16,7 @@
 
 <script lang="ts">
 import ChannelList from '../components/ChannelList.vue';
+import MessageList from '../components/MessageList.vue';
 import TopicList from '../components/TopicList.vue';
 
 export default {
@@ -24,6 +24,7 @@ export default {
   components: {
     ChannelList,
     TopicList,
+    MessageList,
   },
   setup() { },
 };

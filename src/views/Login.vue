@@ -76,7 +76,7 @@ export default {
         console.log(response);
         message.success('Signed in');
         sessionTokenRef.value = response.studoSessionToken;
-        router.push('/');
+        location.href = '/';
       } catch (error) {
         message.error(error.message);
       }

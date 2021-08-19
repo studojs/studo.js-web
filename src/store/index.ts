@@ -24,6 +24,8 @@ export const sessionTokenRef = computed({
     else localStorage.removeItem('sessionToken');
   },
 });
+
+// FIXME: when no session token exists
 export const client = new Client(sessionTokenRef.value!);
 
 client.on('channelUpdate', (channel) => {

@@ -7,7 +7,7 @@ import {
   RestManager,
   Topic,
 } from 'studo.js';
-import { computed, nextTick, reactive, ref, watch } from 'vue';
+import { computed, nextTick, reactive, ref } from 'vue';
 import router from '../router/index';
 
 RestManager.proxyURL = `${location.origin}/api/proxy`;
@@ -24,22 +24,16 @@ export const sessionTokenRef = computed({
   },
 });
 
-let _client = savedTokenRef.value ? new Client(savedTokenRef.value) : null;
+export const pointsRef = ref(0);
+
+let _client: Client | null = null;
 export const clientRef = computed({
   get() {
     return _client;
   },
-  set(value: Client | null) {
+  async set(client: Client | null) {
     _client?.disconnect();
-    _client = value;
-  },
-});
-export const pointsRef = ref(0);
-
-watch(
-  clientRef,
-  async () => {
-    const client = _client;
+    _client = client;
     if (!client) return;
 
     client.on('ready', () => console.log('connected'));
@@ -67,8 +61,8 @@ watch(
 
     await client.connect();
   },
-  { immediate: true }
-);
+});
+if (savedTokenRef.value) clientRef.value = new Client(savedTokenRef.value);
 
 export const channelIdRef = computed(() => {
   const route = router.currentRoute.value;

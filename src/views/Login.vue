@@ -79,7 +79,6 @@ export default {
         sessionTokenRef.value = response.studoSessionToken;
         const client = new Client(response.studoSessionToken);
         clientRef.value = client;
-        await client.connect();
         router.push('/');
       } catch (error) {
         message.error(error.message);

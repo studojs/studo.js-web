@@ -60,7 +60,6 @@ export const clientRef = computed({
     });
 
     await client.connect();
-    await loadTopics();
   },
 });
 if (savedTokenRef.value) clientRef.value = new Client(savedTokenRef.value);
@@ -102,11 +101,12 @@ export function sortMessages() {
 
 export async function loadTopics(channelId = channelIdRef.value) {
   if (!channelId || !_client) return;
+  if (!_client.connected) await _client.once('ready');
+
   await _client.channels.subscribe(channelId);
   const tab = await _client.once('tabUpdate');
   await tab.subscribe();
   topicsRef.clear();
-  messagesRef.clear();
 
   if (isPrivateChannel.value) {
     const topic = await _client.once('topicUpdate');
@@ -117,7 +117,9 @@ export async function loadTopics(channelId = channelIdRef.value) {
 export async function loadMessages(topicId = topicIdRef.value) {
   if (!topicId) return;
   messagesRef.clear();
-  await _client?.topics.subscribe(topicId);
+  if (!_client) return;
+  if (!_client.connected) await _client.once('ready');
+  await _client.topics.subscribe(topicId);
 }
 
 export function tagType(tag: string) {

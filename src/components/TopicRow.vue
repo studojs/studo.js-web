@@ -8,16 +8,21 @@
       <div class="header">{{ topic.header }}</div>
       <div class="footer">{{ topic.footer }}</div>
     </div>
+    <Vote :votes="topic.votes" :type="topic.votingType" :state="topic.voteState" @vote="vote" />
   </router-link>
 </template>
 
 <script lang="ts">
-import { Topic } from 'studo.js';
+import { Topic, VoteType } from 'studo.js';
 import { computed, defineComponent } from 'vue';
 import { tagType, topicIdRef } from '../store';
+import Vote from "@/components/Vote.vue";
 
 export default defineComponent({
   name: 'TopicRow',
+  components: {
+    Vote,
+  },
   props: {
     topic: {
       type: Topic,
@@ -33,7 +38,11 @@ export default defineComponent({
       },
     }));
 
-    return { isSelected, tagType, topicRoute };
+    async function vote(state: VoteType) {
+      await props.topic.vote(state);
+    }
+
+    return { isSelected, tagType, topicRoute, vote };
   },
 });
 </script>
@@ -45,6 +54,7 @@ export default defineComponent({
   --bezier: cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
+  justify-content: space-between;
   border-radius: 8px;
   margin: 8px 14px 0px 8px;
   padding: 4px 8px;
@@ -63,7 +73,9 @@ export default defineComponent({
 
   &.selected {
     background: rgba(99, 226, 183, 0.2);
-    color: #63e2b7;
+    .text {
+      color: #63e2b7;
+    }
   }
 }
 

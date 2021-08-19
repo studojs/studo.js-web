@@ -45,17 +45,18 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   if (to.name !== 'login' && !sessionTokenRef.value)
     return next({ name: 'login' });
 
+  next();
+
   if (from.params.channelId !== to.params.channelId) {
-    loadTopics(to.params.channelId as string);
+    await loadTopics(to.params.channelId as string);
   }
   if (from.params.topicId !== to.params.topicId) {
-    loadMessages(to.params.topicId as string);
+    await loadMessages(to.params.topicId as string);
   }
-  next();
 });
 
 export default router;

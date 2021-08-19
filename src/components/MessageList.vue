@@ -1,6 +1,10 @@
 <template>
   <n-image-group>
-    <MessageRow v-for="message in messages" :key="message.id" :message="message" />
+    <MessageRow v-for="(message, index) in messages" :key="message.id" :message="message">
+      <template #suffix v-if="index === 0">
+        <n-divider />
+      </template>
+    </MessageRow>
   </n-image-group>
 </template>
 
@@ -28,4 +32,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.n-divider {
+  margin: 8px 0px;
+}
 </style>

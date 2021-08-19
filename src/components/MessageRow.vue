@@ -14,31 +14,21 @@
       />
       <div class="footer">{{ message.footer }}</div>
     </div>
-    <div class="votes">
-      <n-icon
-        v-if="message.topic?.votingType.includes('UP')"
-        :class="{ voted: message.voteState === 'UP' }"
-        @click.prevent="toggleVote('UP')"
-      >
-        <UpIcon />
-      </n-icon>
-      <div v-show="message.topic?.votingType !== 'NONE'">{{ message.votes }}</div>
-      <n-icon
-        v-if="message.topic?.votingType.includes('DOWN')"
-        :class="{ voted: message.voteState === 'DOWN' }"
-        @click.prevent="toggleVote('DOWN')"
-      >
-        <DownIcon />
-      </n-icon>
-    </div>
+    <Vote
+      :votes="message.votes"
+      :type="message.topic?.votingType"
+      :state="message.voteState"
+      @vote="vote"
+    />
   </div>
+  <slot name="suffix" />
 </template>
 
 <script lang="ts">
-import { Message } from 'studo.js';
+import { Message, VoteType } from 'studo.js';
 import { defineComponent } from 'vue';
 import { tagType } from '../store';
-import { ChevronDown as DownIcon, ChevronUp as UpIcon } from '@vicons/carbon';
+import Vote from "@/components/Vote.vue";
 
 export default defineComponent({
   name: 'MessageRow',
@@ -49,16 +39,14 @@ export default defineComponent({
     },
   },
   components: {
-    DownIcon,
-    UpIcon
+    Vote,
   },
   setup(props) {
-    function toggleVote(state: 'UP' | 'DOWN') {
-      if (props.message.voteState === state) props.message.vote('NONE');
-      else props.message.vote(state);
+    async function vote(state: VoteType) {
+      await props.message.vote(state);
     }
 
-    return { tagType, toggleVote };
+    return { tagType, vote };
   }
 });
 </script>
@@ -97,20 +85,5 @@ export default defineComponent({
 .footer {
   font-size: 0.8em;
   color: #b1b1b1;
-}
-
-.votes {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-left: 20px;
-  margin-right: 20px;
-
-  > .n-icon {
-    cursor: pointer;
-    &.voted {
-      color: #63e2b7;
-    }
-  }
 }
 </style>

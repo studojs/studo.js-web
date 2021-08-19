@@ -1,36 +1,39 @@
 <template>
-  <router-link :to="channelRoute" :class="['row', { selected: isSelected }]">
-    <n-avatar round>{{ channel.iconChar }}</n-avatar>
-    <div>
-      <div>{{ channel.name }}</div>
-      <div class="footer">{{ channel.footer }}</div>
+  <router-link :to="topicRoute" :class="['row', { selected: isSelected }]">
+    <div class="content">
+      <div>
+        <n-tag v-for="tag in topic.tagIds" :key="tag" :type="tagType(tag)" size="small">{{ tag }}</n-tag>
+      </div>
+      <div class="text">{{ topic.text }}</div>
+      <div class="header">{{ topic.header }}</div>
+      <div class="footer">{{ topic.footer }}</div>
     </div>
   </router-link>
 </template>
 
 <script lang="ts">
-import { Channel } from 'studo.js';
+import { Topic } from 'studo.js';
 import { computed, defineComponent } from 'vue';
-import { channelIdRef } from '../store';
+import { tagType, topicIdRef } from '../store';
 
 export default defineComponent({
-  name: 'ChannelRow',
+  name: 'TopicRow',
   props: {
-    channel: {
-      type: Channel,
+    topic: {
+      type: Topic,
       required: true,
     },
   },
   setup(props) {
-    const isSelected = computed(() => channelIdRef.value === props.channel.id);
-    const channelRoute = computed(() => ({
-      name: 'channel',
+    const isSelected = computed(() => topicIdRef.value === props.topic.id);
+    const topicRoute = computed(() => ({
+      name: 'topic',
       params: {
-        channelId: props.channel.id,
+        topicId: props.topic.id,
       },
     }));
 
-    return { isSelected, channelRoute };
+    return { isSelected, tagType, topicRoute };
   },
 });
 </script>
@@ -61,12 +64,8 @@ export default defineComponent({
   }
 }
 
+.header,
 .footer {
   font-size: 0.8em;
-}
-
-.n-avatar {
-  flex-shrink: 0;
-  margin: 0px 8px;
 }
 </style>

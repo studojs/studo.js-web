@@ -60,6 +60,7 @@ export const clientRef = computed({
     });
 
     await client.connect();
+    await loadTopics();
   },
 });
 if (savedTokenRef.value) clientRef.value = new Client(savedTokenRef.value);
@@ -120,7 +121,7 @@ export async function loadMessages(topicId = topicIdRef.value) {
 }
 
 export function tagType(tag: string) {
-  return ['ACCEPTEDANSWER', 'DONE'].includes(tag) ? 'success' : '';
+  return ['ACCEPTEDANSWER', 'DONE'].includes(tag) ? 'success' : 'info';
 }
 
 export type Theme = 'light' | 'dark' | 'system';

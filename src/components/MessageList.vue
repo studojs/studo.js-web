@@ -6,12 +6,14 @@
       </template>
     </MessageRow>
   </n-image-group>
+  <n-mention type="textarea" placeholder="Message" :options="mentions" :autosize="{ maxRows: 15 }" />
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
-import { messagesRef, topicIdRef } from '../store';
+import { computed, defineComponent, ref } from 'vue';
+import { messagesRef, topicIdRef, topicRef } from '../store';
 import MessageRow from "@/components/MessageRow.vue";
+import { MentionOption } from 'naive-ui/lib/mention/src/interface';
 
 export default defineComponent({
   name: 'MessageList',
@@ -25,7 +27,12 @@ export default defineComponent({
       );
     });
 
-    return { messages: filteredMessages };
+    const mentions = computed<MentionOption[]>(() => {
+      return Object.keys(topicRef.value?.users || {})
+        .map(user => ({ label: user, value: user }));
+    });
+
+    return { mentions, messages: filteredMessages };
   }
 });
 

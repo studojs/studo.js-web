@@ -1,4 +1,3 @@
-import { computed } from '@vue/runtime-core';
 import { darkTheme, useOsTheme } from 'naive-ui';
 import {
   Channel,
@@ -8,7 +7,7 @@ import {
   RestManager,
   Topic,
 } from 'studo.js';
-import { nextTick, reactive, ref } from 'vue';
+import { computed, nextTick, reactive, ref, watch } from 'vue';
 import router from '../router/index';
 
 RestManager.proxyURL = `${location.origin}/api/proxy`;
@@ -25,25 +24,51 @@ export const sessionTokenRef = computed({
   },
 });
 
-// FIXME: when no session token exists
-export const client = new Client(sessionTokenRef.value!);
+let _client = savedTokenRef.value ? new Client(savedTokenRef.value) : null;
+export const clientRef = computed({
+  get() {
+    return _client;
+  },
+  set(value: Client | null) {
+    _client?.disconnect();
+    _client = value;
+  },
+});
+export const pointsRef = ref(0);
 
-client.on('channelUpdate', (channel) => {
-  channelsRef.set(channel.id, channel);
-});
-client.on('topicUpdate', (topic) => {
-  topicsRef.set(topic.id, topic);
-});
-client.on('messageUpdate', (message) => {
-  messagesRef.set(message.id, message);
-});
+watch(
+  clientRef,
+  async () => {
+    const client = _client;
+    if (!client) return;
 
-client.chat.on('updateChannels', () => {
-  nextTick(() => sortChannels());
-});
-client.chat.on('updateMessages', () => {
-  nextTick(() => sortMessages());
-});
+    client.on('ready', () => console.log('connected'));
+    client.on('disconnect', () => console.log('disconnect'));
+
+    client.on('pointsUpdate', () => {
+      pointsRef.value = client.points;
+    });
+    client.on('channelUpdate', (channel) => {
+      channelsRef.set(channel.id, channel);
+    });
+    client.on('topicUpdate', (topic) => {
+      topicsRef.set(topic.id, topic);
+    });
+    client.on('messageUpdate', (message) => {
+      messagesRef.set(message.id, message);
+    });
+
+    client.chat.on('updateChannels', () => {
+      nextTick(() => sortChannels());
+    });
+    client.chat.on('updateMessages', () => {
+      nextTick(() => sortMessages());
+    });
+
+    await client.connect();
+  },
+  { immediate: true }
+);
 
 export const channelIdRef = computed(() => {
   const route = router.currentRoute.value;
@@ -81,15 +106,15 @@ export function sortMessages() {
 }
 
 export async function loadTopics(channelId = channelIdRef.value) {
-  if (!channelId) return;
-  await client.channels.subscribe(channelId);
-  const tab = await client.once('tabUpdate');
+  if (!channelId || !_client) return;
+  await _client.channels.subscribe(channelId);
+  const tab = await _client.once('tabUpdate');
   await tab.subscribe();
   topicsRef.clear();
   messagesRef.clear();
 
   if (isPrivateChannel.value) {
-    const topic = await client.once('topicUpdate');
+    const topic = await _client.once('topicUpdate');
     router.replace({ params: { topicId: topic.id } });
   }
 }
@@ -97,7 +122,7 @@ export async function loadTopics(channelId = channelIdRef.value) {
 export async function loadMessages(topicId = topicIdRef.value) {
   if (!topicId) return;
   messagesRef.clear();
-  await client.topics.subscribe(topicId);
+  await _client?.topics.subscribe(topicId);
 }
 
 export function tagType(tag: string) {
@@ -127,3 +152,5 @@ export const currentTabNameRef = computed(() => {
 
   return (route.name as string) || 'chat';
 });
+
+// client.chat.emit('updateChannels', mockRawChannels);

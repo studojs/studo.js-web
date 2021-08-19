@@ -2,7 +2,7 @@
   <router-link :to="channelRoute" :class="['row', { selected: isSelected }]">
     <n-avatar round>{{ channel.iconChar }}</n-avatar>
     <div>
-      <div class="name">{{ channel.name }}</div>
+      <div>{{ channel.name }}</div>
       <div class="footer">{{ channel.footer }}</div>
     </div>
   </router-link>
@@ -12,7 +12,6 @@
 import { Channel } from 'studo.js';
 import { computed, defineComponent } from 'vue';
 import { channelIdRef } from '../store';
-import { } from "naive-ui/es/styles";
 
 export default defineComponent({
   name: 'ChannelRow',
@@ -44,6 +43,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   border-radius: 8px;
+  margin: 0px 8px;
   padding: 4px 4px 4px 0px;
   color: inherit;
   font-size: 14px;

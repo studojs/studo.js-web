@@ -1,6 +1,7 @@
 <template>
   <n-layout-header bordered>
     <n-menu :value="currentTabNameRef" :options="menuOptions" mode="horizontal" />
+    <p>{{ points }}</p>
   </n-layout-header>
 </template>
 
@@ -14,7 +15,7 @@ import {
   Settings24Regular,
 } from '@vicons/fluent';
 import { LogoGithub } from '@vicons/carbon';
-import { currentTabNameRef } from '../store';
+import { currentTabNameRef, pointsRef } from '../store';
 
 function renderRoute(label: string, route: string) {
   return () => h(
@@ -54,6 +55,7 @@ export default {
     return {
       currentTabNameRef,
       menuOptions,
+      points: pointsRef
     };
   },
 };

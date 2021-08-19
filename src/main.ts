@@ -7,7 +7,7 @@ import router from './router';
 import * as store from './store';
 
 Object.assign(window, {
-  client: store.client,
+  client: store.clientRef.value,
   store: { ...store },
   api: RestManager,
 });

@@ -48,6 +48,7 @@ export default defineComponent({
   color: inherit;
   font-size: 14px;
   text-decoration: none;
+  overflow-wrap: anywhere;
   transition: color 0.3s var(--bezier), opacity 0.3s var(--bezier),
     background 0.3s var(--bezier);
 

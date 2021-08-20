@@ -5,8 +5,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, onUnmounted, ref } from 'vue';
-import { channelIdRef, clientRef, tabRef, topicsRef } from '../store';
+import { computed, defineComponent, ref } from 'vue';
+import { channelIdRef, tabRef, topicsRef } from '../store';
 import TopicRow from "@/components/TopicRow.vue";
 import { ScrollbarInst } from 'naive-ui';
 
@@ -38,7 +38,7 @@ export default defineComponent({
       if (scrollBottom <= 300) {
         loading = true;
         await tabRef.value?.scroll();
-        setTimeout(() => (loading = false), 1000);
+        setTimeout(() => (loading = false), 300);
       }
     }
 

@@ -1,7 +1,6 @@
 <template>
   <n-layout-header bordered>
-    <n-menu :value="currentTabNameRef" :options="menuOptions" mode="horizontal" />
-    <p>{{ points }}</p>
+    <n-menu :value="tabName" :options="menuOptions" mode="horizontal" />
   </n-layout-header>
 </template>
 
@@ -15,7 +14,7 @@ import {
   Settings24Regular,
 } from '@vicons/fluent';
 import { LogoGithub } from '@vicons/carbon';
-import { currentTabNameRef, pointsRef } from '../store';
+import { clientRef, currentTabNameRef, pointsRef } from '../store';
 
 function renderRoute(label: string, route: string) {
   return () => h(
@@ -46,6 +45,10 @@ const menuOptions: MenuOption[] = [
     }, 'GitHub'),
     key: 'github',
     icon: renderIcon(LogoGithub)
+  },
+  {
+    label: () => h('p', null, pointsRef.value),
+    key: 'points',
   }
 ];
 
@@ -53,7 +56,7 @@ export default {
   name: 'NavBar',
   setup() {
     return {
-      currentTabNameRef,
+      tabName: currentTabNameRef,
       menuOptions,
       points: pointsRef
     };

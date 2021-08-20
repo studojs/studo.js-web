@@ -1,26 +1,30 @@
 <template>
-  <router-link :to="topicRoute" :class="['row', { selected: isSelected }]">
-    <div class="content">
-      <div>
-        <n-tag v-for="tag in topic.tagIds" :key="tag" :type="tagType(tag)" size="small">{{ tag }}</n-tag>
+  <ContextMenu :options="actions" @update:value="handleAction">
+    <router-link :to="topicRoute" :class="['row', { selected: isSelected }]">
+      <div class="content">
+        <div>
+          <n-tag v-for="tag in topic.tagIds" :key="tag" :type="tagType(tag)" size="small">{{ tag }}</n-tag>
+        </div>
+        <div class="text">{{ topic.text }}</div>
+        <div class="header">{{ topic.header }}</div>
+        <div class="footer">{{ topic.footer }}</div>
       </div>
-      <div class="text">{{ topic.text }}</div>
-      <div class="header">{{ topic.header }}</div>
-      <div class="footer">{{ topic.footer }}</div>
-    </div>
-    <Vote :votes="topic.votes" :type="topic.votingType" :state="topic.voteState" @vote="vote" />
-  </router-link>
+      <Vote :votes="topic.votes" :type="topic.votingType" :state="topic.voteState" @vote="vote" />
+    </router-link>
+  </ContextMenu>
 </template>
 
 <script lang="ts">
-import { Topic, VoteType } from 'studo.js';
+import { ActionId, Topic, VoteType } from 'studo.js';
 import { computed, defineComponent } from 'vue';
 import { tagType, topicIdRef } from '../store';
 import Vote from "@/components/Vote.vue";
+import ContextMenu from '@/components/ContextMenu.vue';
 
 export default defineComponent({
   name: 'TopicRow',
   components: {
+    ContextMenu,
     Vote,
   },
   props: {
@@ -37,12 +41,15 @@ export default defineComponent({
         topicId: props.topic.id,
       },
     }));
-
+    const actions = computed(() => props.topic.actionIds.map(id => ({ label: id, value: id })));
+    async function handleAction(action: ActionId) {
+      await props.topic.sendActions(action);
+    }
     async function vote(state: VoteType) {
       await props.topic.vote(state);
     }
 
-    return { isSelected, tagType, topicRoute, vote };
+    return { actions, isSelected, handleAction, tagType, topicRoute, vote };
   },
 });
 </script>

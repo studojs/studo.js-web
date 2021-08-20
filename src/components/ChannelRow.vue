@@ -1,31 +1,26 @@
 <template>
-  <router-link :to="channelRoute" :class="['row', { selected: isSelected }]">
-    <n-avatar round>{{ channel.iconChar }}</n-avatar>
-    <div>
-      <div class="text">{{ channel.name }}</div>
-      <div class="footer">{{ channel.footer }}</div>
-    </div>
-    <n-popselect placement="right" trigger="click" :options="actions" @update:value="handleAction">
-      <n-button class="actionsBtn" size="small" @click.prevent>
-        <template #icon>
-          <n-icon>
-            <OverflowIcon />
-          </n-icon>
-        </template>
-      </n-button>
-    </n-popselect>
-  </router-link>
+  <ContextMenu :options="actions" @update:value="handleAction">
+    <router-link :to="channelRoute" :class="['row', { selected: isSelected }]">
+      <n-avatar round>{{ channel.iconChar }}</n-avatar>
+      <div>
+        <div class="text">{{ channel.name }}</div>
+        <div class="footer">{{ channel.footer }}</div>
+      </div>
+    </router-link>
+  </ContextMenu>
 </template>
 
 <script lang="ts">
 import { ActionId, Channel } from 'studo.js';
 import { computed, defineComponent } from 'vue';
 import { channelIdRef } from '../store';
-import { OverflowMenuHorizontal as OverflowIcon } from '@vicons/carbon';
+import ContextMenu from '@/components/ContextMenu.vue';
 
 export default defineComponent({
   name: 'ChannelRow',
-  components: { OverflowIcon },
+  components: {
+    ContextMenu,
+  },
   props: {
     channel: {
       type: Channel,
@@ -44,7 +39,8 @@ export default defineComponent({
     async function handleAction(action: ActionId) {
       await props.channel.sendActions(action);
     }
-    return { actions, handleAction, isSelected, channelRoute };
+
+    return { actions, channelRoute, handleAction, isSelected };
   },
 });
 </script>

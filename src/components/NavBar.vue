@@ -42,7 +42,7 @@ const menuOptions: MenuOption[] = [
   },
   {
     label: () => h('a', {
-      href: 'https://github.com/j4k0xb/studo.js-web', target: '_blank', rel: 'noopenner noreferrer'
+      href: __REPOSITORY__, target: '_blank', rel: 'noopenner noreferrer'
     }, 'GitHub'),
     key: 'github',
     icon: renderIcon(LogoGithub)

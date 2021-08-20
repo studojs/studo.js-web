@@ -1,12 +1,15 @@
 {
   "name": "studo.js-web",
   "version": "0.0.0",
+  "author": "j4k0xb",
+  "license": "GPL-3.0",
   "scripts": {
     "netlify": "netlify dev",
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview"
   },
+  "repository": "https://github.com/j4k0xb/studo.js-web",
   "dependencies": {
     "node-fetch": "^2.6.1",
     "studo.js": "file:../studo.js",

@@ -23,7 +23,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 html,
 body {
   height: 100%;
@@ -34,5 +34,15 @@ body {
   font-family: v-sans, Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+a,
+a:visited {
+  color: #00aff4;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 </style>

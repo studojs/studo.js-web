@@ -5,16 +5,27 @@
       <div class="text">{{ channel.name }}</div>
       <div class="footer">{{ channel.footer }}</div>
     </div>
+    <n-popselect placement="right" trigger="click" :options="actions" @update:value="handleAction">
+      <n-button class="actionsBtn" size="small" @click.prevent>
+        <template #icon>
+          <n-icon>
+            <OverflowIcon />
+          </n-icon>
+        </template>
+      </n-button>
+    </n-popselect>
   </router-link>
 </template>
 
 <script lang="ts">
-import { Channel } from 'studo.js';
+import { ActionId, Channel } from 'studo.js';
 import { computed, defineComponent } from 'vue';
 import { channelIdRef } from '../store';
+import { OverflowMenuHorizontal as OverflowIcon } from '@vicons/carbon';
 
 export default defineComponent({
   name: 'ChannelRow',
+  components: { OverflowIcon },
   props: {
     channel: {
       type: Channel,
@@ -29,8 +40,11 @@ export default defineComponent({
         channelId: props.channel.id,
       },
     }));
-
-    return { isSelected, channelRoute };
+    const actions = computed(() => props.channel.actionIds.map(id => ({ label: id, value: id })));
+    async function handleAction(action: ActionId) {
+      await props.channel.sendActions(action);
+    }
+    return { actions, handleAction, isSelected, channelRoute };
   },
 });
 </script>
@@ -58,6 +72,10 @@ export default defineComponent({
     .text {
       color: #63e2b7;
     }
+
+    .actionsBtn {
+      visibility: visible;
+    }
   }
   &.selected {
     background: rgba(99, 226, 183, 0.2);
@@ -73,5 +91,11 @@ export default defineComponent({
 .n-avatar {
   flex-shrink: 0;
   margin: 0px 8px;
+}
+
+.actionsBtn {
+  flex-shrink: 0;
+  margin-left: auto;
+  visibility: hidden;
 }
 </style>

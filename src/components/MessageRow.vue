@@ -50,7 +50,7 @@ export default defineComponent({
       // sanitize
       const span = document.createElement('span');
       span.textContent = props.message.text;
-      return linkify(span.innerHTML);
+      return linkify(span.innerHTML, { attributes: { target: '_blank', rel: 'noopenner noreferrer' } });
     });
 
     return { tagType, textHTML, vote };

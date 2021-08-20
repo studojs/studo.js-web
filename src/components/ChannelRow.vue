@@ -57,9 +57,10 @@ export default defineComponent({
   --bezier: cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
+  column-gap: 8px;
   border-radius: 8px;
   margin: 8px 14px 0px 8px;
-  padding: 4px 4px 4px 0px;
+  padding: 4px 8px;
   color: inherit;
   font-size: 14px;
   text-decoration: none;
@@ -91,7 +92,6 @@ export default defineComponent({
 
 .n-avatar {
   flex-shrink: 0;
-  margin: 0px 8px;
 }
 
 .pin-icon {

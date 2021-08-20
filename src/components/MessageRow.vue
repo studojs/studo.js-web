@@ -78,6 +78,7 @@ export default defineComponent({
   --bezier: cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
+  column-gap: 8px;
   justify-content: space-between;
   border-radius: 8px;
   margin: 8px 14px 0px 8px;

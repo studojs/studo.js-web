@@ -64,7 +64,6 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0px 16px;
 
   > .n-icon {
     cursor: pointer;

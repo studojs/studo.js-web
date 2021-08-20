@@ -7,7 +7,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
 import { channelIdRef, tabRef, topicsRef } from '../store';
-import TopicRow from "@/components/TopicRow.vue";
+import TopicRow from '@/components/TopicRow.vue';
 import { ScrollbarInst } from 'naive-ui';
 
 export default defineComponent({

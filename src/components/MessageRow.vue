@@ -37,7 +37,7 @@ import { computed, defineComponent } from 'vue';
 import { tagType } from '../store';
 import linkify from 'linkifyjs/html';
 import ContextMenu from '@/components/ContextMenu.vue';
-import Vote from "@/components/Vote.vue";
+import Vote from '@/components/Vote.vue';
 
 export default defineComponent({
   name: 'MessageRow',
@@ -83,7 +83,6 @@ export default defineComponent({
   margin: 8px 14px 0px 8px;
   padding: 4px 8px;
   color: inherit;
-  cursor: pointer;
   font-size: 14px;
   text-decoration: none;
   transition: color 0.3s var(--bezier), opacity 0.3s var(--bezier),
@@ -91,9 +90,6 @@ export default defineComponent({
 
   &:hover {
     background: #18181c;
-    .text {
-      color: #63e2b7;
-    }
   }
 }
 

@@ -18,7 +18,7 @@
 import { ActionId, Topic, VoteType } from 'studo.js';
 import { computed, defineComponent } from 'vue';
 import { tagType, topicIdRef } from '../store';
-import Vote from "@/components/Vote.vue";
+import Vote from '@/components/Vote.vue';
 import ContextMenu from '@/components/ContextMenu.vue';
 
 export default defineComponent({

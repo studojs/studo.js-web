@@ -21,9 +21,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, onUnmounted, ref } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { messagesRef, topicIdRef, topicRef } from '../store';
-import MessageRow from "@/components/MessageRow.vue";
+import MessageRow from '@/components/MessageRow.vue';
 import { MentionOption } from 'naive-ui/lib/mention/src/interface';
 
 export default defineComponent({

@@ -15,9 +15,9 @@
 </template>
 
 <script lang="ts">
-import ChannelList from '../components/ChannelList.vue';
-import MessageList from '../components/MessageList.vue';
-import TopicList from '../components/TopicList.vue';
+import ChannelList from '@/components/ChannelList.vue';
+import MessageList from '@/components/MessageList.vue';
+import TopicList from '@/components/TopicList.vue';
 import { computed } from 'vue';
 import { isPrivateChannel } from '../store';
 

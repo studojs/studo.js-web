@@ -72,7 +72,6 @@ export default defineComponent({
   color: inherit;
   font-size: 14px;
   text-decoration: none;
-  overflow-wrap: anywhere;
   transition: color 0.3s var(--bezier), opacity 0.3s var(--bezier),
     background 0.3s var(--bezier);
 
@@ -87,6 +86,11 @@ export default defineComponent({
   > :deep(img) {
     max-height: 40vh;
   }
+}
+
+.content {
+  overflow-wrap: anywhere;
+  white-space: pre-line;
 }
 
 .header,

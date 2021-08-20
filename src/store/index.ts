@@ -126,10 +126,17 @@ export async function loadTopics(channelId = channelIdRef.value) {
 }
 
 export async function loadMessages(topicId = topicIdRef.value) {
-  if (!topicId) return;
-  messagesRef.clear();
-  if (!_client) return;
+  if (!topicId || !_client) return;
   if (!_client.connected) await _client.once('ready');
+
+  messagesRef.clear();
+  const cachedTopic = _client.topics.find(({ id }) => id === topicId);
+  if (cachedTopic) {
+    for (const [id, msg] of cachedTopic.messages) {
+      messagesRef.set(id, msg);
+    }
+    sortMessages();
+  }
   await _client.topics.subscribe(topicId);
 }
 
@@ -160,5 +167,3 @@ export const currentTabNameRef = computed(() => {
 
   return (route.name as string) || 'chat';
 });
-
-// client.chat.emit('updateChannels', mockRawChannels);

@@ -4,10 +4,10 @@
       <n-layout-sider :native-scrollbar="false" bordered :width="300">
         <ChannelList />
       </n-layout-sider>
-      <n-layout style="flex-basis: 40%;" @scroll="() => console.log('scroll')">
+      <n-layout :style="{ flexBasis: topicsWidth }">
         <TopicList />
       </n-layout>
-      <n-layout :native-scrollbar="false" style="flex-basis: 60%">
+      <n-layout :native-scrollbar="false" :style="{ flexBasis: messagesWidth }">
         <MessageList />
       </n-layout>
     </n-layout>
@@ -15,10 +15,11 @@
 </template>
 
 <script lang="ts">
-import { onMounted, onUnmounted } from 'vue';
 import ChannelList from '../components/ChannelList.vue';
 import MessageList from '../components/MessageList.vue';
 import TopicList from '../components/TopicList.vue';
+import { computed } from 'vue';
+import { isPrivateChannel } from '../store';
 
 export default {
   name: 'Chat',
@@ -27,7 +28,12 @@ export default {
     TopicList,
     MessageList,
   },
-  setup() { },
+  setup() {
+    const topicsWidth = computed(() => isPrivateChannel.value ? '0' : '40%');
+    const messagesWidth = computed(() => isPrivateChannel.value ? '100%' : '60%');
+
+    return { topicsWidth, messagesWidth };
+  },
 };
 </script>
   

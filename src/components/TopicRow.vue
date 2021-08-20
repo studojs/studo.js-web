@@ -17,7 +17,7 @@
 <script lang="ts">
 import { ActionId, Topic, VoteType } from 'studo.js';
 import { computed, defineComponent } from 'vue';
-import { tagType, topicIdRef } from '../store';
+import { localeRef, tagType, topicIdRef } from '../store';
 import Vote from '@/components/Vote.vue';
 import ContextMenu from '@/components/ContextMenu.vue';
 
@@ -41,7 +41,12 @@ export default defineComponent({
         topicId: props.topic.id,
       },
     }));
-    const actions = computed(() => props.topic.actionIds.map(id => ({ label: id, value: id })));
+    const actions = computed(() =>
+      props.topic.actionIds.map((id) => ({
+        label: localeRef.value.Action[id] ?? id,
+        value: id,
+      }))
+    );
     async function handleAction(action: ActionId) {
       await props.topic.sendActions(action);
     }

@@ -8,7 +8,8 @@
             :key="tag"
             :type="tagType(tag)"
             size="small"
-          >{{ tag }}</n-tag>
+            >{{ tag }}</n-tag
+          >
         </div>
         <div class="header">{{ message.header }}</div>
         <div class="text" v-html="textHTML"></div>
@@ -34,7 +35,7 @@
 <script lang="ts">
 import { ActionId, Message, VoteType } from 'studo.js';
 import { computed, defineComponent } from 'vue';
-import { tagType } from '../store';
+import { localeRef, tagType } from '../store';
 import linkify from 'linkifyjs/html';
 import ContextMenu from '@/components/ContextMenu.vue';
 import Vote from '@/components/Vote.vue';
@@ -56,9 +57,16 @@ export default defineComponent({
       // sanitize
       const span = document.createElement('span');
       span.textContent = props.message.text;
-      return linkify(span.innerHTML, { attributes: { target: '_blank', rel: 'noopenner noreferrer' } });
+      return linkify(span.innerHTML, {
+        attributes: { target: '_blank', rel: 'noopenner noreferrer' },
+      });
     });
-    const actions = computed(() => props.message.actionIds.map(id => ({ label: id, value: id })));
+    const actions = computed(() =>
+      props.message.actionIds.map((id) => ({
+        label: localeRef.value.Action[id] ?? id,
+        value: id,
+      }))
+    );
     async function handleAction(action: ActionId) {
       await props.message.sendActions(action);
     }
@@ -67,12 +75,12 @@ export default defineComponent({
     }
 
     return { actions, handleAction, tagType, textHTML, vote };
-  }
+  },
 });
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/vars.scss";
+@import '@/styles/vars.scss';
 
 .row {
   --bezier: cubic-bezier(0.4, 0, 0.2, 1);

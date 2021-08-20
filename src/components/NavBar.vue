@@ -9,7 +9,7 @@ import { MenuOption, NIcon } from 'naive-ui';
 import { Component, h } from 'vue';
 import router from '../router';
 import { RouterLink } from 'vue-router';
-import { Chat as ChatIcon, LogoGithub as GithubIcon, Settings as SettingsIcon } from '@vicons/carbon';
+import { Chat as ChatIcon, Growth as GrowthIcon, LogoGithub as GithubIcon, Settings as SettingsIcon } from '@vicons/carbon';
 import { currentTabNameRef, pointsRef } from '../store';
 
 function renderRoute(label: string, route: string) {
@@ -28,24 +28,25 @@ const menuOptions: MenuOption[] = [
   {
     label: renderRoute('Chat', 'chat'),
     key: 'chat',
-    icon: renderIcon(ChatIcon)
+    icon: renderIcon(ChatIcon),
   },
   {
     label: renderRoute('Settings', 'settings'),
     key: 'settings',
-    icon: renderIcon(SettingsIcon)
+    icon: renderIcon(SettingsIcon),
+  },
+  {
+    label: () => h('p', null, pointsRef.value),
+    key: 'points',
+    icon: renderIcon(GrowthIcon),
   },
   {
     label: () => h('a', {
       href: __REPOSITORY__, target: '_blank', rel: 'noopenner noreferrer'
     }, 'GitHub'),
     key: 'github',
-    icon: renderIcon(GithubIcon)
+    icon: renderIcon(GithubIcon),
   },
-  {
-    label: () => h('p', null, pointsRef.value),
-    key: 'points',
-  }
 ];
 
 export default {

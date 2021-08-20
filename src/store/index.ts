@@ -8,6 +8,7 @@ import {
   Topic,
 } from 'studo.js';
 import { computed, nextTick, reactive, ref } from 'vue';
+import enUS from '../locale/enUS';
 import router from '../router/index';
 
 RestManager.proxyURL = `${location.origin}/api/proxy`;
@@ -167,3 +168,5 @@ export const currentTabNameRef = computed(() => {
 
   return (route.name as string) || 'chat';
 });
+
+export const localeRef = ref(enUS);

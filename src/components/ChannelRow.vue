@@ -16,7 +16,7 @@
 <script lang="ts">
 import { ActionId, Channel } from 'studo.js';
 import { computed, defineComponent } from 'vue';
-import { channelIdRef } from '../store';
+import { channelIdRef, localeRef } from '../store';
 import ContextMenu from '@/components/ContextMenu.vue';
 import { Pin as PinIcon } from '@vicons/carbon';
 
@@ -24,7 +24,7 @@ export default defineComponent({
   name: 'ChannelRow',
   components: {
     ContextMenu,
-    PinIcon
+    PinIcon,
   },
   props: {
     channel: {
@@ -40,7 +40,12 @@ export default defineComponent({
         channelId: props.channel.id,
       },
     }));
-    const actions = computed(() => props.channel.actionIds.map(id => ({ label: id, value: id })));
+    const actions = computed(() =>
+      props.channel.actionIds.map((id) => ({
+        label: localeRef.value.Action[id] ?? id,
+        value: id,
+      }))
+    );
     async function handleAction(action: ActionId) {
       await props.channel.sendActions(action);
     }
@@ -51,7 +56,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/vars.scss";
+@import '@/styles/vars.scss';
 
 .row {
   --bezier: cubic-bezier(0.4, 0, 0.2, 1);

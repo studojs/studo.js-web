@@ -5,7 +5,7 @@
         <n-tag v-for="tag in message.tagIds" :key="tag" :type="tagType(tag)" size="small">{{ tag }}</n-tag>
       </div>
       <div class="header">{{ message.header }}</div>
-      <div class="text">{{ message.text }}</div>
+      <div class="text" v-html="textHTML"></div>
       <n-image
         v-if="message.downloadUrl"
         :src="message.inlineImageUrl"
@@ -26,9 +26,10 @@
 
 <script lang="ts">
 import { Message, VoteType } from 'studo.js';
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { tagType } from '../store';
 import Vote from "@/components/Vote.vue";
+import linkify from 'linkifyjs/html';
 
 export default defineComponent({
   name: 'MessageRow',
@@ -45,8 +46,14 @@ export default defineComponent({
     async function vote(state: VoteType) {
       await props.message.vote(state);
     }
+    const textHTML = computed(() => {
+      // sanitize
+      const span = document.createElement('span');
+      span.textContent = props.message.text;
+      return linkify(span.innerHTML);
+    });
 
-    return { tagType, vote };
+    return { tagType, textHTML, vote };
   }
 });
 </script>

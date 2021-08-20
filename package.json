@@ -11,6 +11,7 @@
   },
   "repository": "https://github.com/j4k0xb/studo.js-web",
   "dependencies": {
+    "linkifyjs": "^3.0.0-beta.3",
     "node-fetch": "^2.6.1",
     "studo.js": "file:../studo.js",
     "vue": "^3.0.5",
@@ -18,6 +19,7 @@
   },
   "devDependencies": {
     "@netlify/functions": "^0.7.2",
+    "@types/linkifyjs": "^2.1.4",
     "@types/node-fetch": "^2.5.12",
     "@vicons/carbon": "^0.11.0",
     "@vicons/fluent": "^0.11.0",

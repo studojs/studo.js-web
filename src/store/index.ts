@@ -74,7 +74,9 @@ export const topicIdRef = computed(() => {
   return (route.params.topicId ?? '') as string;
 });
 
+export const channelRef = computed(() => channelsRef.get(channelIdRef.value));
 export const topicRef = computed(() => topicsRef.get(topicIdRef.value));
+export const tabRef = computed(() => channelRef.value?.tabs.first());
 
 export const channelsRef = reactive(new Collection<string, Channel>());
 export const topicsRef = reactive(new Collection<string, Topic>());

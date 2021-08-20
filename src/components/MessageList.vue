@@ -6,11 +6,22 @@
       </template>
     </MessageRow>
   </n-image-group>
-  <n-mention type="textarea" placeholder="Message" :options="mentions" :autosize="{ maxRows: 15 }" />
+  <n-input-group v-if="messages.length > 0">
+    <n-upload>
+      <n-button>+</n-button>
+    </n-upload>
+    <n-mention
+      type="textarea"
+      placeholder="Message"
+      :options="mentions"
+      :autosize="{ maxRows: 15 }"
+    />
+    <n-button type="primary">Send</n-button>
+  </n-input-group>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent, onMounted, onUnmounted, ref } from 'vue';
 import { messagesRef, topicIdRef, topicRef } from '../store';
 import MessageRow from "@/components/MessageRow.vue";
 import { MentionOption } from 'naive-ui/lib/mention/src/interface';
@@ -26,7 +37,6 @@ export default defineComponent({
         (message) => !message.hidden && message.topicId === topicIdRef.value
       );
     });
-
     const mentions = computed<MentionOption[]>(() => {
       return Object.keys(topicRef.value?.users || {})
         .map(user => ({ label: user, value: user }));
@@ -41,5 +51,10 @@ export default defineComponent({
 <style lang="scss" scoped>
 .n-divider {
   margin: 8px 0px;
+}
+
+.n-input-group {
+  position: sticky;
+  bottom: 0px;
 }
 </style>

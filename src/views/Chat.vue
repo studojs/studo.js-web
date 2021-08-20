@@ -4,7 +4,7 @@
       <n-layout-sider :native-scrollbar="false" bordered :width="300">
         <ChannelList />
       </n-layout-sider>
-      <n-layout :native-scrollbar="false" style="flex-basis: 40%;">
+      <n-layout style="flex-basis: 40%;" @scroll="() => console.log('scroll')">
         <TopicList />
       </n-layout>
       <n-layout :native-scrollbar="false" style="flex-basis: 60%">
@@ -15,6 +15,7 @@
 </template>
 
 <script lang="ts">
+import { onMounted, onUnmounted } from 'vue';
 import ChannelList from '../components/ChannelList.vue';
 import MessageList from '../components/MessageList.vue';
 import TopicList from '../components/TopicList.vue';

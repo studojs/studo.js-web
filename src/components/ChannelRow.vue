@@ -6,6 +6,9 @@
         <div class="text">{{ channel.name }}</div>
         <div class="footer">{{ channel.footer }}</div>
       </div>
+      <n-icon class="pin-icon" v-if="channel.pinned">
+        <PinIcon />
+      </n-icon>
     </router-link>
   </ContextMenu>
 </template>
@@ -15,11 +18,13 @@ import { ActionId, Channel } from 'studo.js';
 import { computed, defineComponent } from 'vue';
 import { channelIdRef } from '../store';
 import ContextMenu from '@/components/ContextMenu.vue';
+import { Pin as PinIcon } from '@vicons/carbon';
 
 export default defineComponent({
   name: 'ChannelRow',
   components: {
     ContextMenu,
+    PinIcon
   },
   props: {
     channel: {
@@ -89,9 +94,8 @@ export default defineComponent({
   margin: 0px 8px;
 }
 
-.actionsBtn {
+.pin-icon {
   flex-shrink: 0;
   margin-left: auto;
-  visibility: hidden;
 }
 </style>

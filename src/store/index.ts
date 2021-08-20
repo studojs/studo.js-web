@@ -107,10 +107,17 @@ export async function loadTopics(channelId = channelIdRef.value) {
   if (!channelId || !_client) return;
   if (!_client.connected) await _client.once('ready');
 
+  topicsRef.clear();
+  const cachedTab = _client.tabs.find((tab) => tab.channelId === channelId);
+  if (cachedTab) {
+    for (const [id, topic] of cachedTab.topics) {
+      topicsRef.set(id, topic);
+    }
+  }
+
   await _client.channels.subscribe(channelId);
   const tab = await _client.once('tabUpdate');
   await tab.subscribe();
-  topicsRef.clear();
 
   if (isPrivateChannel.value) {
     const topic = await _client.once('topicUpdate');

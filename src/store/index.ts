@@ -86,10 +86,15 @@ export const isPrivateChannel = computed(() =>
   channelIdRef.value.startsWith('private')
 );
 
+const collator = new Intl.Collator();
+
 export function sortChannels() {
+  // Sort clone workaround due to proxy/ref errors
   const clone = channelsRef
     .clone()
-    .sort((a, b) => b.sortScore - a.sortScore || a.name.localeCompare(b.name));
+    .sort(
+      (a, b) => b.sortScore - a.sortScore || collator.compare(a.name, b.name)
+    );
   channelsRef.clear();
   for (const [id, channel] of clone.entries()) {
     channelsRef.set(id, channel);
@@ -108,13 +113,9 @@ export async function loadTopics(channelId = channelIdRef.value) {
   if (!channelId || !_client) return;
   if (!_client.connected) await _client.once('ready');
 
+  _client.topics.clear();
+  _client.tabs.clear();
   topicsRef.clear();
-  const cachedTab = _client.tabs.find((tab) => tab.channelId === channelId);
-  if (cachedTab) {
-    for (const [id, topic] of cachedTab.topics) {
-      topicsRef.set(id, topic);
-    }
-  }
 
   await _client.channels.subscribe(channelId);
   const tab = await _client.once('tabUpdate');
@@ -131,13 +132,7 @@ export async function loadMessages(topicId = topicIdRef.value) {
   if (!_client.connected) await _client.once('ready');
 
   messagesRef.clear();
-  const cachedTopic = _client.topics.find(({ id }) => id === topicId);
-  if (cachedTopic) {
-    for (const [id, msg] of cachedTopic.messages) {
-      messagesRef.set(id, msg);
-    }
-    sortMessages();
-  }
+  _client.messages.clear();
   await _client.topics.subscribe(topicId);
 }
 

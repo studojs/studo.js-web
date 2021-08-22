@@ -2,24 +2,16 @@
   <ContextMenu :options="actions" @update:value="handleAction">
     <div class="row">
       <div class="content">
-        <div>
-          <n-tag
-            v-for="tag in message.tagIds"
-            :key="tag"
-            :type="tagType(tag)"
-            size="small"
-            >{{ tag }}</n-tag
-          >
-        </div>
+        <Tags :ids="message.tagIds" />
         <div class="header">{{ message.header }}</div>
-        <div class="text" v-html="textHTML"></div>
-        <n-image
+        <div class="text" v-if="textHTML" v-html="textHTML"></div>
+        <MessageEmbed
           v-if="message.downloadUrl"
-          :src="message.inlineImageUrl"
-          :alt="message.fileName"
-          :img-props="{ loading: 'lazy' }"
+          :url="message.downloadUrl"
+          :inlineURL="message.inlineImageUrl"
+          :fileName="message.fileName"
         />
-        <div class="footer">{{ message.footer }}</div>
+        <div class="footer" v-if="message.footer">{{ message.footer }}</div>
       </div>
       <Vote
         :votes="message.votes"
@@ -35,9 +27,11 @@
 <script lang="ts">
 import { ActionId, Message, VoteType } from 'studo.js';
 import { computed, defineComponent } from 'vue';
-import { localeRef, tagType } from '../store';
+import { localeRef } from '../store';
 import linkify from 'linkifyjs/html';
 import ContextMenu from '@/components/ContextMenu.vue';
+import MessageEmbed from '@/components/MessageEmbed.vue';
+import Tags from '@/components/Tags.vue';
 import Vote from '@/components/Vote.vue';
 
 export default defineComponent({
@@ -50,6 +44,8 @@ export default defineComponent({
   },
   components: {
     ContextMenu,
+    MessageEmbed,
+    Tags,
     Vote,
   },
   setup(props) {
@@ -74,7 +70,7 @@ export default defineComponent({
       await props.message.vote(state);
     }
 
-    return { actions, handleAction, tagType, textHTML, vote };
+    return { actions, handleAction, textHTML, vote };
   },
 });
 </script>
@@ -99,14 +95,6 @@ export default defineComponent({
 
   &:hover {
     background: #18181c;
-  }
-}
-
-.n-image {
-  border-radius: 3px;
-
-  > :deep(img) {
-    max-height: 40vh;
   }
 }
 

@@ -2,14 +2,17 @@
   <ContextMenu :options="actions" @update:value="handleAction">
     <router-link :to="topicRoute" :class="['row', { selected: isSelected }]">
       <div class="content">
-        <div>
-          <n-tag v-for="tag in topic.tagIds" :key="tag" :type="tagType(tag)" size="small">{{ tag }}</n-tag>
-        </div>
-        <div class="text">{{ topic.text }}</div>
+        <Tags :ids="topic.tagIds" />
         <div class="header">{{ topic.header }}</div>
+        <div class="text">{{ topic.text }}</div>
         <div class="footer">{{ topic.footer }}</div>
       </div>
-      <Vote :votes="topic.votes" :type="topic.votingType" :state="topic.voteState" @vote="vote" />
+      <Vote
+        :votes="topic.votes"
+        :type="topic.votingType"
+        :state="topic.voteState"
+        @vote="vote"
+      />
     </router-link>
   </ContextMenu>
 </template>
@@ -17,14 +20,16 @@
 <script lang="ts">
 import { ActionId, Topic, VoteType } from 'studo.js';
 import { computed, defineComponent } from 'vue';
-import { localeRef, tagType, topicIdRef } from '../store';
+import { localeRef, topicIdRef } from '../store';
 import Vote from '@/components/Vote.vue';
+import Tags from '@/components/Tags.vue';
 import ContextMenu from '@/components/ContextMenu.vue';
 
 export default defineComponent({
   name: 'TopicRow',
   components: {
     ContextMenu,
+    Tags,
     Vote,
   },
   props: {
@@ -54,13 +59,13 @@ export default defineComponent({
       await props.topic.vote(state);
     }
 
-    return { actions, isSelected, handleAction, tagType, topicRoute, vote };
+    return { actions, isSelected, handleAction, topicRoute, vote };
   },
 });
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/vars.scss";
+@import '@/styles/vars.scss';
 
 .row {
   --bezier: cubic-bezier(0.4, 0, 0.2, 1);

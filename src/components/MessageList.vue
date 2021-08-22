@@ -1,12 +1,18 @@
 <template>
-  <n-image-group>
-    <MessageRow v-for="(message, index) in messages" :key="message.id" :message="message">
-      <template #suffix v-if="index === 0">
-        <n-divider />
-      </template>
-    </MessageRow>
-  </n-image-group>
-  <n-input-group v-if="messages.length > 0">
+  <n-scrollbar ref="scrollbarRef" @scroll="handleScroll">
+    <n-image-group>
+      <MessageRow
+        v-for="(message, index) in messages"
+        :key="message.id"
+        :message="message"
+      >
+        <template #suffix v-if="index === 0">
+          <n-divider />
+        </template>
+      </MessageRow>
+    </n-image-group>
+  </n-scrollbar>
+  <!-- <n-input-group v-if="messages.length > 0">
     <n-upload>
       <n-button>+</n-button>
     </n-upload>
@@ -17,19 +23,20 @@
       :autosize="{ maxRows: 15 }"
     />
     <n-button type="primary">Send</n-button>
-  </n-input-group>
+  </n-input-group> -->
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
-import { messagesRef, topicIdRef, topicRef } from '../store';
+import { computed, defineComponent, ref } from 'vue';
+import { messagesRef, tabRef, topicIdRef, topicRef } from '../store';
 import MessageRow from '@/components/MessageRow.vue';
 import { MentionOption } from 'naive-ui/lib/mention/src/interface';
+import { ScrollbarInst } from 'naive-ui';
 
 export default defineComponent({
   name: 'MessageList',
   components: {
-    MessageRow
+    MessageRow,
   },
   setup() {
     const filteredMessages = computed(() => {
@@ -38,14 +45,35 @@ export default defineComponent({
       );
     });
     const mentions = computed<MentionOption[]>(() => {
-      return Object.keys(topicRef.value?.users || {})
-        .map(user => ({ label: user, value: user }));
+      return Object.keys(topicRef.value?.users || {}).map((user) => ({
+        label: user,
+        value: user,
+      }));
     });
 
-    return { mentions, messages: filteredMessages };
-  }
-});
+    let loading = false;
+    const scrollbarRef = ref<ScrollbarInst | null>(null);
+    async function handleScroll(e: Event) {
+      if (loading) return;
+      const container = e.target as HTMLElement;
+      const content = container.firstElementChild as HTMLElement;
 
+      const containerHeight = container.offsetHeight;
+      const containerScrollTop = container.scrollTop;
+      const contentHeight = content.offsetHeight;
+      const scrollBottom = contentHeight - containerScrollTop - containerHeight;
+
+      console.log(scrollBottom);
+      if (scrollBottom <= 300) {
+        loading = true;
+        await topicRef.value?.scroll();
+        setTimeout(() => (loading = false), 300);
+      }
+    }
+
+    return { handleScroll, mentions, messages: filteredMessages, scrollbarRef };
+  },
+});
 </script>
 
 <style lang="scss" scoped>

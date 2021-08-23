@@ -1,18 +1,9 @@
 import { Handler } from '@netlify/functions';
-import fetch from 'node-fetch';
-import { config, RestManager } from 'studo.js';
+import { RestManager } from 'studo.js';
 
 export const handler: Handler = async (event) => {
   const endpoint = event.path.split('/proxy/')[1];
 
-  const headers: Record<string, string> = {
-    'user-agent': config.userAgent,
-    'application-id': config.applicationId,
-  };
-  if (event.headers['session-token'])
-    headers['session-token'] = event.headers['session-token'];
-
-  // validate
   if (!endpoint || !/^\w+(\/\w+)*\/?$/.test(endpoint)) {
     return {
       statusCode: 400,
@@ -21,12 +12,12 @@ export const handler: Handler = async (event) => {
   }
 
   try {
-    const response = await fetch(`${RestManager.baseURL}/${endpoint}`, {
-      method: event.httpMethod,
-      body: event.body,
-      headers,
-      timeout: 10_000,
-    });
+    const response = await RestManager.request(
+      event.httpMethod,
+      endpoint,
+      { body: event.body },
+      event.headers['session-token']
+    );
 
     return {
       statusCode: response.status,

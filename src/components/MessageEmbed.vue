@@ -1,10 +1,13 @@
 <template>
-  <a v-if="!mimeType" :href="url" target="_blank" rel="noopenner noreferrer">
+  <a v-if="!loaded" :href="url" target="_blank" rel="noopenner noreferrer">
     <n-skeleton width="70%" height="200px" :sharp="false" />
   </a>
+
   <n-image
-    v-else-if="mimeType.startsWith('image')"
+    v-if="mimeType.startsWith('image')"
     :src="inlineURL || url"
+    :preview-src="url"
+    :img-props="{ onload: () => (loaded = true) }"
     :alt="fileName"
     @click.right.stop
   />
@@ -12,6 +15,7 @@
     v-else-if="mimeType.startsWith('video')"
     :src="url"
     controls
+    @load="loaded = true"
     @click.right.stop
   />
   <a v-else :href="url" target="_blank" rel="noopenner noreferrer">
@@ -20,8 +24,7 @@
 </template>
 
 <script lang="ts">
-import { useMessage } from 'naive-ui';
-import { defineComponent, computed, ref } from 'vue';
+import { defineComponent, computed, ref, watch } from 'vue';
 
 export default defineComponent({
   name: 'MessageEmbed',
@@ -34,15 +37,24 @@ export default defineComponent({
     fileName: String,
   },
   setup(props) {
-    const message = useMessage();
-    const mimeType = ref('');
     const extension = computed(() => props.fileName?.split('.').pop());
-    fetch(props.url, { method: 'HEAD' })
-      .then(({ headers }) => {
-        mimeType.value = headers.get('content-type') || '';
-      })
-      .catch((error) => message.error(error.message));
-    return { extension, mimeType };
+    const mimeType = computed(() => {
+      if (extension.value?.match(/^jpe?g|png|gif|webp$/i))
+        return `image/${extension.value}`;
+      if (extension.value?.match(/^mp4|mov|mkv|webm$/i))
+        return `video/${extension.value}`;
+      return `application/${extension.value}`;
+    });
+    const loaded = ref(false);
+    watch(
+      mimeType,
+      () => {
+        if (mimeType.value.startsWith('application')) loaded.value = true;
+      },
+      { immediate: true }
+    );
+
+    return { extension, loaded, mimeType };
   },
 });
 </script>

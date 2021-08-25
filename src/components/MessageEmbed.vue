@@ -1,19 +1,27 @@
 <template>
+  <a v-if="!mimeType" :href="url" target="_blank" rel="noopenner noreferrer">
+    <n-skeleton width="70%" height="200px" :sharp="false" />
+  </a>
   <n-image
-    v-if="isImage"
+    v-else-if="mimeType.startsWith('image')"
     :src="inlineURL || url"
     :alt="fileName"
-    :img-props="{ loading: 'lazy' }"
-    @click.prevent
+    @click.right.stop
   />
-  <video v-else-if="isVideo" :src="url" />
+  <video
+    v-else-if="mimeType.startsWith('video')"
+    :src="url"
+    controls
+    @click.right.stop
+  />
   <a v-else :href="url" target="_blank" rel="noopenner noreferrer">
     <n-button>({{ extension }}) {{ fileName }}</n-button>
   </a>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { useMessage } from 'naive-ui';
+import { defineComponent, computed, ref } from 'vue';
 
 export default defineComponent({
   name: 'MessageEmbed',
@@ -26,14 +34,15 @@ export default defineComponent({
     fileName: String,
   },
   setup(props) {
-    const extension = computed(() => props.fileName?.split('.').slice(-1)[0]);
-    const isImage = computed(() => {
-      return !!extension.value?.match(/^jpe?g|png|gif|webp$/i);
-    });
-    const isVideo = computed(() => {
-      return !!extension.value?.match(/^mp4|mov|mkv|webm$/i);
-    });
-    return { extension, isImage, isVideo };
+    const message = useMessage();
+    const mimeType = ref('');
+    const extension = computed(() => props.fileName?.split('.').pop());
+    fetch(props.url, { method: 'HEAD' })
+      .then(({ headers }) => {
+        mimeType.value = headers.get('content-type') || '';
+      })
+      .catch((error) => message.error(error.message));
+    return { extension, mimeType };
   },
 });
 </script>
@@ -41,6 +50,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .n-image,
 video {
+  max-width: 100%;
   border-radius: 3px;
 
   > :deep(img) {

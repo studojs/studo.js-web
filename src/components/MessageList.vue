@@ -63,7 +63,6 @@ export default defineComponent({
       const contentHeight = content.offsetHeight;
       const scrollBottom = contentHeight - containerScrollTop - containerHeight;
 
-      console.log(scrollBottom);
       if (scrollBottom <= 300) {
         loading = true;
         await topicRef.value?.scroll();

@@ -11,10 +11,8 @@ import {
   LogoGithub as GithubIcon,
   Settings as SettingsIcon,
 } from '@vicons/carbon';
-import type { MenuOption } from 'naive-ui';
-import { NIcon } from 'naive-ui';
-import type { Component } from 'vue';
-import { h } from 'vue';
+import { MenuOption, NIcon } from 'naive-ui';
+import { Component, h } from 'vue';
 import { RouterLink } from 'vue-router';
 import router from '../router';
 import { currentTabNameRef as tabName, pointsRef } from '../store';

@@ -6,7 +6,7 @@
 
 <script lang="ts" setup>
 import TopicRow from '@/components/TopicRow.vue';
-import type { ScrollbarInst } from 'naive-ui';
+import { ScrollbarInst } from 'naive-ui';
 import { computed, ref } from 'vue';
 import { channelIdRef, tabRef, topicsRef } from '../store';
 const topics = computed(() => {

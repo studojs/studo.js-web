@@ -21,8 +21,7 @@
 import ContextMenu from '@/components/ContextMenu.vue';
 import Tags from '@/components/Tags.vue';
 import Vote from '@/components/Vote.vue';
-import type { ActionId, VoteType } from 'studo.js';
-import { Topic } from 'studo.js';
+import { ActionId, Topic, VoteType } from 'studo.js';
 import { computed } from 'vue';
 import { localeRef, topicIdRef } from '../store';
 

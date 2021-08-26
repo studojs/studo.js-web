@@ -16,8 +16,7 @@
 <script lang="ts" setup>
 import ContextMenu from '@/components/ContextMenu.vue';
 import { Pin as PinIcon } from '@vicons/carbon';
-import type { ActionId } from 'studo.js';
-import { Channel } from 'studo.js';
+import { ActionId, Channel } from 'studo.js';
 import { computed } from 'vue';
 import { channelIdRef, localeRef } from '../store';
 

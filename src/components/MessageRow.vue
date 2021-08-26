@@ -30,8 +30,7 @@ import MessageEmbed from '@/components/MessageEmbed.vue';
 import Tags from '@/components/Tags.vue';
 import Vote from '@/components/Vote.vue';
 import linkify from 'linkifyjs/html';
-import type { ActionId, VoteType } from 'studo.js';
-import { Message } from 'studo.js';
+import { ActionId, Message, VoteType } from 'studo.js';
 import { computed } from 'vue';
 import { localeRef } from '../store';
 

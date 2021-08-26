@@ -20,7 +20,7 @@
 
 <script lang="ts" setup>
 import { ChevronDown as DownIcon, ChevronUp as UpIcon } from '@vicons/carbon';
-import type { VoteType, VotingType } from 'studo.js';
+import { VoteType, VotingType } from 'studo.js';
 
 const props = withDefaults(
   defineProps<{

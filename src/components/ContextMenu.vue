@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { SelectGroupOption, SelectOption } from 'naive-ui';
+import { SelectGroupOption, SelectOption } from 'naive-ui';
 import { onMounted, onUnmounted, ref } from 'vue';
 
 type FollowerPlacement =

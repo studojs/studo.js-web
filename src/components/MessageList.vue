@@ -28,7 +28,7 @@
 
 <script lang="ts" setup>
 import MessageRow from '@/components/MessageRow.vue';
-import type { ScrollbarInst } from 'naive-ui';
+import { ScrollbarInst } from 'naive-ui';
 import { MentionOption } from 'naive-ui/lib/mention/src/interface';
 import { computed, ref } from 'vue';
 import { messagesRef, topicIdRef, topicRef } from '../store';

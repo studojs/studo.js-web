@@ -13,46 +13,34 @@
   </ContextMenu>
 </template>
 
-<script lang="ts">
-import { ActionId, Channel } from 'studo.js';
-import { computed, defineComponent } from 'vue';
-import { channelIdRef, localeRef } from '../store';
+<script lang="ts" setup>
 import ContextMenu from '@/components/ContextMenu.vue';
 import { Pin as PinIcon } from '@vicons/carbon';
+import type { ActionId } from 'studo.js';
+import { Channel } from 'studo.js';
+import { computed } from 'vue';
+import { channelIdRef, localeRef } from '../store';
 
-export default defineComponent({
-  name: 'ChannelRow',
-  components: {
-    ContextMenu,
-    PinIcon,
-  },
-  props: {
-    channel: {
-      type: Channel,
-      required: true,
-    },
-  },
-  setup(props) {
-    const isSelected = computed(() => channelIdRef.value === props.channel.id);
-    const channelRoute = computed(() => ({
-      name: 'channel',
-      params: {
-        channelId: props.channel.id,
-      },
-    }));
-    const actions = computed(() =>
-      props.channel.actionIds.map((id) => ({
-        label: localeRef.value.Action[id] ?? id,
-        value: id,
-      }))
-    );
-    async function handleAction(action: ActionId) {
-      await props.channel.sendActions(action);
-    }
+const props = defineProps<{
+  channel: Channel;
+}>();
 
-    return { actions, channelRoute, handleAction, isSelected };
+const isSelected = computed(() => channelIdRef.value === props.channel.id);
+const channelRoute = computed(() => ({
+  name: 'channel',
+  params: {
+    channelId: props.channel.id,
   },
-});
+}));
+const actions = computed(() =>
+  props.channel.actionIds.map((id) => ({
+    label: localeRef.value.Action[id] ?? id,
+    value: id,
+  }))
+);
+async function handleAction(action: ActionId) {
+  await props.channel.sendActions(action);
+}
 </script>
 
 <style lang="scss" scoped>

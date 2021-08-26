@@ -28,33 +28,24 @@
   </a>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, ref, watch } from 'vue';
+<script lang="ts" setup>
+import { computed, ref } from 'vue';
 
-export default defineComponent({
-  name: 'MessageEmbed',
-  props: {
-    url: {
-      type: String,
-      required: true,
-    },
-    inlineURL: String,
-    fileName: String,
-  },
-  setup(props) {
-    const extension = computed(() => props.fileName?.split('.').pop());
-    const mimeType = computed(() => {
-      if (extension.value?.match(/^jpe?g|png|gif|webp$/i))
-        return `image/${extension.value}`;
-      if (extension.value?.match(/^mp4|mov|mkv|webm$/i))
-        return `video/${extension.value}`;
-      return undefined;
-    });
-    const loaded = ref(false);
+const props = defineProps<{
+  url: string;
+  inlineURL?: string;
+  fileName?: string;
+}>();
 
-    return { extension, loaded, mimeType };
-  },
+const extension = computed(() => props.fileName?.split('.').pop());
+const mimeType = computed(() => {
+  if (extension.value?.match(/^jpe?g|png|gif|webp$/i))
+    return `image/${extension.value}`;
+  if (extension.value?.match(/^mp4|mov|mkv|webm$/i))
+    return `video/${extension.value}`;
+  return undefined;
 });
+const loaded = ref(false);
 </script>
 
 <style lang="scss" scoped>

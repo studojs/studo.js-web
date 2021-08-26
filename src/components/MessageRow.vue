@@ -24,55 +24,41 @@
   <slot name="suffix" />
 </template>
 
-<script lang="ts">
-import { ActionId, Message, VoteType } from 'studo.js';
-import { computed, defineComponent } from 'vue';
-import { localeRef } from '../store';
-import linkify from 'linkifyjs/html';
+<script lang="ts" setup>
 import ContextMenu from '@/components/ContextMenu.vue';
 import MessageEmbed from '@/components/MessageEmbed.vue';
 import Tags from '@/components/Tags.vue';
 import Vote from '@/components/Vote.vue';
+import linkify from 'linkifyjs/html';
+import type { ActionId, VoteType } from 'studo.js';
+import { Message } from 'studo.js';
+import { computed } from 'vue';
+import { localeRef } from '../store';
 
-export default defineComponent({
-  name: 'MessageRow',
-  props: {
-    message: {
-      type: Message,
-      required: true,
-    },
-  },
-  components: {
-    ContextMenu,
-    MessageEmbed,
-    Tags,
-    Vote,
-  },
-  setup(props) {
-    const textHTML = computed(() => {
-      // sanitize
-      const span = document.createElement('span');
-      span.textContent = props.message.text;
-      return linkify(span.innerHTML, {
-        attributes: { target: '_blank', rel: 'noopenner noreferrer' },
-      });
-    });
-    const actions = computed(() =>
-      props.message.actionIds.map((id) => ({
-        label: localeRef.value.Action[id] ?? id,
-        value: id,
-      }))
-    );
-    async function handleAction(action: ActionId) {
-      await props.message.sendActions(action);
-    }
-    async function vote(state: VoteType) {
-      await props.message.vote(state);
-    }
+const props = defineProps<{
+  message: Message;
+}>();
 
-    return { actions, handleAction, textHTML, vote };
-  },
+const textHTML = computed(() => {
+  // sanitize
+  const span = document.createElement('span');
+  span.textContent = props.message.text;
+  return linkify(span.innerHTML, {
+    attributes: { target: '_blank', rel: 'noopenner noreferrer' },
+  });
 });
+const actions = computed(() =>
+  props.message.actionIds.map((id) => ({
+    label: localeRef.value.Action[id] ?? id,
+    value: id,
+  }))
+);
+async function handleAction(action: ActionId) {
+  await props.message.sendActions(action);
+}
+async function vote(state: VoteType) {
+  await props.message.vote(state);
+}
 </script>
 
 <style lang="scss" scoped>

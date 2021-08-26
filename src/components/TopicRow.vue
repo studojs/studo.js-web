@@ -17,51 +17,38 @@
   </ContextMenu>
 </template>
 
-<script lang="ts">
-import { ActionId, Topic, VoteType } from 'studo.js';
-import { computed, defineComponent } from 'vue';
-import { localeRef, topicIdRef } from '../store';
-import Vote from '@/components/Vote.vue';
-import Tags from '@/components/Tags.vue';
+<script lang="ts" setup>
 import ContextMenu from '@/components/ContextMenu.vue';
+import Tags from '@/components/Tags.vue';
+import Vote from '@/components/Vote.vue';
+import type { ActionId, VoteType } from 'studo.js';
+import { Topic } from 'studo.js';
+import { computed } from 'vue';
+import { localeRef, topicIdRef } from '../store';
 
-export default defineComponent({
-  name: 'TopicRow',
-  components: {
-    ContextMenu,
-    Tags,
-    Vote,
-  },
-  props: {
-    topic: {
-      type: Topic,
-      required: true,
-    },
-  },
-  setup(props) {
-    const isSelected = computed(() => topicIdRef.value === props.topic.id);
-    const topicRoute = computed(() => ({
-      name: 'topic',
-      params: {
-        topicId: props.topic.id,
-      },
-    }));
-    const actions = computed(() =>
-      props.topic.actionIds.map((id) => ({
-        label: localeRef.value.Action[id] ?? id,
-        value: id,
-      }))
-    );
-    async function handleAction(action: ActionId) {
-      await props.topic.sendActions(action);
-    }
-    async function vote(state: VoteType) {
-      await props.topic.vote(state);
-    }
+const props = defineProps<{
+  topic: Topic;
+}>();
 
-    return { actions, isSelected, handleAction, topicRoute, vote };
+const isSelected = computed(() => topicIdRef.value === props.topic.id);
+const topicRoute = computed(() => ({
+  name: 'topic',
+  params: {
+    topicId: props.topic.id,
   },
-});
+}));
+const actions = computed(() =>
+  props.topic.actionIds.map((id) => ({
+    label: localeRef.value.Action[id] ?? id,
+    value: id,
+  }))
+);
+async function handleAction(action: ActionId) {
+  await props.topic.sendActions(action);
+}
+async function vote(state: VoteType) {
+  await props.topic.vote(state);
+}
 </script>
 
 <style lang="scss" scoped>

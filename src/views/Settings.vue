@@ -24,32 +24,25 @@
   </div>
 </template>
 
-<script lang="ts">
-import { clientRef, sessionTokenRef, themeNameRef } from '../store';
+<script lang="ts" setup>
+import { Logout as LogoutIcon } from '@vicons/carbon';
 import { useMessage } from 'naive-ui';
 import router from '../router';
-import { Logout as LogoutIcon } from '@vicons/carbon';
-import { RestManager } from 'studo.js';
+import {
+  clientRef,
+  sessionTokenRef,
+  themeNameRef as themeName,
+} from '../store';
 
-export default {
-  name: 'Settings',
-  components: {
-    LogoutIcon,
-  },
-  setup() {
-    const message = useMessage();
-    async function logOut() {
-      if (!sessionTokenRef.value) return;
+const message = useMessage();
+async function logOut() {
+  if (!sessionTokenRef.value) return;
 
-      // await RestManager.signOut(sessionTokenRef.value);
-      sessionTokenRef.value = clientRef.value = null;
-      message.info('Logged out');
-      router.push('/');
-    }
-
-    return { logOut, themeName: themeNameRef };
-  },
-};
+  // await RestManager.signOut(sessionTokenRef.value);
+  sessionTokenRef.value = clientRef.value = null;
+  message.info('Logged out');
+  router.push('/');
+}
 </script>
 
 <style lang="scss" scoped>

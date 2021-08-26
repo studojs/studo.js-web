@@ -4,18 +4,20 @@
   </n-layout-header>
 </template>
 
-<script lang="ts">
-import { MenuOption, NIcon } from 'naive-ui';
-import { Component, h } from 'vue';
-import router from '../router';
-import { RouterLink } from 'vue-router';
+<script lang="ts" setup>
 import {
   Chat as ChatIcon,
   Growth as GrowthIcon,
   LogoGithub as GithubIcon,
   Settings as SettingsIcon,
 } from '@vicons/carbon';
-import { currentTabNameRef, pointsRef } from '../store';
+import type { MenuOption } from 'naive-ui';
+import { NIcon } from 'naive-ui';
+import type { Component } from 'vue';
+import { h } from 'vue';
+import { RouterLink } from 'vue-router';
+import router from '../router';
+import { currentTabNameRef as tabName, pointsRef } from '../store';
 
 function renderRoute(label: string, route: string) {
   return () =>
@@ -25,11 +27,9 @@ function renderRoute(label: string, route: string) {
       { default: () => label }
     );
 }
-
 function renderIcon(icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) });
 }
-
 const menuOptions: MenuOption[] = [
   {
     label: renderRoute('Chat', 'chat'),
@@ -61,17 +61,6 @@ const menuOptions: MenuOption[] = [
     icon: renderIcon(GithubIcon),
   },
 ];
-
-export default {
-  name: 'NavBar',
-  setup() {
-    return {
-      tabName: currentTabNameRef,
-      menuOptions,
-      points: pointsRef,
-    };
-  },
-};
 </script>
 
 <style lang="scss" scoped>

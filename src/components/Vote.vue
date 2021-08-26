@@ -18,45 +18,32 @@
   </div>
 </template>
 
-<script lang="ts">
-import { VoteType, VotingType } from 'studo.js';
-import { defineComponent, PropType } from 'vue';
+<script lang="ts" setup>
 import { ChevronDown as DownIcon, ChevronUp as UpIcon } from '@vicons/carbon';
+import type { VoteType, VotingType } from 'studo.js';
 
-export default defineComponent({
-  name: 'Vote',
-  components: {
-    DownIcon,
-    UpIcon,
-  },
-  props: {
-    type: {
-      type: String as PropType<VotingType>,
-      default: 'NONE',
-    },
-    state: {
-      type: String as PropType<VoteType>,
-      default: 'NONE',
-    },
-    votes: {
-      type: Number,
-      default: 0,
-    },
-  },
-  emits: {
-    vote(state: VoteType) {
-      return true;
-    },
-  },
-  setup(props, ctx) {
-    function toggleVote(state: 'UP' | 'DOWN') {
-      if (props.state === state) ctx.emit('vote', 'NONE');
-      else ctx.emit('vote', state);
-    }
-
-    return { toggleVote };
+const props = withDefaults(
+  defineProps<{
+    type: VotingType;
+    state: VoteType;
+    votes: number;
+  }>(),
+  {
+    type: 'NONE',
+    state: 'NONE',
+    votes: 0,
+  }
+);
+const emit = defineEmits({
+  vote(state: VoteType) {
+    return true;
   },
 });
+
+function toggleVote(state: 'UP' | 'DOWN') {
+  if (props.state === state) emit('vote', 'NONE');
+  else emit('vote', state);
+}
 </script>
 
 <style lang="scss" scoped>

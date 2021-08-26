@@ -4,46 +4,35 @@
   </n-scrollbar>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
-import { channelIdRef, tabRef, topicsRef } from '../store';
+<script lang="ts" setup>
 import TopicRow from '@/components/TopicRow.vue';
-import { ScrollbarInst } from 'naive-ui';
-
-export default defineComponent({
-  name: 'TopicList',
-  components: {
-    TopicRow,
-  },
-  setup() {
-    const filteredTopics = computed(() => {
-      return [...topicsRef.values()].filter(
-        (topic) => !topic.hidden && topic.channelId === channelIdRef.value
-      );
-    });
-
-    let loading = false;
-    const scrollbarRef = ref<ScrollbarInst | null>(null);
-    async function handleScroll(e: Event) {
-      if (loading) return;
-      const container = e.target as HTMLElement;
-      const content = container.firstElementChild as HTMLElement;
-
-      const containerHeight = container.offsetHeight;
-      const containerScrollTop = container.scrollTop;
-      const contentHeight = content.offsetHeight;
-      const scrollBottom = contentHeight - containerScrollTop - containerHeight;
-
-      if (scrollBottom <= 300) {
-        loading = true;
-        await tabRef.value?.scroll();
-        setTimeout(() => (loading = false), 300);
-      }
-    }
-
-    return { handleScroll, topics: filteredTopics, scrollbarRef };
-  },
+import type { ScrollbarInst } from 'naive-ui';
+import { computed, ref } from 'vue';
+import { channelIdRef, tabRef, topicsRef } from '../store';
+const topics = computed(() => {
+  return [...topicsRef.values()].filter(
+    (topic) => !topic.hidden && topic.channelId === channelIdRef.value
+  );
 });
+
+let scrollLoading = false;
+const scrollbarRef = ref<ScrollbarInst | null>(null);
+async function handleScroll(e: Event) {
+  if (scrollLoading) return;
+  const container = e.target as HTMLElement;
+  const content = container.firstElementChild as HTMLElement;
+
+  const containerHeight = container.offsetHeight;
+  const containerScrollTop = container.scrollTop;
+  const contentHeight = content.offsetHeight;
+  const scrollBottom = contentHeight - containerScrollTop - containerHeight;
+
+  if (scrollBottom <= 300) {
+    scrollLoading = true;
+    await tabRef.value?.scroll();
+    setTimeout(() => (scrollLoading = false), 300);
+  }
+}
 </script>
 
 <style lang="scss" scoped></style>

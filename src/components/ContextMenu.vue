@@ -13,9 +13,9 @@
   </n-popselect>
 </template>
 
-<script lang="ts">
-import { SelectGroupOption, SelectOption } from 'naive-ui';
-import { defineComponent, onMounted, onUnmounted, PropType, ref } from 'vue';
+<script lang="ts" setup>
+import type { SelectGroupOption, SelectOption } from 'naive-ui';
+import { onMounted, onUnmounted, ref } from 'vue';
 
 type FollowerPlacement =
   | 'top-start'
@@ -31,45 +31,42 @@ type FollowerPlacement =
   | 'left'
   | 'left-end';
 
-export default defineComponent({
-  name: 'ContextMenu',
-  props: {
-    options: Array as PropType<(SelectOption | SelectGroupOption)[]>,
-    placement: {
-      type: String as PropType<FollowerPlacement>,
-      default: 'top',
-    },
-  },
-  emits: {
-    'update:value'(option: string) {
-      return true;
-    },
-  },
-  setup(props, ctx) {
-    const slotElem = ref<HTMLElement | null>(null);
-    const isOpen = ref(false);
-    function handleSelect(option: string) {
-      ctx.emit('update:value', option);
-      hide();
-    }
-    function show(e: MouseEvent) {
-      if (e.target instanceof HTMLAnchorElement) return;
-      isOpen.value = true;
-      e.preventDefault();
-    }
-    function hide() {
-      isOpen.value = false;
-    }
+withDefaults(
+  defineProps<{
+    options: (SelectOption | SelectGroupOption)[];
+    placement?: FollowerPlacement;
+  }>(),
+  {
+    placement: 'top',
+  }
+);
 
-    onMounted(() => {
-      slotElem.value?.addEventListener('contextmenu', show);
-    });
-    onUnmounted(() => {
-      slotElem.value?.removeEventListener('contextmenu', show);
-    });
-
-    return { handleSelect, hide, isOpen, show, slotElem };
+const emit = defineEmits({
+  'update:value'(option: string) {
+    return true;
   },
+});
+
+const slotElem = ref<HTMLElement | null>(null);
+const isOpen = ref(false);
+function handleSelect(option: string) {
+  emit('update:value', option);
+  hide();
+}
+function show(e: MouseEvent) {
+  if (e.target instanceof HTMLAnchorElement) return;
+  isOpen.value = true;
+  e.preventDefault();
+}
+function hide() {
+  isOpen.value = false;
+}
+
+onMounted(() => {
+  slotElem.value?.addEventListener('contextmenu', show);
+});
+onUnmounted(() => {
+  slotElem.value?.removeEventListener('contextmenu', show);
 });
 </script>
 

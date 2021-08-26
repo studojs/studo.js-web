@@ -14,32 +14,17 @@
   </n-layout>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import ChannelList from '@/components/ChannelList.vue';
 import MessageList from '@/components/MessageList.vue';
 import TopicList from '@/components/TopicList.vue';
-import { isPrivateChannel, tabRef } from '../store';
+import { computed } from 'vue';
+import { isPrivateChannel } from '../store';
 
-export default {
-  name: 'Chat',
-  components: {
-    ChannelList,
-    TopicList,
-    MessageList,
-  },
-  setup() {
-    const topicsWidth = computed(() => {
-      return isPrivateChannel.value ? '0' : '40%';
-    });
-    const messagesWidth = computed(() => {
-      return isPrivateChannel.value ? '100%' : '60%';
-    });
-
-    return { topicsWidth, messagesWidth };
-  },
-};
+const topicsWidth = computed(() => (isPrivateChannel.value ? '0' : '40%'));
+const messagesWidth = computed(() => (isPrivateChannel.value ? '100%' : '60%'));
 </script>
-  
+
 <style lang="scss" scoped>
 @import '@/styles/vars.scss';
 

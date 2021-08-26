@@ -1,29 +1,19 @@
 <template>
-  <ChannelRow v-for="channel in channels" :key="channel.id" :channel="channel" />
+  <ChannelRow
+    v-for="channel in channels"
+    :key="channel.id"
+    :channel="channel"
+  />
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from 'vue';
-import { channelsRef } from '../store';
+<script lang="ts" setup>
 import ChannelRow from '@/components/ChannelRow.vue';
+import { computed } from 'vue';
+import { channelsRef } from '../store';
 
-export default defineComponent({
-  name: 'ChannelList',
-  components: {
-    ChannelRow
-  },
-  setup() {
-    const filteredChannels = computed(() => {
-      return [...channelsRef.values()].filter(
-        (channel) => !channel.hidden
-      );
-    });
-
-    return { channels: filteredChannels };
-  }
+const channels = computed(() => {
+  return [...channelsRef.values()].filter((channel) => !channel.hidden);
 });
-
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

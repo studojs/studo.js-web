@@ -8,19 +8,9 @@
   </n-config-provider>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import NavBar from '@/components/NavBar.vue';
-import { localeRef, themeRef } from './store';
-
-export default {
-  name: 'App',
-  components: {
-    NavBar,
-  },
-  setup() {
-    return { locale: localeRef, theme: themeRef };
-  },
-};
+import { localeRef as locale, themeRef as theme } from './store';
 </script>
 
 <style lang="scss">

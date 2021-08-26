@@ -6,30 +6,20 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue';
+<script lang="ts" setup>
 import { localeRef } from '../store';
 
-export default defineComponent({
-  name: 'Tags',
-  props: {
-    ids: {
-      type: Array as PropType<string[]>,
-      default: [],
-    },
-  },
-  setup() {
-    function text(id: string) {
-      return localeRef.value.Tag[id as keyof typeof localeRef.value.Tag] ?? id;
-    }
-
-    function type(id: string) {
-      return ['ACCEPTEDANSWER', 'DONE'].includes(id) ? 'success' : 'info';
-    }
-
-    return { text, type };
-  },
+withDefaults(defineProps<{ ids: string[] }>(), {
+  ids: () => [],
 });
+
+function text(id: string) {
+  return localeRef.value.Tag[id as keyof typeof localeRef.value.Tag] ?? id;
+}
+
+function type(id: string) {
+  return ['ACCEPTEDANSWER', 'DONE'].includes(id) ? 'success' : 'info';
+}
 </script>
 
 <style lang="scss" scoped>

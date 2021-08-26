@@ -11,9 +11,6 @@
       </n-button>
       <n-card>
         <n-form :style="{ maxWidth: '640px' }">
-          <n-form-item label="Session Token">
-            <n-input v-model:value="token" :disabled="true" />
-          </n-form-item>
           <n-form-item label="Theme">
             <n-radio-group v-model:value="themeName" name="theme">
               <n-radio-button value="dark">Dark</n-radio-button>
@@ -50,7 +47,7 @@ export default {
       router.push('/');
     }
 
-    return { logOut, themeName: themeNameRef, token: sessionTokenRef.value };
+    return { logOut, themeName: themeNameRef };
   },
 };
 </script>

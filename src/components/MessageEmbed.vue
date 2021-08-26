@@ -1,10 +1,15 @@
 <template>
-  <a v-if="!loaded" :href="url" target="_blank" rel="noopenner noreferrer">
+  <a
+    v-if="!loaded && mimeType"
+    :href="url"
+    target="_blank"
+    rel="noopenner noreferrer"
+  >
     <n-skeleton width="70%" height="200px" :sharp="false" />
   </a>
 
   <n-image
-    v-if="mimeType.startsWith('image')"
+    v-if="mimeType?.startsWith('image')"
     :src="inlineURL || url"
     :preview-src="url"
     :img-props="{ onload: () => (loaded = true) }"
@@ -12,7 +17,7 @@
     @click.right.stop
   />
   <video
-    v-else-if="mimeType.startsWith('video')"
+    v-else-if="mimeType?.startsWith('video')"
     :src="url"
     controls
     @load="loaded = true"
@@ -43,16 +48,9 @@ export default defineComponent({
         return `image/${extension.value}`;
       if (extension.value?.match(/^mp4|mov|mkv|webm$/i))
         return `video/${extension.value}`;
-      return `application/${extension.value}`;
+      return undefined;
     });
     const loaded = ref(false);
-    watch(
-      mimeType,
-      () => {
-        if (mimeType.value.startsWith('application')) loaded.value = true;
-      },
-      { immediate: true }
-    );
 
     return { extension, loaded, mimeType };
   },

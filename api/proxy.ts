@@ -2,7 +2,7 @@ import { Handler } from '@netlify/functions';
 import { RestManager } from 'studo.js';
 
 export const handler: Handler = async (event) => {
-  const endpoint = event.path.split('/proxy/')[1];
+  const endpoint = event.path.substr('/api/proxy/'.length);
 
   if (!endpoint || !/^\w+(\/\w+)*\/?$/.test(endpoint)) {
     return {

@@ -136,10 +136,6 @@ export async function loadMessages(topicId = topicIdRef.value) {
   await _client.topics.subscribe(topicId);
 }
 
-export function tagType(tag: string) {
-  return ['ACCEPTEDANSWER', 'DONE'].includes(tag) ? 'success' : 'info';
-}
-
 export type Theme = 'light' | 'dark' | 'system';
 const savedThemeRef = ref((localStorage.getItem('theme') ?? 'system') as Theme);
 export const themeNameRef = computed({

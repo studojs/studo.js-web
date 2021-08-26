@@ -27,12 +27,12 @@ export default defineComponent({
   name: 'Vote',
   components: {
     DownIcon,
-    UpIcon
+    UpIcon,
   },
   props: {
     type: {
       type: String as PropType<VotingType>,
-      default: 'UP_AND_DOWN',
+      default: 'NONE',
     },
     state: {
       type: String as PropType<VoteType>,
@@ -40,13 +40,13 @@ export default defineComponent({
     },
     votes: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
   emits: {
     vote(state: VoteType) {
       return true;
-    }
+    },
   },
   setup(props, ctx) {
     function toggleVote(state: 'UP' | 'DOWN') {
@@ -55,7 +55,7 @@ export default defineComponent({
     }
 
     return { toggleVote };
-  }
+  },
 });
 </script>
 

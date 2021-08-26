@@ -13,7 +13,7 @@ import { ScrollbarInst } from 'naive-ui';
 export default defineComponent({
   name: 'TopicList',
   components: {
-    TopicRow
+    TopicRow,
   },
   setup() {
     const filteredTopics = computed(() => {
@@ -23,17 +23,16 @@ export default defineComponent({
     });
 
     let loading = false;
-
-    const scrollbarRef = ref<ScrollbarInst | null>(null)
+    const scrollbarRef = ref<ScrollbarInst | null>(null);
     async function handleScroll(e: Event) {
       if (loading) return;
-      const container = e.target as HTMLElement
-      const content = container.firstElementChild as HTMLElement
+      const container = e.target as HTMLElement;
+      const content = container.firstElementChild as HTMLElement;
 
-      const containerHeight = container.offsetHeight
-      const containerScrollTop = container.scrollTop
-      const contentHeight = content.offsetHeight
-      const scrollBottom = contentHeight - containerScrollTop - containerHeight
+      const containerHeight = container.offsetHeight;
+      const containerScrollTop = container.scrollTop;
+      const contentHeight = content.offsetHeight;
+      const scrollBottom = contentHeight - containerScrollTop - containerHeight;
 
       if (scrollBottom <= 300) {
         loading = true;
@@ -43,9 +42,8 @@ export default defineComponent({
     }
 
     return { handleScroll, topics: filteredTopics, scrollbarRef };
-  }
+  },
 });
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -17,7 +17,19 @@
 import { SelectGroupOption, SelectOption } from 'naive-ui';
 import { defineComponent, onMounted, onUnmounted, PropType, ref } from 'vue';
 
-type FollowerPlacement = 'top-start' | 'top' | 'top-end' | 'right-start' | 'right' | 'right-end' | 'bottom-start' | 'bottom' | 'bottom-end' | 'left-start' | 'left' | 'left-end';
+type FollowerPlacement =
+  | 'top-start'
+  | 'top'
+  | 'top-end'
+  | 'right-start'
+  | 'right'
+  | 'right-end'
+  | 'bottom-start'
+  | 'bottom'
+  | 'bottom-end'
+  | 'left-start'
+  | 'left'
+  | 'left-end';
 
 export default defineComponent({
   name: 'ContextMenu',
@@ -25,13 +37,13 @@ export default defineComponent({
     options: Array as PropType<(SelectOption | SelectGroupOption)[]>,
     placement: {
       type: String as PropType<FollowerPlacement>,
-      default: 'top'
-    }
+      default: 'top',
+    },
   },
   emits: {
     'update:value'(option: string) {
       return true;
-    }
+    },
   },
   setup(props, ctx) {
     const slotElem = ref<HTMLElement | null>(null);
@@ -41,6 +53,7 @@ export default defineComponent({
       hide();
     }
     function show(e: MouseEvent) {
+      if (e.target instanceof HTMLAnchorElement) return;
       isOpen.value = true;
       e.preventDefault();
     }
@@ -50,15 +63,14 @@ export default defineComponent({
 
     onMounted(() => {
       slotElem.value?.addEventListener('contextmenu', show);
-    })
+    });
     onUnmounted(() => {
       slotElem.value?.removeEventListener('contextmenu', show);
-    })
+    });
 
     return { handleSelect, hide, isOpen, show, slotElem };
-  }
+  },
 });
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

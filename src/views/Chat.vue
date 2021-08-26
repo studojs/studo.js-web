@@ -7,7 +7,7 @@
       <n-layout :style="{ flexBasis: topicsWidth }">
         <TopicList />
       </n-layout>
-      <n-layout :native-scrollbar="false" :style="{ flexBasis: messagesWidth }">
+      <n-layout :style="{ flexBasis: messagesWidth }">
         <MessageList />
       </n-layout>
     </n-layout>
@@ -18,8 +18,7 @@
 import ChannelList from '@/components/ChannelList.vue';
 import MessageList from '@/components/MessageList.vue';
 import TopicList from '@/components/TopicList.vue';
-import { computed } from 'vue';
-import { isPrivateChannel } from '../store';
+import { isPrivateChannel, tabRef } from '../store';
 
 export default {
   name: 'Chat',
@@ -29,8 +28,12 @@ export default {
     MessageList,
   },
   setup() {
-    const topicsWidth = computed(() => isPrivateChannel.value ? '0' : '40%');
-    const messagesWidth = computed(() => isPrivateChannel.value ? '100%' : '60%');
+    const topicsWidth = computed(() => {
+      return isPrivateChannel.value ? '0' : '40%';
+    });
+    const messagesWidth = computed(() => {
+      return isPrivateChannel.value ? '100%' : '60%';
+    });
 
     return { topicsWidth, messagesWidth };
   },
@@ -38,7 +41,7 @@ export default {
 </script>
   
 <style lang="scss" scoped>
-@import "@/styles/vars.scss";
+@import '@/styles/vars.scss';
 
 .container {
   height: calc(100vh - #{$header-height});

@@ -7,7 +7,7 @@
       <n-layout :style="{ flexBasis: topicsWidth }">
         <TopicList />
       </n-layout>
-      <n-layout :style="{ flexBasis: messagesWidth }">
+      <n-layout :style="{ flexBasis: messagesWidth }" class="messages-panel">
         <MessageList />
       </n-layout>
     </n-layout>
@@ -37,5 +37,11 @@ const messagesWidth = computed(() => (isPrivateChannel.value ? '100%' : '60%'));
   bottom: 0px;
   position: absolute;
   width: 100%;
+}
+
+.messages-panel > :deep(.n-layout-scroll-container) {
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
 }
 </style>

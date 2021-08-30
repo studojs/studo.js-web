@@ -53,10 +53,10 @@ export const clientRef = computed({
       messagesRef.set(message.id, message);
     });
 
-    client.chat.on('updateChannels', () => {
+    client.chat.on('UpdateChannels', () => {
       nextTick(() => sortChannels());
     });
-    client.chat.on('updateMessages', () => {
+    client.chat.on('UpdateMessages', () => {
       nextTick(() => sortMessages());
     });
 

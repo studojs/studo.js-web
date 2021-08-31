@@ -29,6 +29,7 @@
 
 <script lang="ts" setup>
 import MessageRow from '@/components/MessageRow.vue';
+import debounce from 'debounce';
 import { ScrollbarInst } from 'naive-ui';
 import { MentionOption } from 'naive-ui/lib/mention/src/interface';
 import { computed, ref } from 'vue';
@@ -53,10 +54,14 @@ const mentions = computed<MentionOption[]>(() => {
   }));
 });
 
-let scrollLoading = false;
 const scrollbarRef = ref<ScrollbarInst | null>(null);
+const loadMessagesDebounced = debounce(
+  () => topicRef.value?.scroll(),
+  500,
+  true
+);
+
 async function handleScroll(e: Event) {
-  if (scrollLoading) return;
   const container = e.target as HTMLElement;
   const content = container.firstElementChild as HTMLElement;
 
@@ -65,11 +70,7 @@ async function handleScroll(e: Event) {
   const contentHeight = content.offsetHeight;
   const scrollBottom = contentHeight - containerScrollTop - containerHeight;
 
-  if (scrollBottom <= 300) {
-    scrollLoading = true;
-    await topicRef.value?.scroll();
-    setTimeout(() => (scrollLoading = false), 300);
-  }
+  if (scrollBottom <= 300) loadMessagesDebounced();
 }
 </script>
 

@@ -4,7 +4,11 @@
       <div class="content">
         <Tags :ids="message.tagIds" />
         <div class="header">{{ message.header }}</div>
-        <div class="text" v-if="textHTML" v-html="textHTML"></div>
+        <div
+          :class="['text', { italic }]"
+          v-if="textHTML"
+          v-html="textHTML"
+        ></div>
         <MessageEmbed
           v-if="message.downloadUrl"
           :url="message.downloadUrl"
@@ -37,11 +41,12 @@ import { localeRef } from '../store';
 const props = defineProps<{
   message: Message;
 }>();
-
+const italic = computed(() => /^<i>.+<\/i>$/.test(props.message.text));
 const textHTML = computed(() => {
   // sanitize
   const span = document.createElement('span');
-  span.textContent = props.message.text;
+  const { text } = props.message;
+  span.textContent = italic.value ? text.substring(3, text.length - 4) : text;
   return linkify(span.innerHTML, {
     attributes: { target: '_blank', rel: 'noopenner noreferrer' },
   });
@@ -86,6 +91,10 @@ async function vote(state: VoteType) {
 .content {
   overflow-wrap: anywhere;
   white-space: pre-line;
+}
+
+.italic {
+  font-style: italic;
 }
 
 .header,

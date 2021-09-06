@@ -34,6 +34,7 @@ import MessageEmbed from '@/components/MessageEmbed.vue';
 import Tags from '@/components/Tags.vue';
 import Vote from '@/components/Vote.vue';
 import linkify from 'linkifyjs/html';
+import { useMessage } from 'naive-ui';
 import { ActionId, Message, VoteType } from 'studo.js';
 import { computed } from 'vue';
 import { localeRef } from '../store';
@@ -41,11 +42,13 @@ import { localeRef } from '../store';
 const props = defineProps<{
   message: Message;
 }>();
+
+const msg = useMessage();
 const italic = computed(() => /^<i>.+<\/i>$/.test(props.message.text));
 const textHTML = computed(() => {
   // sanitize
   const span = document.createElement('span');
-  const { text } = props.message;
+  const text = props.message.text.replace(/☺/g, ':)');
   span.textContent = italic.value ? text.substring(3, text.length - 4) : text;
   return linkify(span.innerHTML, {
     attributes: { target: '_blank', rel: 'noopenner noreferrer' },
@@ -58,6 +61,13 @@ const actions = computed(() =>
   }))
 );
 async function handleAction(action: ActionId) {
+  let copyText = '';
+  if (action === 'SHARE') copyText = props.message.actionParameters.SHARE;
+  else if (action === 'COPYTEXT') copyText = props.message.text;
+  if (copyText) {
+    await navigator.clipboard.writeText(copyText);
+    return msg.info(localeRef.value.copied);
+  }
   await props.message.sendActions(action);
 }
 async function vote(state: VoteType) {

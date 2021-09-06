@@ -1,21 +1,33 @@
 <template>
-  <ContextMenu :options="actions" @update:value="handleAction">
-    <router-link :to="channelRoute" :class="['row', { selected: isSelected }]">
-      <n-avatar round>{{ channel.iconChar }}</n-avatar>
-      <div>
-        <div class="text">{{ channel.name }}</div>
-        <div class="footer">{{ channel.footer }}</div>
-      </div>
-      <n-icon class="pin-icon" v-if="channel.pinned">
-        <PinIcon />
-      </n-icon>
-    </router-link>
-  </ContextMenu>
+  <router-link :to="channelRoute" :class="['row', { selected: isSelected }]">
+    <n-avatar round>{{ channel.iconChar }}</n-avatar>
+    <div>
+      <div class="text">{{ channel.name }}</div>
+      <div class="footer">{{ channel.footer }}</div>
+    </div>
+    <n-icon class="pin-icon" v-if="channel.pinned">
+      <PinIcon />
+    </n-icon>
+    <n-popselect
+      trigger="click"
+      :options="actions"
+      @update:value="handleAction"
+    >
+      <n-button class="menu" text size="large" @click.prevent>
+        <template #icon>
+          <n-icon><MenuIcon /></n-icon>
+        </template>
+      </n-button>
+    </n-popselect>
+  </router-link>
 </template>
 
 <script lang="ts" setup>
-import ContextMenu from '@/components/ContextMenu.vue';
-import { Pin as PinIcon } from '@vicons/carbon';
+import {
+  OverflowMenuVertical as MenuIcon,
+  Pin as PinIcon,
+} from '@vicons/carbon';
+import { useMessage } from 'naive-ui';
 import { ActionId, Channel } from 'studo.js';
 import { computed } from 'vue';
 import { channelIdRef, localeRef } from '../store';
@@ -24,6 +36,7 @@ const props = defineProps<{
   channel: Channel;
 }>();
 
+const message = useMessage();
 const isSelected = computed(() => channelIdRef.value === props.channel.id);
 const channelRoute = computed(() => ({
   name: 'channel',
@@ -38,6 +51,10 @@ const actions = computed(() =>
   }))
 );
 async function handleAction(action: ActionId) {
+  if (action === 'SHARE') {
+    await navigator.clipboard.writeText(props.channel.actionParameters.SHARE);
+    return message.info(localeRef.value.copied);
+  }
   await props.channel.sendActions(action);
 }
 </script>
@@ -46,6 +63,7 @@ async function handleAction(action: ActionId) {
 @import '@/styles/vars.scss';
 
 .row {
+  position: relative;
   --bezier: cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
@@ -70,6 +88,14 @@ async function handleAction(action: ActionId) {
     .actionsBtn {
       visibility: visible;
     }
+
+    .pin-icon {
+      display: none;
+    }
+
+    .menu {
+      display: block;
+    }
   }
   &.selected {
     background: rgba(99, 226, 183, 0.2);
@@ -89,5 +115,11 @@ async function handleAction(action: ActionId) {
 .pin-icon {
   flex-shrink: 0;
   margin-left: auto;
+}
+
+.menu {
+  position: absolute;
+  right: 25px;
+  display: none;
 }
 </style>

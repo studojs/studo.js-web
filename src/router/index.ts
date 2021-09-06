@@ -1,6 +1,4 @@
 import Chat from '@/views/Chat.vue';
-import Login from '@/views/Login.vue';
-import Settings from '@/views/Settings.vue';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import { loadMessages, loadTopics, sessionTokenRef } from '../store/index';
 
@@ -12,7 +10,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'login',
-    component: Login,
+    component: () => import('@/views/Login.vue'),
   },
   {
     path: '/chat',
@@ -36,7 +34,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/settings',
     name: 'settings',
-    component: Settings,
+    component: () => import('@/views/Settings.vue'),
   },
 ];
 

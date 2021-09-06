@@ -1,11 +1,9 @@
 <template>
   <n-scrollbar ref="scrollbarRef" @scroll="handleScroll">
     <TopicRow v-for="topic in topics" :key="topic.id" :topic="topic" />
-    <n-button v-show="topics.length" type="primary" round>
+    <n-button v-show="enableNewTopics" type="primary" circle>
       <template #icon>
-        <n-icon>
-          <AddIcon />
-        </n-icon>
+        <n-icon><AddIcon /></n-icon>
       </template>
     </n-button>
   </n-scrollbar>
@@ -19,6 +17,7 @@ import { ScrollbarInst } from 'naive-ui';
 import { computed, ref } from 'vue';
 import { channelIdRef, tabRef, topicsRef } from '../store';
 
+const enableNewTopics = computed(() => !!tabRef.value?.enableNewTopics);
 const topics = computed(() => {
   return [...topicsRef.values()].filter(
     (topic) => !topic.hidden && topic.channelId === channelIdRef.value
@@ -26,7 +25,7 @@ const topics = computed(() => {
 });
 
 const scrollbarRef = ref<ScrollbarInst | null>(null);
-const loadTopicsDebounced = debounce(() => tabRef.value?.scroll(), 500, true);
+const loadTopicsDebounced = debounce(() => tabRef.value?.scroll(), 200, true);
 
 function handleScroll(e: Event) {
   const container = e.target as HTMLElement;

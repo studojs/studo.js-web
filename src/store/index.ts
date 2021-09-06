@@ -90,11 +90,15 @@ const collator = new Intl.Collator();
 
 export function sortChannels() {
   // Sort clone workaround due to proxy/ref errors
-  const clone = channelsRef
-    .clone()
-    .sort(
-      (a, b) => b.sortScore - a.sortScore || collator.compare(a.name, b.name)
-    );
+  const clone = channelsRef.clone().sort((a, b) => {
+    if ([a, b].every(({ id }) => id.startsWith('course'))) {
+      return collator.compare(
+        a.name.replace(/^(VO|VU|KU|UE) /, ''),
+        b.name.replace(/^(VO|VU|KU|UE) /, '')
+      );
+    }
+    return b.sortScore - a.sortScore || collator.compare(a.name, b.name);
+  });
   channelsRef.clear();
   for (const [id, channel] of clone.entries()) {
     channelsRef.set(id, channel);

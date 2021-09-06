@@ -18,11 +18,25 @@
 import ChannelList from '@/components/ChannelList.vue';
 import MessageList from '@/components/MessageList.vue';
 import TopicList from '@/components/TopicList.vue';
-import { computed } from 'vue';
-import { isPrivateChannel } from '../store';
+import { useMessage } from 'naive-ui';
+import { computed, onMounted, watch } from 'vue';
+import { clientRef, isPrivateChannel } from '../store';
 
 const topicsWidth = computed(() => (isPrivateChannel.value ? '0' : '40%'));
 const messagesWidth = computed(() => (isPrivateChannel.value ? '100%' : '60%'));
+
+const msg = useMessage();
+onMounted(() => {
+  watch(
+    clientRef,
+    (client) => {
+      client?.chat.on('ShowToast', ({ text }) => {
+        msg.info(text, { closable: true });
+      });
+    },
+    { immediate: true }
+  );
+});
 </script>
 
 <style lang="scss" scoped>

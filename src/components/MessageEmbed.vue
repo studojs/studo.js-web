@@ -11,7 +11,7 @@
   <n-image
     v-if="mimeType?.startsWith('image')"
     :src="inlineURL || url"
-    :preview-src="inlineURL || url"
+    :preview-src="url || inlineURL"
     :img-props="{ onload: () => (loaded = true) }"
     :alt="fileName"
     @click.right.stop

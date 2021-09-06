@@ -4,9 +4,7 @@
       <n-button @click="logOut">
         Log Out
         <template #icon>
-          <n-icon>
-            <LogoutIcon />
-          </n-icon>
+          <n-icon><LogoutIcon /></n-icon>
         </template>
       </n-button>
       <n-card>

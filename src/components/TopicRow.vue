@@ -4,7 +4,7 @@
       <div class="content">
         <Tags :ids="topic.tagIds" />
         <div class="header">{{ topic.header }}</div>
-        <div class="text">{{ topic.text }}</div>
+        <div class="text">{{ topic.text.replace(/☺️/g, ':)') }}</div>
         <div class="footer">{{ topic.footer }}</div>
       </div>
       <Vote
@@ -21,6 +21,7 @@
 import ContextMenu from '@/components/ContextMenu.vue';
 import Tags from '@/components/Tags.vue';
 import Vote from '@/components/Vote.vue';
+import { useMessage } from 'naive-ui';
 import { ActionId, Topic, VoteType } from 'studo.js';
 import { computed } from 'vue';
 import { localeRef, topicIdRef } from '../store';
@@ -29,6 +30,7 @@ const props = defineProps<{
   topic: Topic;
 }>();
 
+const message = useMessage();
 const isSelected = computed(() => topicIdRef.value === props.topic.id);
 const topicRoute = computed(() => ({
   name: 'topic',
@@ -43,6 +45,13 @@ const actions = computed(() =>
   }))
 );
 async function handleAction(action: ActionId) {
+  let copyText = '';
+  if (action === 'SHARE') copyText = props.topic.actionParameters.SHARE;
+  else if (action === 'COPYTEXT') copyText = props.topic.text;
+  if (copyText) {
+    await navigator.clipboard.writeText(copyText);
+    return message.info(localeRef.value.copied);
+  }
   await props.topic.sendActions(action);
 }
 async function vote(state: VoteType) {

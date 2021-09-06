@@ -12,26 +12,39 @@
       </MessageRow>
     </n-image-group>
   </n-scrollbar>
-  <n-input-group v-show="messages.length">
-    <n-upload v-if="enableFiles">
-      <n-button>+</n-button>
-    </n-upload>
+  <n-input-group v-show="allowNewMessages">
     <n-mention
       type="textarea"
       placeholder="Message"
       :options="mentions"
       v-model:value="textInput"
       :autosize="{ maxRows: 15 }"
-    />
-    <n-button @click="send" :disabled="!canSend" type="primary">Send</n-button>
+      round
+    >
+      <template #suffix>
+        <n-button>Suffix</n-button>
+      </template>
+    </n-mention>
+    <n-upload v-if="allowFiles">
+      <n-button>
+        <template #icon>
+          <n-icon><AttachmentIcon /></n-icon>
+        </template>
+      </n-button>
+    </n-upload>
+    <n-button @click="send" :disabled="!canSend">
+      <template #icon>
+        <n-icon><SendIcon /></n-icon>
+      </template>
+    </n-button>
   </n-input-group>
 </template>
 
 <script lang="ts" setup>
 import MessageRow from '@/components/MessageRow.vue';
+import { Attachment as AttachmentIcon, Send as SendIcon } from '@vicons/carbon';
 import debounce from 'debounce';
-import { ScrollbarInst } from 'naive-ui';
-import { MentionOption } from 'naive-ui/lib/mention/src/interface';
+import { MentionOption, ScrollbarInst } from 'naive-ui';
 import { computed, ref } from 'vue';
 import { messagesRef, topicIdRef, topicRef } from '../store';
 
@@ -41,7 +54,8 @@ async function send() {
   await topicRef.value?.sendMessage(textInput.value.trim());
   textInput.value = '';
 }
-const enableFiles = computed(() => !!topicRef.value?.enableFileUpload);
+const allowNewMessages = computed(() => !!topicRef.value?.allowNewMessages);
+const allowFiles = computed(() => !!topicRef.value?.enableFileUpload);
 const messages = computed(() => {
   return [...messagesRef.values()].filter(
     (message) => !message.hidden && message.topicId === topicIdRef.value
@@ -57,7 +71,7 @@ const mentions = computed<MentionOption[]>(() => {
 const scrollbarRef = ref<ScrollbarInst | null>(null);
 const loadMessagesDebounced = debounce(
   () => topicRef.value?.scroll(),
-  500,
+  200,
   true
 );
 

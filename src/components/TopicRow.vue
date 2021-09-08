@@ -22,15 +22,18 @@ import ContextMenu from '@/components/ContextMenu.vue';
 import Tags from '@/components/Tags.vue';
 import Vote from '@/components/Vote.vue';
 import { useMessage } from 'naive-ui';
-import { ActionId, Topic, VoteType } from 'studo.js';
+import { Topic, VoteType } from 'studo.js';
 import { computed } from 'vue';
-import { localeRef, topicIdRef } from '../store';
+import { useI18n } from 'vue-i18n';
+import { topicIdRef } from '../store';
+import { useAction } from '../utils';
 
 const props = defineProps<{
   topic: Topic;
 }>();
-
+const { t } = useI18n();
 const message = useMessage();
+
 const isSelected = computed(() => topicIdRef.value === props.topic.id);
 const topicRoute = computed(() => ({
   name: 'topic',
@@ -40,19 +43,12 @@ const topicRoute = computed(() => ({
 }));
 const actions = computed(() =>
   props.topic.actionIds.map((id) => ({
-    label: localeRef.value.Action[id] ?? id,
+    label: t('actions.' + id),
     value: id,
   }))
 );
-async function handleAction(action: ActionId) {
-  let copyText = '';
-  if (action === 'SHARE') copyText = props.topic.actionParameters.SHARE;
-  else if (action === 'COPYTEXT') copyText = props.topic.text;
-  if (copyText) {
-    await navigator.clipboard.writeText(copyText);
-    return message.info(localeRef.value.copied);
-  }
-  await props.topic.sendActions(action);
+async function handleAction(action: string) {
+  await useAction(action, props.topic, message);
 }
 async function vote(state: VoteType) {
   await props.topic.vote(state);

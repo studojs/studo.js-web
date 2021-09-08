@@ -1,0 +1,32 @@
+{
+  "language": "Sprache",
+  "copied": "Kopiert",
+  "logout": "Abmelden",
+  "chat": "Chat",
+  "settings": "Einstellungen",
+  "languages": {
+    "en": "Englisch",
+    "de": "Deutsch"
+  },
+  "theme": "Anzeige",
+  "themes": {
+    "dark": "Dunkel",
+    "system": "System",
+    "light": "Hell"
+  },
+  "actions": {
+    "BLOCKPRIVATEMESSAGE": "Blockieren",
+    "COPYTEXT": "Text kopieren",
+    "DELETE": "Löschen",
+    "DISABLEPUSH": "Push Notifications ausschalten",
+    "ENABLEPUSH": "Push Notifications einschalten",
+    "HIDE": "Verbergen",
+    "HIDEPRIVATE": "Verbergen",
+    "PIN": "Pinnen",
+    "REPORT": "Melden",
+    "REPORTUSER": "Melden",
+    "SHARE": "Teilen",
+    "STARTPRIVATEMESSAGING": "Private Nachricht",
+    "UNPIN": "Pin entfernen"
+  }
+}

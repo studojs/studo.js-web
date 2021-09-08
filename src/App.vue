@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider :theme="theme" :locale="locale" abstract>
+  <n-config-provider :theme="theme" abstract>
     <n-global-style />
     <NavBar />
     <n-message-provider>
@@ -10,7 +10,7 @@
 
 <script lang="ts" setup>
 import NavBar from '@/components/NavBar.vue';
-import { localeRef as locale, themeRef as theme } from './store';
+import { themeRef as theme } from './store';
 </script>
 
 <style lang="scss">

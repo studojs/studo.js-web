@@ -8,7 +8,6 @@ import {
   Topic,
 } from 'studo.js';
 import { computed, nextTick, reactive, ref } from 'vue';
-import enUS from '../locale/enUS';
 import router from '../router/index';
 
 RestManager.proxyURL = `${location.origin}/api/proxy`;
@@ -58,6 +57,12 @@ export const clientRef = computed({
     });
     client.chat.on('UpdateMessages', () => {
       nextTick(() => sortMessages());
+    });
+    client.chat.on('send', ({ name, content }) => {
+      console.debug('@send', name, content);
+    });
+    client.chat.on('command', ({ name, content }) => {
+      console.debug('@recv', name, content);
     });
 
     await client.connect();
@@ -163,5 +168,3 @@ export const currentTabNameRef = computed(() => {
 
   return (route.name as string) || 'chat';
 });
-
-export const localeRef = ref(enUS);

@@ -35,15 +35,18 @@ import Tags from '@/components/Tags.vue';
 import Vote from '@/components/Vote.vue';
 import linkify from 'linkifyjs/html';
 import { useMessage } from 'naive-ui';
-import { ActionId, Message, VoteType } from 'studo.js';
+import { Message, VoteType } from 'studo.js';
 import { computed } from 'vue';
-import { localeRef } from '../store';
+import { useI18n } from 'vue-i18n';
+import { useAction } from '../utils';
 
 const props = defineProps<{
   message: Message;
 }>();
 
 const msg = useMessage();
+const { t } = useI18n();
+
 const italic = computed(() => /^<i>.+<\/i>$/.test(props.message.text));
 const textHTML = computed(() => {
   // sanitize
@@ -56,19 +59,12 @@ const textHTML = computed(() => {
 });
 const actions = computed(() =>
   props.message.actionIds.map((id) => ({
-    label: localeRef.value.Action[id] ?? id,
+    label: t('actions.' + id),
     value: id,
   }))
 );
-async function handleAction(action: ActionId) {
-  let copyText = '';
-  if (action === 'SHARE') copyText = props.message.actionParameters.SHARE;
-  else if (action === 'COPYTEXT') copyText = props.message.text;
-  if (copyText) {
-    await navigator.clipboard.writeText(copyText);
-    return msg.info(localeRef.value.copied);
-  }
-  await props.message.sendActions(action);
+async function handleAction(action: string) {
+  await useAction(action, props.message, msg);
 }
 async function vote(state: VoteType) {
   await props.message.vote(state);

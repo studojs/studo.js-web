@@ -42,12 +42,11 @@ function handleScroll(e: Event) {
 
 <style lang="scss" scoped>
 .n-button {
-  --size: 40px;
   position: absolute;
   bottom: 30px;
   padding: 0;
   right: 40px;
-  width: var(--size);
-  height: var(--size);
+  width: 40px;
+  height: 40px;
 }
 </style>

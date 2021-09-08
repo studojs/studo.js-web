@@ -7,14 +7,12 @@
 </template>
 
 <script lang="ts" setup>
-import { localeRef } from '../store';
-
 withDefaults(defineProps<{ ids: string[] }>(), {
   ids: () => [],
 });
 
 function text(id: string) {
-  return localeRef.value.Tag[id as keyof typeof localeRef.value.Tag] ?? id;
+  return id; // TODO: locale
 }
 
 function type(id: string) {

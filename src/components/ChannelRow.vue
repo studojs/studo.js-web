@@ -28,9 +28,13 @@ import {
   Pin as PinIcon,
 } from '@vicons/carbon';
 import { useMessage } from 'naive-ui';
-import { ActionId, Channel } from 'studo.js';
+import { Channel } from 'studo.js';
 import { computed } from 'vue';
-import { channelIdRef, localeRef } from '../store';
+import { useI18n } from 'vue-i18n';
+import { channelIdRef } from '../store';
+import { useAction } from '../utils';
+
+const { t } = useI18n();
 
 const props = defineProps<{
   channel: Channel;
@@ -46,16 +50,12 @@ const channelRoute = computed(() => ({
 }));
 const actions = computed(() =>
   props.channel.actionIds.map((id) => ({
-    label: localeRef.value.Action[id] ?? id,
+    label: t('actions.' + id),
     value: id,
   }))
 );
-async function handleAction(action: ActionId) {
-  if (action === 'SHARE') {
-    await navigator.clipboard.writeText(props.channel.actionParameters.SHARE);
-    return message.info(localeRef.value.copied);
-  }
-  await props.channel.sendActions(action);
+async function handleAction(action: string) {
+  await useAction(action, props.channel, message);
 }
 </script>
 

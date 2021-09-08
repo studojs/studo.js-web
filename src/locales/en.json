@@ -1,0 +1,32 @@
+{
+  "language": "Language",
+  "copied": "Copied",
+  "logout": "Log Out",
+  "chat": "Chat",
+  "settings": "Settings",
+  "languages": {
+    "en": "English",
+    "de": "German"
+  },
+  "theme": "Theme",
+  "themes": {
+    "dark": "Dark",
+    "system": "System",
+    "light": "Light"
+  },
+  "actions": {
+    "BLOCKPRIVATEMESSAGE": "Block",
+    "COPYTEXT": "Copy Text",
+    "DELETE": "Delete",
+    "DISABLEPUSH": "Disable Push Notifications",
+    "ENABLEPUSH": "Enable Push Notifications",
+    "HIDE": "Hide",
+    "HIDEPRIVATE": "Hide",
+    "PIN": "Pin",
+    "REPORT": "Report",
+    "REPORTUSER": "Report",
+    "SHARE": "Share",
+    "STARTPRIVATEMESSAGING": "Private Message",
+    "UNPIN": "Remove Pin"
+  }
+}

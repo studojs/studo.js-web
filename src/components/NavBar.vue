@@ -13,16 +13,19 @@ import {
 } from '@vicons/carbon';
 import { MenuOption, NIcon } from 'naive-ui';
 import { Component, h } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { RouterLink } from 'vue-router';
 import router from '../router';
 import { currentTabNameRef as tabName, pointsRef } from '../store';
+
+const { t } = useI18n();
 
 function renderRoute(label: string, route: string) {
   return () =>
     h(
       RouterLink,
       { to: router.resolve({ name: route }).path },
-      { default: () => label }
+      { default: () => t(label) }
     );
 }
 function renderIcon(icon: Component) {
@@ -30,12 +33,12 @@ function renderIcon(icon: Component) {
 }
 const menuOptions: MenuOption[] = [
   {
-    label: renderRoute('Chat', 'chat'),
+    label: renderRoute('chat', 'chat'),
     key: 'chat',
     icon: renderIcon(ChatIcon),
   },
   {
-    label: renderRoute('Settings', 'settings'),
+    label: renderRoute('settings', 'settings'),
     key: 'settings',
     icon: renderIcon(SettingsIcon),
   },

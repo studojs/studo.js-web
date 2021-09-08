@@ -1,9 +1,15 @@
 {
   "language": "Sprache",
   "copied": "Kopiert",
+  "login": "Anmelden",
   "logout": "Abmelden",
   "chat": "Chat",
   "settings": "Einstellungen",
+  "phone": "Telefonnummer",
+  "send": "Senden",
+  "verificationCode": "Verifizierungscode",
+  "tos": "Nutzungsbedingungen",
+  "term": "Ich akzeptiere die {0}.",
   "languages": {
     "en": "Englisch",
     "de": "Deutsch"
@@ -28,5 +34,9 @@
     "SHARE": "Teilen",
     "STARTPRIVATEMESSAGING": "Private Nachricht",
     "UNPIN": "Pin entfernen"
+  },
+  "tags": {
+    "INPLANNING": "In Planung",
+    "DONE": "Implementiert"
   }
 }

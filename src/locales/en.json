@@ -1,9 +1,15 @@
 {
   "language": "Language",
   "copied": "Copied",
+  "login": "Login",
   "logout": "Log Out",
   "chat": "Chat",
   "settings": "Settings",
+  "phone": "Phone",
+  "send": "Send",
+  "verificationCode": "Verification Code",
+  "tos": "Term of Service",
+  "term": "I accept the {0}.",
   "languages": {
     "en": "English",
     "de": "German"
@@ -28,5 +34,9 @@
     "SHARE": "Share",
     "STARTPRIVATEMESSAGING": "Private Message",
     "UNPIN": "Remove Pin"
+  },
+  "tags": {
+    "INPLANNING": "Planned",
+    "DONE": "Implemented"
   }
 }

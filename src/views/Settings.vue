@@ -1,13 +1,13 @@
 <template>
   <div class="container">
-    <n-space vertical>
-      <n-button @click="logOut">
-        {{ t('logout') }}
-        <template #icon>
-          <n-icon><LogoutIcon /></n-icon>
-        </template>
-      </n-button>
-      <n-card>
+    <n-card>
+      <n-space vertical>
+        <n-button @click="logOut">
+          {{ t('logout') }}
+          <template #icon>
+            <n-icon><LogoutIcon /></n-icon>
+          </template>
+        </n-button>
         <n-form :style="{ maxWidth: '640px' }">
           <n-form-item :label="t('theme')">
             <n-radio-group v-model:value="themeName" name="theme">
@@ -25,7 +25,7 @@
           <n-form-item :label="t('language')">
             <n-radio-group v-model:value="locale" name="language">
               <n-radio-button
-                v-for="lang in locales"
+                v-for="lang in availableLocales"
                 :key="lang"
                 :value="lang"
                 >{{ t('languages.' + lang) }}</n-radio-button
@@ -33,25 +33,26 @@
             </n-radio-group>
           </n-form-item>
         </n-form>
-      </n-card>
-    </n-space>
+      </n-space>
+    </n-card>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Logout as LogoutIcon } from '@vicons/carbon';
+import { watch } from '@vue/runtime-core';
 import { useMessage } from 'naive-ui';
 import { useI18n } from 'vue-i18n';
-import { locales } from '../i18n';
 import router from '../router';
 import {
   clientRef,
   sessionTokenRef,
   themeNameRef as themeName,
 } from '../store';
-const { t, locale } = useI18n();
 
+const { t, locale, availableLocales } = useI18n();
 const message = useMessage();
+
 async function logOut() {
   if (!sessionTokenRef.value) return;
 
@@ -60,6 +61,10 @@ async function logOut() {
   message.info('Logged out');
   router.push('/');
 }
+
+watch(locale, () => {
+  localStorage.setItem('locale', locale.value);
+});
 </script>
 
 <style lang="scss" scoped>

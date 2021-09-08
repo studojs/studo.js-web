@@ -64,7 +64,9 @@ const actions = computed(() =>
   }))
 );
 async function handleAction(action: string) {
-  await useAction(action, props.message, msg);
+  if ((await useAction(action, props.message)) === 'copied') {
+    msg.info(t('copied'));
+  }
 }
 async function vote(state: VoteType) {
   await props.message.vote(state);

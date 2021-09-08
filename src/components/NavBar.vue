@@ -18,7 +18,7 @@ import { RouterLink } from 'vue-router';
 import router from '../router';
 import { currentTabNameRef as tabName, pointsRef } from '../store';
 
-const { t } = useI18n();
+const { t, n } = useI18n();
 
 function renderRoute(label: string, route: string) {
   return () =>
@@ -43,7 +43,7 @@ const menuOptions: MenuOption[] = [
     icon: renderIcon(SettingsIcon),
   },
   {
-    label: () => h('p', null, pointsRef.value.toLocaleString()),
+    label: () => h('p', null, { default: () => n(pointsRef.value) }),
     key: 'points',
     icon: renderIcon(GrowthIcon),
   },

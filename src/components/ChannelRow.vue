@@ -55,7 +55,9 @@ const actions = computed(() =>
   }))
 );
 async function handleAction(action: string) {
-  await useAction(action, props.channel, message);
+  if ((await useAction(action, props.channel)) === 'copied') {
+    message.info(t('copied'));
+  }
 }
 </script>
 

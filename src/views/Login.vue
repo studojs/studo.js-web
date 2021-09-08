@@ -2,21 +2,23 @@
   <div class="container">
     <n-space vertical>
       <n-checkbox v-model:checked="tos">
-        I have read the
-        <a
-          @click.stop
-          href="https://studo.com/tos"
-          target="_blank"
-          rel="noopenner noreferrer"
-          >Terms Of Service</a
-        >
+        <i18n-t keypath="term" tag="label" for="tos">
+          <a
+            @click.stop
+            href="https://studo.com/tos"
+            target="_blank"
+            rel="noopenner noreferrer"
+          >
+            {{ $t('tos') }}
+          </a>
+        </i18n-t>
       </n-checkbox>
       <n-form
         :model="model"
         :disabled="!tos || step !== 1"
         :style="{ maxWidth: '640px' }"
       >
-        <n-form-item label="Phone">
+        <n-form-item :label="t('phone')">
           <n-input-group>
             <n-input
               v-model:value="model.prefix"
@@ -32,18 +34,22 @@
             />
           </n-input-group>
         </n-form-item>
-        <n-button @click="sendSMS" :disabled="!tos || step !== 1" type="primary"
-          >Send</n-button
+        <n-button
+          @click="sendSMS"
+          :disabled="!tos || step !== 1"
+          type="primary"
         >
+          {{ t('send') }}
+        </n-button>
       </n-form>
 
       <n-form :disabled="!tos || step !== 2" :style="{ maxWidth: '640px' }">
-        <n-form-item label="Verification Code">
+        <n-form-item :label="t('verificationCode')">
           <n-input v-model:value="smsToken" placeholder="1234" maxlength="4" />
         </n-form-item>
-        <n-button @click="login" :disabled="!tos || step !== 2" type="primary"
-          >Login</n-button
-        >
+        <n-button @click="login" :disabled="!tos || step !== 2" type="primary">
+          {{ t('login') }}
+        </n-button>
       </n-form>
     </n-space>
   </div>
@@ -53,11 +59,14 @@
 import { useMessage } from 'naive-ui';
 import { Client, SmsVerification } from 'studo.js';
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import router from '../router';
 import { clientRef, sessionTokenRef } from '../store';
 
-const tos = ref(false);
 const message = useMessage();
+const { t } = useI18n();
+
+const tos = ref(false);
 const smsToken = ref('');
 const step = ref(1);
 const model = ref({
@@ -86,7 +95,7 @@ async function login() {
     const client = new Client(response.studoSessionToken);
     clientRef.value = client;
     router.push('/');
-  } catch (error) {
+  } catch (error: any) {
     message.error(error.message);
   }
 }

@@ -50,7 +50,7 @@ const channelRoute = computed(() => ({
 }));
 const actions = computed(() =>
   props.channel.actionIds.map((id) => ({
-    label: t('actions.' + id),
+    label: t('actions.' + id, id),
     value: id,
   }))
 );

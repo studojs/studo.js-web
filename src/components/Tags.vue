@@ -1,7 +1,7 @@
 <template>
   <div v-if="ids.length" class="tags">
     <n-tag v-for="id in ids" :key="id" :type="type(id)" size="small">
-      {{ t('tags.' + id) }}
+      {{ t('tags.' + id, id) }}
     </n-tag>
   </div>
 </template>

@@ -3,11 +3,14 @@
   "copied": "Copied",
   "login": "Login",
   "logout": "Log Out",
+  "loggedIn": "Logged in",
+  "loggedOut": "Logged out",
   "chat": "Chat",
   "settings": "Settings",
   "phone": "Phone",
   "send": "Send",
   "verificationCode": "Verification Code",
+  "smsSent": "SMS sent",
   "tos": "Term of Service",
   "term": "I accept the {0}.",
   "languages": {
@@ -36,7 +39,8 @@
     "UNPIN": "Remove Pin"
   },
   "tags": {
-    "INPLANNING": "Planned",
-    "DONE": "Implemented"
+    "ACCEPTEDANSWER": "Accepted Answer",
+    "DONE": "Implemented",
+    "INPLANNING": "Planned"
   }
 }

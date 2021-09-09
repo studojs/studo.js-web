@@ -59,7 +59,7 @@ const textHTML = computed(() => {
 });
 const actions = computed(() =>
   props.message.actionIds.map((id) => ({
-    label: t('actions.' + id),
+    label: t('actions.' + id, id),
     value: id,
   }))
 );

@@ -80,7 +80,7 @@ async function sendSMS() {
   const { prefix, number } = model.value;
   sms = new SmsVerification(prefix, number);
   const response = await sms.send();
-  if (response === 'SUCCESS') message.success('SMS sent');
+  if (response === 'SUCCESS') message.success(t('smsSent'));
   else message.error(response);
 }
 
@@ -89,7 +89,7 @@ async function login() {
   try {
     const response = await sms.signIn(smsToken.value);
     console.log(response);
-    message.success('Signed in');
+    message.success(t('loggedIn'));
 
     sessionTokenRef.value = response.studoSessionToken;
     const client = new Client(response.studoSessionToken);

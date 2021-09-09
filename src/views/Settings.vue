@@ -42,6 +42,7 @@
 import { Logout as LogoutIcon } from '@vicons/carbon';
 import { watch } from '@vue/runtime-core';
 import { useMessage } from 'naive-ui';
+import { RestManager } from 'studo.js';
 import { useI18n } from 'vue-i18n';
 import router from '../router';
 import {
@@ -56,9 +57,9 @@ const message = useMessage();
 async function logOut() {
   if (!sessionTokenRef.value) return;
 
-  // await RestManager.signOut(sessionTokenRef.value);
+  await RestManager.signOut(sessionTokenRef.value);
   sessionTokenRef.value = clientRef.value = null;
-  message.info('Logged out');
+  message.info(t('loggedOut'));
   router.push('/');
 }
 
@@ -74,7 +75,7 @@ watch(locale, () => {
   margin: 30px;
 }
 
-.n-space {
-  width: 100%;
+.n-card {
+  width: 50%;
 }
 </style>

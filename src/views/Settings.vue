@@ -40,9 +40,9 @@
 
 <script lang="ts" setup>
 import { Logout as LogoutIcon } from '@vicons/carbon';
-import { watch } from '@vue/runtime-core';
 import { useMessage } from 'naive-ui';
 import { RestManager } from 'studo.js';
+import { watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import router from '../router';
 import {

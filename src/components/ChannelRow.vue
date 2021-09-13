@@ -8,11 +8,7 @@
     <n-icon class="pin-icon" v-if="channel.pinned">
       <PinIcon />
     </n-icon>
-    <n-popselect
-      trigger="click"
-      :options="actions"
-      @update:value="handleAction"
-    >
+    <n-popselect trigger="click" :options="actions" @update:value="sendAction">
       <n-button class="menu" text size="large" @click.prevent>
         <template #icon>
           <n-icon><MenuIcon /></n-icon>
@@ -27,20 +23,18 @@ import {
   OverflowMenuVertical as MenuIcon,
   Pin as PinIcon,
 } from '@vicons/carbon';
-import { useMessage } from 'naive-ui';
 import { Channel } from 'studo.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { channelIdRef } from '../store';
 import { useAction } from '../utils';
 
-const { t } = useI18n();
-
 const props = defineProps<{
   channel: Channel;
 }>();
+const { t } = useI18n();
+const sendAction = useAction(props.channel);
 
-const message = useMessage();
 const isSelected = computed(() => channelIdRef.value === props.channel.id);
 const channelRoute = computed(() => ({
   name: 'channel',
@@ -54,11 +48,6 @@ const actions = computed(() =>
     value: id,
   }))
 );
-async function handleAction(action: string) {
-  if ((await useAction(action, props.channel)) === 'copied') {
-    message.info(t('copied'));
-  }
-}
 </script>
 
 <style lang="scss" scoped>

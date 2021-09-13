@@ -1,5 +1,5 @@
 <template>
-  <ContextMenu :options="actions" @update:value="handleAction">
+  <ContextMenu :options="actions" @update:value="sendAction">
     <router-link :to="topicRoute" :class="['row', { selected: isSelected }]">
       <div class="content">
         <Tags :ids="topic.tagIds" />
@@ -18,7 +18,6 @@
 </template>
 
 <script lang="ts" setup>
-import { useMessage } from 'naive-ui';
 import { Topic, VoteType } from 'studo.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -29,7 +28,7 @@ const props = defineProps<{
   topic: Topic;
 }>();
 const { t } = useI18n();
-const message = useMessage();
+const sendAction = useAction(props.topic);
 
 const isSelected = computed(() => topicIdRef.value === props.topic.id);
 const topicRoute = computed(() => ({
@@ -44,11 +43,6 @@ const actions = computed(() =>
     value: id,
   }))
 );
-async function handleAction(action: string) {
-  if ((await useAction(action, props.topic)) === 'copied') {
-    message.info(t('copied'));
-  }
-}
 async function vote(state: VoteType) {
   await props.topic.vote(state);
 }

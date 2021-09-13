@@ -1,5 +1,5 @@
 <template>
-  <ContextMenu :options="actions" @update:value="handleAction">
+  <ContextMenu :options="actions" @update:value="sendAction">
     <div class="row">
       <div class="content">
         <Tags :ids="message.tagIds" />
@@ -30,7 +30,6 @@
 
 <script lang="ts" setup>
 import linkify from 'linkifyjs/html';
-import { useMessage } from 'naive-ui';
 import { Message, VoteType } from 'studo.js';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -39,9 +38,8 @@ import { useAction } from '../utils';
 const props = defineProps<{
   message: Message;
 }>();
-
-const msg = useMessage();
 const { t } = useI18n();
+const sendAction = useAction(props.message);
 
 const italic = computed(() => /^<i>.+<\/i>$/.test(props.message.text));
 const textHTML = computed(() => {
@@ -59,11 +57,6 @@ const actions = computed(() =>
     value: id,
   }))
 );
-async function handleAction(action: string) {
-  if ((await useAction(action, props.message)) === 'copied') {
-    msg.info(t('copied'));
-  }
-}
 async function vote(state: VoteType) {
   await props.message.vote(state);
 }

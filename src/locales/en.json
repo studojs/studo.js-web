@@ -24,10 +24,12 @@
     "light": "Light"
   },
   "actions": {
+    "AREYOUSUREDELETE": "Delete",
     "BLOCKPRIVATEMESSAGE": "Block",
     "COPYTEXT": "Copy Text",
     "DELETE": "Delete",
     "DISABLEPUSH": "Disable Push Notifications",
+    "EDITMESSAGE": "Edit Message",
     "ENABLEPUSH": "Enable Push Notifications",
     "HIDE": "Hide",
     "HIDEPRIVATE": "Hide",

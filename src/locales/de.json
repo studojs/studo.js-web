@@ -24,10 +24,12 @@
     "light": "Hell"
   },
   "actions": {
+    "AREYOUSUREDELETE": "Löschen",
     "BLOCKPRIVATEMESSAGE": "Blockieren",
     "COPYTEXT": "Text kopieren",
     "DELETE": "Löschen",
     "DISABLEPUSH": "Push Notifications ausschalten",
+    "EDITMESSAGE": "Text bearbeiten",
     "ENABLEPUSH": "Push Notifications einschalten",
     "HIDE": "Verbergen",
     "HIDEPRIVATE": "Verbergen",

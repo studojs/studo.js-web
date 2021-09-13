@@ -10,9 +10,14 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
+      'vue-i18n': 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js',
     },
+  },
+  build: {
+    sourcemap: true,
   },
   define: {
     __REPOSITORY__: JSON.stringify(repository),
+    __VUE_I18N_LEGACY_API__: false,
   },
 });

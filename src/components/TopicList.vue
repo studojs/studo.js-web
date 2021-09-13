@@ -10,7 +10,6 @@
 </template>
 
 <script lang="ts" setup>
-import TopicRow from '@/components/TopicRow.vue';
 import { Add as AddIcon } from '@vicons/carbon';
 import { debounce } from 'debounce';
 import { ScrollbarInst } from 'naive-ui';

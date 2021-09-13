@@ -29,10 +29,6 @@
 </template>
 
 <script lang="ts" setup>
-import ContextMenu from '@/components/ContextMenu.vue';
-import MessageEmbed from '@/components/MessageEmbed.vue';
-import Tags from '@/components/Tags.vue';
-import Vote from '@/components/Vote.vue';
 import linkify from 'linkifyjs/html';
 import { useMessage } from 'naive-ui';
 import { Message, VoteType } from 'studo.js';

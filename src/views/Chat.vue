@@ -15,9 +15,6 @@
 </template>
 
 <script lang="ts" setup>
-import ChannelList from '@/components/ChannelList.vue';
-import MessageList from '@/components/MessageList.vue';
-import TopicList from '@/components/TopicList.vue';
 import { useMessage } from 'naive-ui';
 import { computed, onMounted, watch } from 'vue';
 import { clientRef, isPrivateChannel } from '../store';

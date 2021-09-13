@@ -7,7 +7,6 @@
 </template>
 
 <script lang="ts" setup>
-import ChannelRow from '@/components/ChannelRow.vue';
 import { computed } from 'vue';
 import { channelsRef } from '../store';
 

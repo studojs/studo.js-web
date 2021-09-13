@@ -41,7 +41,6 @@
 </template>
 
 <script lang="ts" setup>
-import MessageRow from '@/components/MessageRow.vue';
 import { Attachment as AttachmentIcon, Send as SendIcon } from '@vicons/carbon';
 import debounce from 'debounce';
 import { MentionOption, ScrollbarInst } from 'naive-ui';

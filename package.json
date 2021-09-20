@@ -9,7 +9,7 @@
     "build": "vite build",
     "serve": "vite preview"
   },
-  "repository": "https://github.com/j4k0xb/studo.js-web",
+  "repository": "https://github.com/studojs/studo.js-web",
   "dependencies": {
     "debounce": "^1.2.1",
     "linkifyjs": "^3.0.1",

@@ -31,7 +31,7 @@
 <script lang="ts" setup>
 import linkify from 'linkifyjs/html';
 import { Message, VoteType } from 'studo.js';
-import { computed } from 'vue';
+import { computed, toRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useAction } from '../utils';
 
@@ -39,7 +39,7 @@ const props = defineProps<{
   message: Message;
 }>();
 const { t } = useI18n();
-const sendAction = useAction(props.message);
+const sendAction = useAction(toRef(props, 'message'));
 
 const italic = computed(() => /^<i>.+<\/i>$/.test(props.message.text));
 const textHTML = computed(() => {

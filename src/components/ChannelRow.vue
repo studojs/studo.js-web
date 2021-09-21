@@ -24,7 +24,7 @@ import {
   Pin as PinIcon,
 } from '@vicons/carbon';
 import { Channel } from 'studo.js';
-import { computed } from 'vue';
+import { computed, toRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { channelIdRef } from '../store';
 import { useAction } from '../utils';
@@ -33,7 +33,7 @@ const props = defineProps<{
   channel: Channel;
 }>();
 const { t } = useI18n();
-const sendAction = useAction(props.channel);
+const sendAction = useAction(toRef(props, 'channel'));
 
 const isSelected = computed(() => channelIdRef.value === props.channel.id);
 const channelRoute = computed(() => ({

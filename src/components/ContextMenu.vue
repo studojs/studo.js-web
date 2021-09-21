@@ -1,7 +1,7 @@
 <template>
   <n-popselect
     trigger="manual"
-    :placement="placement"
+    placement="top"
     :options="options"
     :show="isOpen"
     :on-clickoutside="hide"
@@ -17,29 +17,9 @@
 import { SelectGroupOption, SelectOption } from 'naive-ui';
 import { onMounted, onUnmounted, ref } from 'vue';
 
-type FollowerPlacement =
-  | 'top-start'
-  | 'top'
-  | 'top-end'
-  | 'right-start'
-  | 'right'
-  | 'right-end'
-  | 'bottom-start'
-  | 'bottom'
-  | 'bottom-end'
-  | 'left-start'
-  | 'left'
-  | 'left-end';
-
-withDefaults(
-  defineProps<{
-    options: (SelectOption | SelectGroupOption)[];
-    placement?: FollowerPlacement;
-  }>(),
-  {
-    placement: 'top',
-  }
-);
+defineProps<{
+  options: (SelectOption | SelectGroupOption)[];
+}>();
 
 const emit = defineEmits({
   'update:value'(option: string) {
@@ -54,7 +34,11 @@ function handleSelect(option: string) {
   hide();
 }
 function show(e: MouseEvent) {
-  if (e.target instanceof HTMLAnchorElement) return;
+  if (
+    e.target instanceof HTMLAnchorElement &&
+    e.target.classList.contains('linkified')
+  )
+    return;
   isOpen.value = true;
   e.preventDefault();
 }

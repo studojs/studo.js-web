@@ -19,7 +19,7 @@
 
 <script lang="ts" setup>
 import { Topic, VoteType } from 'studo.js';
-import { computed } from 'vue';
+import { computed, toRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { topicIdRef } from '../store';
 import { useAction } from '../utils';
@@ -28,7 +28,7 @@ const props = defineProps<{
   topic: Topic;
 }>();
 const { t } = useI18n();
-const sendAction = useAction(props.topic);
+const sendAction = useAction(toRef(props, 'topic'));
 
 const isSelected = computed(() => topicIdRef.value === props.topic.id);
 const topicRoute = computed(() => ({

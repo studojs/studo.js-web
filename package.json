@@ -4,7 +4,8 @@
   "author": "j4k0xb",
   "license": "GPL-3.0",
   "scripts": {
-    "dev": "netlify dev",
+    "netlify": "netlify dev",
+    "dev": "vite",
     "build": "vite build",
     "serve": "vite preview"
   },

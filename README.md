@@ -18,7 +18,7 @@ npm install
 Start dev server:
 
 ```sh
-npm run dev
+npm run netlify
 ```
 
 Build:

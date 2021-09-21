@@ -44,7 +44,7 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (to.name !== 'login' && !sessionTokenRef.value)
+  if (to.name === 'chat' && !sessionTokenRef.value)
     return next({ name: 'login' });
 
   next();

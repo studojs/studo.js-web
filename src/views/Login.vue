@@ -9,7 +9,7 @@
             target="_blank"
             rel="noopenner noreferrer"
           >
-            {{ $t('tos') }}
+            {{ t('tos') }}
           </a>
         </i18n-t>
       </n-checkbox>

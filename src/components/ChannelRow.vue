@@ -1,28 +1,20 @@
 <template>
-  <router-link :to="channelRoute" :class="['row', { selected: isSelected }]">
-    <n-avatar round>{{ channel.iconChar }}</n-avatar>
-    <div>
-      <div class="text">{{ channel.name }}</div>
-      <div class="footer">{{ channel.footer }}</div>
-    </div>
-    <n-icon class="pin-icon" v-if="channel.pinned">
-      <PinIcon />
-    </n-icon>
-    <n-popselect trigger="click" :options="actions" @update:value="sendAction">
-      <n-button class="menu" text size="large" @click.prevent>
-        <template #icon>
-          <n-icon><MenuIcon /></n-icon>
-        </template>
-      </n-button>
-    </n-popselect>
-  </router-link>
+  <ContextMenu :options="actions" @update:value="sendAction">
+    <router-link :to="channelRoute" :class="['row', { selected: isSelected }]">
+      <n-avatar round>{{ channel.iconChar }}</n-avatar>
+      <div>
+        <div class="text">{{ channel.name }}</div>
+        <div class="footer">{{ channel.footer }}</div>
+      </div>
+      <n-icon class="pin-icon" v-if="channel.pinned">
+        <PinIcon />
+      </n-icon>
+    </router-link>
+  </ContextMenu>
 </template>
 
 <script lang="ts" setup>
-import {
-  OverflowMenuVertical as MenuIcon,
-  Pin as PinIcon,
-} from '@vicons/carbon';
+import { Pin as PinIcon } from '@vicons/carbon';
 import { Channel } from 'studo.js';
 import { computed, toRef } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -38,9 +30,7 @@ const sendAction = useAction(toRef(props, 'channel'));
 const isSelected = computed(() => channelIdRef.value === props.channel.id);
 const channelRoute = computed(() => ({
   name: 'channel',
-  params: {
-    channelId: props.channel.id,
-  },
+  params: { channelId: props.channel.id },
 }));
 const actions = computed(() =>
   props.channel.actionIds.map((id) => ({
@@ -78,10 +68,6 @@ const actions = computed(() =>
 
     .actionsBtn {
       visibility: visible;
-    }
-
-    .pin-icon {
-      display: none;
     }
 
     .menu {

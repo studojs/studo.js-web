@@ -6,8 +6,8 @@
         <div class="header">{{ message.header }}</div>
         <div
           :class="['text', { italic }]"
-          v-if="textHTML"
-          v-html="textHTML"
+          v-if="htmlText.length"
+          v-html="htmlText"
         ></div>
         <MessageEmbed
           v-if="message.downloadUrl"
@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts" setup>
-import linkify from 'linkifyjs/html';
+import linkify from 'linkify-string';
 import { Message, VoteType } from 'studo.js';
 import { computed, toRef } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -41,13 +41,16 @@ const props = defineProps<{
 const { t } = useI18n();
 const sendAction = useAction(toRef(props, 'message'));
 
-const italic = computed(() => /^<i>.+<\/i>$/.test(props.message.text));
-const textHTML = computed(() => {
-  // sanitize
-  const span = document.createElement('span');
-  const text = props.message.text.replace(/☺/g, ':)');
-  span.textContent = italic.value ? text.substring(3, text.length - 4) : text;
-  return linkify(span.innerHTML, {
+const italic = computed(
+  () => props.message.htmlText && /^<i>.+<\/i>$/.test(props.message.text)
+);
+const htmlText = computed(() => {
+  let text = props.message.text.replace(/☺/g, ':)');
+  text = italic.value ? text.substring(3, text.length - 4) : text;
+  // also escapes html entities
+  return linkify(text, {
+    className: 'linkified',
+    defaultProtocol: 'https',
     attributes: { target: '_blank', rel: 'noopenner noreferrer' },
   });
 });

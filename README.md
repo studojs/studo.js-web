@@ -1,27 +1,34 @@
-# Vue 3 + Typescript + Vite
+# studo.js web
 
-This template should help get you started developing with Vue 3 and Typescript in Vite.
+[![License: GPL-3.0](https://img.shields.io/badge/License-GPL-blue.svg)](https://opensource.org/licenses/GPL-3.0)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/8c712ba1-b993-4ef3-bb80-181d627c6dbf/deploy-status)](https://app.netlify.com/sites/studojs/deploys)
 
-## Recommended IDE Setup
+Based on https://github.com/studojs/studo.js
 
-[VSCode](https://code.visualstudio.com/) + [Vetur](https://marketplace.visualstudio.com/items?itemName=octref.vetur). Make sure to enable `vetur.experimental.templateInterpolationService` in settings!
+## Development
 
-### If Using `<script setup>`
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
 
-[`<script setup>`](https://github.com/vuejs/rfcs/pull/227) is a feature that is currently in RFC stage. To get proper IDE support for the syntax, use [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar) instead of Vetur (and disable Vetur).
+Setup:
 
-## Type Support For `.vue` Imports in TS
+```js
+npm install
+```
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can use the following:
+Start dev server:
 
-### If Using Volar
+```sh
+npm run dev
+```
 
-Run `Volar: Switch TS Plugin on/off` from VSCode command palette.
+Build:
 
-### If Using Vetur
+```sh
+npm run build
+```
 
-1. Install and add `@vuedx/typescript-plugin-vue` to the [plugins section](https://www.typescriptlang.org/tsconfig#plugins) in `tsconfig.json`
-2. Delete `src/shims-vue.d.ts` as it is no longer needed to provide module info to Typescript
-3. Open `src/main.ts` in VSCode
-4. Open the VSCode command palette
-5. Search and run "Select TypeScript version" -> "Use workspace version"
+Preview build:
+
+```sh
+npm run serve
+```

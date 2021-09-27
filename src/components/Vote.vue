@@ -22,18 +22,16 @@
 import { ChevronDown as DownIcon, ChevronUp as UpIcon } from '@vicons/carbon';
 import { VoteType, VotingType } from 'studo.js';
 
-const props = withDefaults(
-  defineProps<{
-    type: VotingType;
-    state: VoteType;
-    votes: number;
-  }>(),
-  {
-    type: 'NONE',
-    state: 'NONE',
-    votes: 0,
-  }
-);
+interface Props {
+  type: VotingType;
+  state: VoteType;
+  votes: number;
+}
+const props = withDefaults(defineProps<Props>(), {
+  type: 'NONE',
+  state: 'NONE',
+  votes: 0,
+});
 const emit = defineEmits({
   vote(state: VoteType) {
     return true;

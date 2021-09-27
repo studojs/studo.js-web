@@ -1,6 +1,6 @@
 <template>
   <n-layout-header bordered>
-    <n-menu :value="tabName" :options="menuOptions" mode="horizontal" />
+    <n-menu :value="tabNameRef" :options="menuOptions" mode="horizontal" />
   </n-layout-header>
 </template>
 
@@ -12,13 +12,22 @@ import {
   Settings as SettingsIcon,
 } from '@vicons/carbon';
 import { MenuOption, NIcon } from 'naive-ui';
-import { Component, h } from 'vue';
+import { Component, computed, h } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { RouterLink } from 'vue-router';
 import router from '../router';
-import { currentTabNameRef as tabName, pointsRef } from '../store';
+import { useClientStore } from '../store';
 
 const { t, n } = useI18n();
+const store = useClientStore();
+
+const tabNameRef = computed(() => {
+  const route = router.resolve({
+    path: '/' + router.currentRoute.value.path.split('/')[1],
+  });
+
+  return (route.name as string) || 'chat';
+});
 
 function renderRoute(label: string, route: string) {
   return () =>
@@ -43,7 +52,7 @@ const menuOptions: MenuOption[] = [
     icon: renderIcon(SettingsIcon),
   },
   {
-    label: () => h('p', null, { default: () => n(pointsRef.value) }),
+    label: () => h('p', null, { default: () => n(store.points) }),
     key: 'points',
     icon: renderIcon(GrowthIcon),
   },

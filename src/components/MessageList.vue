@@ -1,22 +1,22 @@
 <template>
-  <n-scrollbar ref="scrollbarRef" @scroll="handleScroll">
+  <n-scrollbar @scroll="handleScroll">
     <n-image-group>
       <MessageRow
-        v-for="(message, index) in messages"
-        :key="message.id"
+        v-for="[id, message] in chat.messages"
+        :key="id"
         :message="message"
       >
-        <template #suffix v-if="index === 0">
+        <!-- <template #suffix v-if="index === 0">
           <n-divider />
-        </template>
+        </template> -->
       </MessageRow>
     </n-image-group>
   </n-scrollbar>
-  <n-input-group v-show="allowNewMessages">
+  <n-input-group v-show="chat.allowNewMessages">
     <n-mention
       type="textarea"
       placeholder="Message"
-      :options="mentions"
+      :options="chat.mentionOptions"
       v-model:value="textInput"
       :autosize="{ maxRows: 15 }"
       round
@@ -25,7 +25,7 @@
         <n-button>Suffix</n-button>
       </template>
     </n-mention>
-    <n-upload v-if="allowFiles">
+    <n-upload v-if="chat.allowFiles">
       <n-button>
         <template #icon>
           <n-icon><AttachmentIcon /></n-icon>
@@ -43,36 +43,18 @@
 <script lang="ts" setup>
 import { Attachment as AttachmentIcon, Send as SendIcon } from '@vicons/carbon';
 import debounce from 'debounce';
-import { MentionOption, ScrollbarInst } from 'naive-ui';
 import { computed, ref } from 'vue';
-import { messagesRef, topicIdRef, topicRef } from '../store';
+import { useChatStore } from '../store';
+
+const chat = useChatStore();
 
 const textInput = ref('');
 const canSend = computed(() => textInput.value.trim().length > 0);
 async function send() {
-  await topicRef.value?.sendMessage(textInput.value.trim());
+  await chat.topic?.sendMessage(textInput.value.trim());
   textInput.value = '';
 }
-const allowNewMessages = computed(() => !!topicRef.value?.allowNewMessages);
-const allowFiles = computed(() => !!topicRef.value?.enableFileUpload);
-const messages = computed(() => {
-  return [...messagesRef.values()].filter(
-    (message) => !message.hidden && message.topicId === topicIdRef.value
-  );
-});
-const mentions = computed<MentionOption[]>(() => {
-  return Object.keys(topicRef.value?.users || {}).map((user) => ({
-    label: user,
-    value: user,
-  }));
-});
-
-const scrollbarRef = ref<ScrollbarInst | null>(null);
-const loadMessagesDebounced = debounce(
-  () => topicRef.value?.scroll(),
-  200,
-  true
-);
+const loadMessagesDebounced = debounce(() => chat.topic?.scroll(), 200, true);
 
 async function handleScroll(e: Event) {
   const container = e.target as HTMLElement;

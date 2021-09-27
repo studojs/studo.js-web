@@ -1,6 +1,6 @@
 <template>
   <ContextMenu :options="actions" @update:value="sendAction">
-    <router-link :to="channelRoute" :class="['row', { selected: isSelected }]">
+    <router-link :to="route" :class="['row', { selected: isSelected }]">
       <n-avatar round>{{ channel.iconChar }}</n-avatar>
       <div>
         <div class="text">{{ channel.name }}</div>
@@ -18,20 +18,28 @@ import { Pin as PinIcon } from '@vicons/carbon';
 import { Channel } from 'studo.js';
 import { computed, toRef } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { channelIdRef } from '../store';
+import { RouteLocation } from 'vue-router';
+import { useChatStore } from '../store';
 import { useAction } from '../utils';
 
-const props = defineProps<{
+interface Props {
   channel: Channel;
-}>();
+}
+const props = defineProps<Props>();
 const { t } = useI18n();
+const chat = useChatStore();
 const sendAction = useAction(toRef(props, 'channel'));
 
-const isSelected = computed(() => channelIdRef.value === props.channel.id);
-const channelRoute = computed(() => ({
-  name: 'channel',
-  params: { channelId: props.channel.id },
-}));
+const isSelected = computed(() => chat.channelId === props.channel.id);
+const route = computed(
+  (): Partial<RouteLocation> => ({
+    name: 'chat',
+    query: {
+      channel: props.channel.id,
+      tab: props.channel.tabs.first()?.id || null,
+    },
+  })
+);
 const actions = computed(() =>
   props.channel.actionIds.map((id) => ({
     label: t('actions.' + id, id),
@@ -41,8 +49,6 @@ const actions = computed(() =>
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/vars.scss';
-
 .row {
   position: relative;
   --bezier: cubic-bezier(0.4, 0, 0.2, 1);

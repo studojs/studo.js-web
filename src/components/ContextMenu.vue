@@ -17,9 +17,10 @@
 import { SelectGroupOption, SelectOption } from 'naive-ui';
 import { onMounted, onUnmounted, ref } from 'vue';
 
-defineProps<{
+interface Props {
   options: (SelectOption | SelectGroupOption)[];
-}>();
+}
+defineProps<Props>();
 
 const emit = defineEmits({
   'update:value'(option: string) {

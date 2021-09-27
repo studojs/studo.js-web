@@ -1,6 +1,6 @@
 <template>
   <ContextMenu :options="actions" @update:value="sendAction">
-    <router-link :to="topicRoute" :class="['row', { selected: isSelected }]">
+    <router-link :to="route" :class="['row', { selected: isSelected }]">
       <div class="content">
         <Tags :ids="topic.tagIds" />
         <div class="header">{{ topic.header }}</div>
@@ -21,22 +21,30 @@
 import { Topic, VoteType } from 'studo.js';
 import { computed, toRef } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { topicIdRef } from '../store';
+import { RouteLocation } from 'vue-router';
+import { useChatStore } from '../store';
 import { useAction } from '../utils';
 
-const props = defineProps<{
+interface Props {
   topic: Topic;
-}>();
+}
+const props = defineProps<Props>();
+
 const { t } = useI18n();
+const chat = useChatStore();
 const sendAction = useAction(toRef(props, 'topic'));
 
-const isSelected = computed(() => topicIdRef.value === props.topic.id);
-const topicRoute = computed(() => ({
-  name: 'topic',
-  params: {
-    topicId: props.topic.id,
-  },
-}));
+const isSelected = computed(() => chat.topicId === props.topic.id);
+const route = computed(
+  (): Partial<RouteLocation> => ({
+    name: 'chat',
+    query: {
+      channel: props.topic.channelId,
+      tab: props.topic.tabId,
+      topic: props.topic.id,
+    },
+  })
+);
 const actions = computed(() =>
   props.topic.actionIds.map((id) => ({
     label: t('actions.' + id),
@@ -49,8 +57,6 @@ async function vote(state: VoteType) {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/vars.scss';
-
 .row {
   --bezier: cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;

@@ -15,25 +15,26 @@
 </template>
 
 <script lang="ts" setup>
-import { useMessage } from 'naive-ui';
-import { computed, onMounted, watch } from 'vue';
-import { clientRef, isPrivateChannel } from '../store';
+import { computed } from 'vue';
+import { useChatStore } from '../store';
 
-const topicsWidth = computed(() => (isPrivateChannel.value ? '0' : '40%'));
-const messagesWidth = computed(() => (isPrivateChannel.value ? '100%' : '60%'));
+const chat = useChatStore();
 
-const msg = useMessage();
-onMounted(() => {
-  watch(
-    clientRef,
-    (client) => {
-      client?.chat.on('ShowToast', ({ text }) => {
-        msg.info(text, { closable: true });
-      });
-    },
-    { immediate: true }
-  );
-});
+const topicsWidth = computed(() => (chat.isPrivateChannel ? '0' : '40%'));
+const messagesWidth = computed(() => (chat.isPrivateChannel ? '100%' : '60%'));
+
+// TODO: toasts
+// onMounted(() => {
+//   watch(
+//     clientRef,
+//     (client) => {
+//       client?.chat.on('ShowToast', ({ text }) => {
+//         msg.info(text, { closable: true });
+//       });
+//     },
+//     { immediate: true }
+//   );
+// });
 </script>
 
 <style lang="scss" scoped>

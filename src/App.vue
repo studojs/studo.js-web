@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider :theme="theme" abstract>
+  <n-config-provider :theme="settings.theme" abstract>
     <n-global-style />
     <NavBar />
     <n-message-provider>
@@ -9,7 +9,26 @@
 </template>
 
 <script lang="ts" setup>
-import { themeRef as theme } from './store';
+import { RestManager } from 'studo.js';
+import router from './router';
+import { useChatStore, useClientStore, useSettingsStore } from './store';
+
+const settings = useSettingsStore();
+
+Object.assign(window, {
+  chat: useChatStore(),
+  store: useClientStore(),
+  settings,
+  api: RestManager,
+  router,
+});
+
+const store = useClientStore();
+if (!store.client.connected)
+  store
+    .connect()
+    .then(() => console.log('connected'))
+    .catch(console.error);
 </script>
 
 <style lang="scss">

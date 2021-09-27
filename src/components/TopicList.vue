@@ -1,7 +1,7 @@
 <template>
-  <n-scrollbar ref="scrollbarRef" @scroll="handleScroll">
-    <TopicRow v-for="topic in topics" :key="topic.id" :topic="topic" />
-    <n-button v-show="enableNewTopics" type="primary" circle>
+  <n-scrollbar @scroll="handleScroll">
+    <TopicRow v-for="[id, topic] in chat.topics" :key="id" :topic="topic" />
+    <n-button v-show="chat.allowNewTopics" type="primary" circle>
       <template #icon>
         <n-icon><AddIcon /></n-icon>
       </template>
@@ -12,19 +12,11 @@
 <script lang="ts" setup>
 import { Add as AddIcon } from '@vicons/carbon';
 import { debounce } from 'debounce';
-import { ScrollbarInst } from 'naive-ui';
-import { computed, ref } from 'vue';
-import { channelIdRef, tabRef, topicsRef } from '../store';
+import { useChatStore } from '../store';
 
-const enableNewTopics = computed(() => !!tabRef.value?.enableNewTopics);
-const topics = computed(() => {
-  return [...topicsRef.values()].filter(
-    (topic) => !topic.hidden && topic.channelId === channelIdRef.value
-  );
-});
+const chat = useChatStore();
 
-const scrollbarRef = ref<ScrollbarInst | null>(null);
-const loadTopicsDebounced = debounce(() => tabRef.value?.scroll(), 200, true);
+const loadTopicsDebounced = debounce(() => chat.tab?.scroll(), 200, true);
 
 function handleScroll(e: Event) {
   const container = e.target as HTMLElement;

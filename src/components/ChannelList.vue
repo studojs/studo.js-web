@@ -1,18 +1,15 @@
 <template>
   <ChannelRow
-    v-for="channel in channels"
-    :key="channel.id"
+    v-for="[id, channel] in chat.channels"
+    :key="id"
     :channel="channel"
   />
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
-import { channelsRef } from '../store';
+import { useChatStore } from '../store';
 
-const channels = computed(() => {
-  return [...channelsRef.values()].filter((channel) => !channel.hidden);
-});
+const chat = useChatStore();
 </script>
 
 <style lang="scss" scoped></style>

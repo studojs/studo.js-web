@@ -57,14 +57,15 @@
 
 <script lang="ts" setup>
 import { useMessage } from 'naive-ui';
-import { Client, SmsVerification } from 'studo.js';
+import { SmsVerification } from 'studo.js';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import router from '../router';
-import { clientRef, sessionTokenRef } from '../store';
+import { useClientStore } from '../store';
 
 const message = useMessage();
 const { t } = useI18n();
+const store = useClientStore();
 
 const tos = ref(false);
 const smsToken = ref('');
@@ -88,12 +89,9 @@ async function login() {
   if (!sms) return;
   try {
     const response = await sms.signIn(smsToken.value);
-    console.log(response);
+    await store.login(response.studoSessionToken);
     message.success(t('loggedIn'));
 
-    sessionTokenRef.value = response.studoSessionToken;
-    const client = new Client(response.studoSessionToken);
-    clientRef.value = client;
     router.push('/');
   } catch (error: any) {
     message.error(error.message);

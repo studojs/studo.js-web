@@ -4,11 +4,7 @@
       <div class="content">
         <Tags :ids="message.tagIds" />
         <div class="header">{{ message.header }}</div>
-        <div
-          :class="['text', { italic }]"
-          v-if="htmlText.length"
-          v-html="htmlText"
-        ></div>
+        <div class="text" v-if="htmlText.length" v-html="htmlText"></div>
         <MessageEmbed
           v-if="message.downloadUrl"
           :url="message.downloadUrl"
@@ -35,20 +31,18 @@ import { computed, toRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useAction } from '../utils';
 
-const props = defineProps<{
+interface Props {
   message: Message;
-}>();
+}
+const props = defineProps<Props>();
 const { t } = useI18n();
 const sendAction = useAction(toRef(props, 'message'));
 
-const italic = computed(
-  () => props.message.htmlText && /^<i>.+<\/i>$/.test(props.message.text)
-);
 const htmlText = computed(() => {
-  let text = props.message.text.replace(/☺/g, ':)');
-  text = italic.value ? text.substring(3, text.length - 4) : text;
+  if (props.message.htmlText) return props.message.text;
+
   // also escapes html entities
-  return linkify(text, {
+  return linkify(props.message.text.replace(/☺/g, ':)'), {
     className: 'linkified',
     defaultProtocol: 'https',
     attributes: { target: '_blank', rel: 'noopenner noreferrer' },
@@ -66,8 +60,6 @@ async function vote(state: VoteType) {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/vars.scss';
-
 .row {
   --bezier: cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
@@ -91,10 +83,6 @@ async function vote(state: VoteType) {
 .content {
   overflow-wrap: anywhere;
   white-space: pre-line;
-}
-
-.italic {
-  font-style: italic;
 }
 
 .header,

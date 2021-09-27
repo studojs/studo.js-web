@@ -31,11 +31,12 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-const props = defineProps<{
+interface Props {
   url: string;
   inlineURL?: string;
   fileName?: string;
-}>();
+}
+const props = defineProps<Props>();
 
 const extension = computed(() => props.fileName?.split('.').pop());
 const mimeType = computed(() => {

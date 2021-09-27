@@ -9,7 +9,10 @@
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n';
 
-withDefaults(defineProps<{ ids: string[] }>(), {
+interface Props {
+  ids: string[];
+}
+withDefaults(defineProps<Props>(), {
   ids: () => [],
 });
 const { t } = useI18n();

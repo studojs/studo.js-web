@@ -20,13 +20,12 @@ import { onMounted, onUnmounted, ref } from 'vue';
 interface Props {
   options: (SelectOption | SelectGroupOption)[];
 }
-defineProps<Props>();
+interface Emits {
+  (event: 'update:value', option: string): void;
+}
 
-const emit = defineEmits({
-  'update:value'(option: string) {
-    return true;
-  },
-});
+defineProps<Props>();
+const emit = defineEmits<Emits>();
 
 const slotElem = ref<HTMLElement | null>(null);
 const isOpen = ref(false);

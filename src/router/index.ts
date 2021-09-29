@@ -45,7 +45,6 @@ router.afterEach(async (to, from) => {
   if (!client.connected) await client.once('ready');
 
   if (from.query.tab !== to.query.tab && typeof to.query.tab === 'string') {
-    console.log('tab change', to.query.tab);
     await chat.subscribeTab(to.query.tab);
   }
 
@@ -53,10 +52,15 @@ router.afterEach(async (to, from) => {
     from.query.channel !== to.query.channel &&
     typeof to.query.channel === 'string'
   ) {
-    console.log('channel change', to.query.channel);
-
     const tab = await chat.subscribeChannel(to.query.channel);
     if (!to.query.tab) router.replace({ query: { ...to.query, tab: tab.id } });
+  }
+
+  if (
+    from.query.topic !== to.query.topic &&
+    typeof to.query.topic === 'string'
+  ) {
+    await chat.subscribeTopic(to.query.topic);
   }
 });
 

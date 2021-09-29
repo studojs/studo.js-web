@@ -1,6 +1,10 @@
 <template>
   <n-scrollbar @scroll="handleScroll">
-    <TopicRow v-for="[id, topic] in chat.topics" :key="id" :topic="topic" />
+    <TopicRow
+      v-for="[id, topic] in chat.visibleTopics"
+      :key="id"
+      :topic="topic"
+    />
     <n-button v-show="chat.allowNewTopics" type="primary" circle>
       <template #icon>
         <n-icon><AddIcon /></n-icon>

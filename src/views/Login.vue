@@ -1,53 +1,46 @@
 <template>
   <div class="container">
     <n-space vertical>
-      <n-checkbox v-model:checked="tos">
-        <i18n-t keypath="term" tag="label" for="tos">
-          <a
-            @click.stop
-            href="https://studo.com/tos"
-            target="_blank"
-            rel="noopenner noreferrer"
-          >
-            {{ t('tos') }}
-          </a>
-        </i18n-t>
-      </n-checkbox>
+      <pre>{{ model }}</pre>
       <n-form
         :model="model"
-        :disabled="!tos || step !== 1"
+        :rules="rules"
+        :show-require-mark="true"
         :style="{ maxWidth: '640px' }"
+        ref="formRef"
       >
-        <n-form-item :label="t('phone')">
+        <n-form-item path="phone" :label="t('phone')">
           <n-input-group>
-            <n-input
-              v-model:value="model.prefix"
-              placeholder="+123"
-              maxlength="5"
-              :style="{ width: '30%' }"
+            <n-select
+              v-model:value="model.phone.prefix"
+              :options="countryCodes"
+              :render-label="renderCountry"
+              filterable
+              tag
             />
             <n-input
-              v-model:value="model.number"
-              placeholder="678 123456789"
+              v-model:value="model.phone.number"
               maxlength="20"
-              :style="{ width: '70%' }"
+              :input-props="{ inputmode: 'tel' }"
+              placeholder="678 123456789"
             />
           </n-input-group>
         </n-form-item>
-        <n-button
-          @click="sendSMS"
-          :disabled="!tos || step !== 1"
-          type="primary"
-        >
-          {{ t('send') }}
+        <n-button @click.prevent="sendSMS" :disabled="!canSend" type="primary">
+          {{ t('next') }}
         </n-button>
       </n-form>
 
-      <n-form :disabled="!tos || step !== 2" :style="{ maxWidth: '640px' }">
+      <n-form :style="{ maxWidth: '640px' }">
         <n-form-item :label="t('verificationCode')">
-          <n-input v-model:value="smsToken" placeholder="1234" maxlength="4" />
+          <n-input
+            v-model:value="model.smsToken"
+            placeholder="1234"
+            maxlength="4"
+            :input-props="{ inputmode: 'numeric' }"
+          />
         </n-form-item>
-        <n-button @click="login" :disabled="!tos || step !== 2" type="primary">
+        <n-button @click="login" type="primary">
           {{ t('login') }}
         </n-button>
       </n-form>
@@ -56,42 +49,85 @@
 </template>
 
 <script lang="ts" setup>
-import { useMessage } from 'naive-ui';
-import { SmsVerification } from 'studo.js';
-import { ref } from 'vue';
+import { FormInst, FormRules, SelectOption, useMessage } from 'naive-ui';
+import { RestManager, SmsVerification } from 'studo.js';
+import { computed, h, onMounted, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import router from '../router';
+import { useRouter } from 'vue-router';
 import { useClientStore } from '../store';
+import { useSettingsStore } from '../store/settings';
 
+const router = useRouter();
 const message = useMessage();
 const { t } = useI18n();
 const store = useClientStore();
-
-const tos = ref(false);
-const smsToken = ref('');
-const step = ref(1);
-const model = ref({
-  prefix: '',
-  number: '',
-});
+const settings = useSettingsStore();
 let sms: SmsVerification | undefined;
 
+const formRef = ref<FormInst>(null as any);
+
+function renderCountry(option: SelectOption, selected: boolean) {
+  if (!option.label) return h(() => ''); // nothing selected
+  if (!option.emoticon) return h(() => option.label); // custom input
+  return h(() => `${option.emoticon}${option.value} ${option.label}`);
+}
+onMounted(async () => {
+  const countries = await RestManager.fetchCountries();
+
+  countryCodes.value = countries.map((country) => ({
+    label: country.name,
+    value: country.prefix,
+    emoticon: country.emoticon,
+  }));
+});
+let countryCodes = ref<SelectOption[]>([]);
+
+const model = reactive({
+  phone: {
+    prefix: '',
+    number: '',
+  },
+  smsToken: '',
+});
+
+const rules: FormRules = {
+  phone: {
+    type: 'object',
+    validator(rule, { prefix, number }: typeof model['phone']) {
+      // TODO: i18n
+      if (!/^\+\d{1,5}$/.test(prefix)) return new Error('invalid prefix');
+      if (!/^[\d\s]{5,20}$/.test(number)) return new Error('invalid number');
+    },
+  },
+};
+
+const canSend = computed(
+  () => model.phone.prefix.length > 0 && model.phone.number.length > 0
+);
+
 async function sendSMS() {
-  step.value = 2;
-  const { prefix, number } = model.value;
-  sms = new SmsVerification(prefix, number);
-  const response = await sms.send();
-  if (response === 'SUCCESS') message.success(t('smsSent'));
-  else message.error(response);
+  formRef.value.validate((errors) => {
+    if (!errors) {
+      message.success('Valid');
+    } else {
+      console.log(errors);
+      message.error('Invalid');
+    }
+  });
+  // sms = new SmsVerification(model.prefix, model.number);
+  // const response = await sms.send();
+  // if (response === 'SUCCESS') message.success(t('smsSent'));
+  // else message.error(response);
 }
 
 async function login() {
   if (!sms) return;
   try {
-    const response = await sms.signIn(smsToken.value);
-    await store.login(response.studoSessionToken);
-    message.success(t('loggedIn'));
+    const response = await sms.signIn(model.smsToken);
+    settings.setSessionToken(response.studoSessionToken);
+    await store.connect();
 
+    message.success(t('loggedIn'));
     router.push('/');
   } catch (error: any) {
     message.error(error.message);

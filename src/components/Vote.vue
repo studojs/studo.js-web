@@ -27,16 +27,16 @@ interface Props {
   state: VoteType;
   votes: number;
 }
+interface Emits {
+  (event: 'vote', state: VoteType): void;
+}
+
 const props = withDefaults(defineProps<Props>(), {
   type: 'NONE',
   state: 'NONE',
   votes: 0,
 });
-const emit = defineEmits({
-  vote(state: VoteType) {
-    return true;
-  },
-});
+const emit = defineEmits<Emits>();
 
 function toggleVote(state: 'UP' | 'DOWN') {
   if (props.state === state) emit('vote', 'NONE');
@@ -53,7 +53,7 @@ function toggleVote(state: 'UP' | 'DOWN') {
   > .n-icon {
     cursor: pointer;
     &.voted {
-      color: #63e2b7;
+      color: var(--primary-color);
     }
   }
 }

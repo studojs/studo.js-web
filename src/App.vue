@@ -9,11 +9,14 @@
 </template>
 
 <script lang="ts" setup>
+import { useThemeVars } from 'naive-ui';
 import { RestManager } from 'studo.js';
-import router from './router';
+import { useRouter } from 'vue-router';
 import { useChatStore, useClientStore, useSettingsStore } from './store';
 
 const settings = useSettingsStore();
+const router = useRouter();
+const theme = useThemeVars();
 
 Object.assign(window, {
   chat: useChatStore(),
@@ -22,13 +25,6 @@ Object.assign(window, {
   api: RestManager,
   router,
 });
-
-const store = useClientStore();
-if (!store.client.connected)
-  store
-    .connect()
-    .then(() => console.log('connected'))
-    .catch(console.error);
 </script>
 
 <style lang="scss">

@@ -21,9 +21,10 @@ export const useSettingsStore = defineStore('settings', {
     },
   },
   actions: {
-    setSessionToken(token: string) {
+    setSessionToken(token: string | undefined) {
       this.sessionToken = token;
-      localStorage.setItem(SESSION_TOKEN, token);
+      if (token) localStorage.setItem(SESSION_TOKEN, token);
+      else localStorage.removeItem(SESSION_TOKEN);
     },
     setTheme(name: ThemeName) {
       this.themeName = name;

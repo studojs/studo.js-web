@@ -14,12 +14,12 @@ import {
 import { MenuOption, NIcon } from 'naive-ui';
 import { Component, computed, h } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { RouterLink } from 'vue-router';
-import router from '../router';
+import { RouterLink, useRouter } from 'vue-router';
 import { useClientStore } from '../store';
 
 const { t, n } = useI18n();
 const store = useClientStore();
+const router = useRouter();
 
 const tabNameRef = computed(() => {
   const route = router.resolve({

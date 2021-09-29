@@ -2,10 +2,11 @@ import { useMessage } from 'naive-ui';
 import { Channel, Message, Topic } from 'studo.js';
 import { Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import router from './router';
+import { useRouter } from 'vue-router';
 
 export function useAction(component: Ref<Channel | Topic | Message>) {
   const message = useMessage();
+  const router = useRouter();
   const { t } = useI18n();
 
   return async function (action: string) {

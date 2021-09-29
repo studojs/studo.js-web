@@ -3,7 +3,7 @@
     <div class="row">
       <div class="content">
         <Tags :ids="message.tagIds" />
-        <div class="header">{{ message.header }}</div>
+        <n-text depth="2" class="header">{{ message.header }}</n-text>
         <div class="text" v-if="htmlText.length" v-html="htmlText"></div>
         <MessageEmbed
           v-if="message.downloadUrl"
@@ -11,7 +11,9 @@
           :inlineURL="message.inlineImageUrl"
           :fileName="message.fileName"
         />
-        <div class="footer" v-if="message.footer">{{ message.footer }}</div>
+        <n-text depth="2" class="footer" v-if="message.footer">{{
+          message.footer
+        }}</n-text>
       </div>
       <Vote
         :votes="message.votes"
@@ -61,7 +63,7 @@ async function vote(state: VoteType) {
 
 <style lang="scss" scoped>
 .row {
-  --bezier: cubic-bezier(0.4, 0, 0.2, 1);
+  --bezier: var(--cubic-bezier-ease-in-out);
   display: flex;
   align-items: center;
   column-gap: 8px;
@@ -76,7 +78,7 @@ async function vote(state: VoteType) {
     background 0.3s var(--bezier);
 
   &:hover {
-    background: #18181c;
+    background: var(--hover-color);
   }
 }
 
@@ -88,6 +90,5 @@ async function vote(state: VoteType) {
 .header,
 .footer {
   font-size: 0.8em;
-  color: #b1b1b1;
 }
 </style>

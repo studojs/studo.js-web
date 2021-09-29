@@ -2,7 +2,7 @@
   <n-scrollbar @scroll="handleScroll">
     <n-image-group>
       <MessageRow
-        v-for="[id, message] in chat.messages"
+        v-for="[id, message] in chat.visibleMessages"
         :key="id"
         :message="message"
       >

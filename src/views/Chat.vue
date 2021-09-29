@@ -1,40 +1,45 @@
 <template>
-  <n-layout class="container">
-    <n-layout class="panel" has-sider>
-      <n-layout-sider :native-scrollbar="false" bordered :width="300">
-        <ChannelList />
-      </n-layout-sider>
-      <n-layout :style="{ flexBasis: topicsWidth }">
-        <TopicList />
-      </n-layout>
-      <n-layout :style="{ flexBasis: messagesWidth }" class="messages-panel">
-        <MessageList />
+  <n-element>
+    <n-layout class="container">
+      <n-layout class="panel" has-sider>
+        <n-layout-sider :native-scrollbar="false" bordered :width="300">
+          <ChannelList />
+        </n-layout-sider>
+        <n-layout :style="{ flexBasis: topicsWidth }">
+          <TopicList />
+        </n-layout>
+        <n-layout :style="{ flexBasis: messagesWidth }" class="messages-panel">
+          <MessageList />
+        </n-layout>
       </n-layout>
     </n-layout>
-  </n-layout>
+  </n-element>
 </template>
 
 <script lang="ts" setup>
+import { useMessage } from 'naive-ui';
 import { computed } from 'vue';
-import { useChatStore } from '../store';
+import { useChatStore, useClientStore } from '../store';
 
+const store = useClientStore();
 const chat = useChatStore();
+const msg = useMessage();
 
 const topicsWidth = computed(() => (chat.isPrivateChannel ? '0' : '40%'));
 const messagesWidth = computed(() => (chat.isPrivateChannel ? '100%' : '60%'));
 
-// TODO: toasts
-// onMounted(() => {
-//   watch(
-//     clientRef,
-//     (client) => {
-//       client?.chat.on('ShowToast', ({ text }) => {
-//         msg.info(text, { closable: true });
-//       });
-//     },
-//     { immediate: true }
-//   );
-// });
+store.$onAction(({ name, store, args, after, onError }) => {
+  if (name !== 'connect') return;
+  after(() => {
+    msg.success('Connected');
+    store.client.chat.on('ShowToast', ({ text }) => {
+      msg.info(text, { closable: true });
+    });
+  });
+  onError((error) => msg.error(`Connection error: ${error}`));
+});
+
+if (!store.client.connected) store.connect();
 </script>
 
 <style lang="scss" scoped>

@@ -41,9 +41,10 @@ import { Logout as LogoutIcon } from '@vicons/carbon';
 import { useMessage } from 'naive-ui';
 import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import router from '../router';
+import { useRouter } from 'vue-router';
 import { useClientStore, useSettingsStore } from '../store';
 
+const router = useRouter();
 const { t, locale, availableLocales } = useI18n();
 const message = useMessage();
 const settings = useSettingsStore();

@@ -4,7 +4,7 @@
       <n-avatar round>{{ channel.iconChar }}</n-avatar>
       <div>
         <div class="text">{{ channel.name }}</div>
-        <div class="footer">{{ channel.footer }}</div>
+        <n-text depth="2" class="footer">{{ channel.footer }}</n-text>
       </div>
       <n-icon class="pin-icon" v-if="channel.pinned">
         <PinIcon />
@@ -51,7 +51,7 @@ const actions = computed(() =>
 <style lang="scss" scoped>
 .row {
   position: relative;
-  --bezier: cubic-bezier(0.4, 0, 0.2, 1);
+  --bezier: var(--cubic-bezier-ease-in-out);
   display: flex;
   align-items: center;
   column-gap: 8px;
@@ -66,10 +66,10 @@ const actions = computed(() =>
     background 0.3s var(--bezier);
 
   &:hover {
-    background: #101014;
+    background: var(--hover-color);
 
     .text {
-      color: #63e2b7;
+      color: var(--primary-color-hover);
     }
 
     .actionsBtn {
@@ -82,13 +82,12 @@ const actions = computed(() =>
   }
   &.selected {
     background: rgba(99, 226, 183, 0.2);
-    color: #63e2b7;
+    color: var(--primary-color);
   }
 }
 
 .footer {
   font-size: 0.8em;
-  color: #b1b1b1;
 }
 
 .n-avatar {

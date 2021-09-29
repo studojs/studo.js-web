@@ -11,8 +11,6 @@
   "send": "Send",
   "verificationCode": "Verification Code",
   "smsSent": "SMS sent",
-  "tos": "Term of Service",
-  "term": "I accept the {0}.",
   "languages": {
     "en": "English",
     "de": "German"

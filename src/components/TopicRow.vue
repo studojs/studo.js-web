@@ -5,7 +5,7 @@
         <Tags :ids="topic.tagIds" />
         <div class="header">{{ topic.header }}</div>
         <div class="text">{{ topic.text.replace(/☺️/g, ':)') }}</div>
-        <div class="footer">{{ topic.footer }}</div>
+        <n-text depth="2" class="footer">{{ topic.footer }}</n-text>
       </div>
       <Vote
         :votes="topic.votes"
@@ -58,7 +58,7 @@ async function vote(state: VoteType) {
 
 <style lang="scss" scoped>
 .row {
-  --bezier: cubic-bezier(0.4, 0, 0.2, 1);
+  --bezier: var(--cubic-bezier-ease-in-out);
   display: flex;
   align-items: center;
   column-gap: 8px;
@@ -73,16 +73,16 @@ async function vote(state: VoteType) {
     background 0.3s var(--bezier);
 
   &:hover {
-    background: #18181c;
+    background: var(--hover-color);
     .text {
-      color: #63e2b7;
+      color: var(--primary-color-hover);
     }
   }
 
   &.selected {
     background: rgba(99, 226, 183, 0.2);
     .text {
-      color: #63e2b7;
+      color: var(--primary-color);
     }
   }
 }
@@ -95,6 +95,5 @@ async function vote(state: VoteType) {
 .header,
 .footer {
   font-size: 0.8em;
-  color: #b1b1b1;
 }
 </style>

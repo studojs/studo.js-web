@@ -1,44 +1,37 @@
 <template>
   <n-layout-header bordered>
-    <n-menu :value="tabNameRef" :options="menuOptions" mode="horizontal" />
+    <n-menu :value="tabName" :options="menuOptions" mode="horizontal" />
   </n-layout-header>
 </template>
 
-<script lang="ts" setup>
+<script lang="tsx" setup>
 import {
   Chat as ChatIcon,
   Growth as GrowthIcon,
   LogoGithub as GithubIcon,
   Settings as SettingsIcon,
 } from '@vicons/carbon';
-import { MenuOption, NIcon } from 'naive-ui';
+import { MenuOption } from 'naive-ui';
 import { Component, computed, h } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { RouterLink, useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useClientStore } from '../store';
 
 const { t, n } = useI18n();
 const store = useClientStore();
 const router = useRouter();
+const route = useRoute();
 
-const tabNameRef = computed(() => {
-  const route = router.resolve({
-    path: '/' + router.currentRoute.value.path.split('/')[1],
-  });
+const tabName = computed(() =>
+  typeof route.name === 'string' ? route.name : ''
+);
 
-  return (route.name as string) || 'chat';
-});
-
-function renderRoute(label: string, route: string) {
-  return () =>
-    h(
-      RouterLink,
-      { to: router.resolve({ name: route }).path },
-      { default: () => t(label) }
-    );
+function renderRoute(label: string, name: string) {
+  const path = router.resolve({ name }).path;
+  return () => <router-link to={path}>{t(label)}</router-link>;
 }
 function renderIcon(icon: Component) {
-  return () => h(NIcon, null, { default: () => h(icon) });
+  return () => <n-icon>{h(icon)}</n-icon>;
 }
 const menuOptions: MenuOption[] = [
   {
@@ -52,21 +45,14 @@ const menuOptions: MenuOption[] = [
     icon: renderIcon(SettingsIcon),
   },
   {
-    label: () => h('p', null, { default: () => n(store.points) }),
+    label: () => <p>{n(store.points)}</p>,
     key: 'points',
     icon: renderIcon(GrowthIcon),
   },
   {
-    label: () =>
-      h(
-        'a',
-        {
-          href: __REPOSITORY__,
-          target: '_blank',
-          rel: 'noopenner noreferrer',
-        },
-        'GitHub'
-      ),
+    label: () => (
+      <a href={__REPOSITORY__} target="blank" rel="noopenner noreferrer" />
+    ),
     key: 'github',
     icon: renderIcon(GithubIcon),
   },

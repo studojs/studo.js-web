@@ -38,13 +38,15 @@ router.afterEach(async (to, from) => {
   const channel = chat.channel;
   document.title = (channel ? channel.name + ' - ' : '') + 'studo.js';
 
-  // FIXME
+  // FIXME: login route
   // if (to.name === 'chat' && !sessionTokenRef.value)
   //   return next({ name: 'login' });
-
+  console.log(to.query);
   if (!client.connected) await client.once('ready');
 
   if (from.query.tab !== to.query.tab && typeof to.query.tab === 'string') {
+    console.log('sub tab', to.query.tab);
+
     await chat.subscribeTab(to.query.tab);
   }
 
@@ -52,6 +54,7 @@ router.afterEach(async (to, from) => {
     from.query.channel !== to.query.channel &&
     typeof to.query.channel === 'string'
   ) {
+    console.log('sub channel', to.query.channel);
     const tab = await chat.subscribeChannel(to.query.channel);
     if (!to.query.tab) router.replace({ query: { ...to.query, tab: tab.id } });
   }
@@ -60,6 +63,7 @@ router.afterEach(async (to, from) => {
     from.query.topic !== to.query.topic &&
     typeof to.query.topic === 'string'
   ) {
+    console.log('sub topic', to.query.topic);
     await chat.subscribeTopic(to.query.topic);
   }
 });

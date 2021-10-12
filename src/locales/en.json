@@ -8,9 +8,10 @@
   "chat": "Chat",
   "settings": "Settings",
   "phone": "Phone",
-  "send": "Send",
+  "next": "Next",
   "verificationCode": "Verification Code",
   "smsSent": "SMS sent",
+  "message": "Message",
   "languages": {
     "en": "English",
     "de": "German"

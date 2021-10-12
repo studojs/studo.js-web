@@ -1,5 +1,5 @@
 <template>
-  <n-card>
+  <div class="container">
     <n-space vertical>
       <n-button @click="logOut">
         {{ t('logout') }}
@@ -33,7 +33,7 @@
         </n-form-item>
       </n-form>
     </n-space>
-  </n-card>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -63,4 +63,10 @@ async function logOut() {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.container {
+  display: flex;
+  justify-content: center;
+  margin: 30px;
+}
+</style>

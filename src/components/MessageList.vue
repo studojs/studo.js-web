@@ -1,21 +1,16 @@
 <template>
   <n-scrollbar @scroll="handleScroll">
     <n-image-group>
-      <MessageRow
-        v-for="[id, message] in chat.visibleMessages"
-        :key="id"
-        :message="message"
-      >
-        <!-- <template #suffix v-if="index === 0">
-          <n-divider />
-        </template> -->
-      </MessageRow>
+      <template v-for="([, message], index) in chat.visibleMessages" :key="id">
+        <MessageRow :message="message" />
+        <n-divider v-if="index === 0" />
+      </template>
     </n-image-group>
   </n-scrollbar>
   <n-input-group v-show="chat.allowNewMessages">
     <n-mention
       type="textarea"
-      placeholder="Message"
+      :placeholder="t('message')"
       :options="chat.mentionOptions"
       v-model:value="textInput"
       :autosize="{ maxRows: 15 }"
@@ -44,9 +39,11 @@
 import { Attachment as AttachmentIcon, Send as SendIcon } from '@vicons/carbon';
 import debounce from 'debounce';
 import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useChatStore } from '../store';
 
 const chat = useChatStore();
+const { t } = useI18n();
 
 const textInput = ref('');
 const canSend = computed(() => textInput.value.trim().length > 0);

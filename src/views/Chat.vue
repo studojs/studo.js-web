@@ -1,19 +1,17 @@
 <template>
-  <n-element>
-    <n-layout class="container">
-      <n-layout class="panel" has-sider>
-        <n-layout-sider :native-scrollbar="false" bordered :width="300">
-          <ChannelList />
-        </n-layout-sider>
-        <n-layout :style="{ flexBasis: topicsWidth }">
-          <TopicList />
-        </n-layout>
-        <n-layout :style="{ flexBasis: messagesWidth }" class="messages-panel">
-          <MessageList />
-        </n-layout>
+  <n-layout class="container">
+    <n-layout class="panel" has-sider>
+      <n-layout-sider :native-scrollbar="false" bordered :width="300">
+        <ChannelList />
+      </n-layout-sider>
+      <n-layout :style="{ flexBasis: topicsWidth }">
+        <TopicList />
+      </n-layout>
+      <n-layout :style="{ flexBasis: messagesWidth }" class="messages-panel">
+        <MessageList />
       </n-layout>
     </n-layout>
-  </n-element>
+  </n-layout>
 </template>
 
 <script lang="ts" setup>

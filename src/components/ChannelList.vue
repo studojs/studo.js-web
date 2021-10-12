@@ -1,6 +1,6 @@
 <template>
   <ChannelRow
-    v-for="[id, channel] in chat.channels"
+    v-for="[id, channel] in chat.visibleChannels"
     :key="id"
     :channel="channel"
   />

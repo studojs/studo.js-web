@@ -1,22 +1,22 @@
 <template>
   <n-config-provider :theme="settings.theme" abstract>
-    <n-global-style />
-    <NavBar />
-    <n-message-provider>
-      <router-view />
-    </n-message-provider>
+    <n-element>
+      <n-global-style />
+      <NavBar />
+      <n-message-provider>
+        <router-view />
+      </n-message-provider>
+    </n-element>
   </n-config-provider>
 </template>
 
 <script lang="ts" setup>
-import { useThemeVars } from 'naive-ui';
 import { RestManager } from 'studo.js';
 import { useRouter } from 'vue-router';
 import { useChatStore, useClientStore, useSettingsStore } from './store';
 
 const settings = useSettingsStore();
 const router = useRouter();
-const theme = useThemeVars();
 
 Object.assign(window, {
   chat: useChatStore(),

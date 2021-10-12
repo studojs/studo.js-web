@@ -23,7 +23,6 @@
       />
     </div>
   </ContextMenu>
-  <slot name="suffix" />
 </template>
 
 <script lang="ts" setup>
@@ -89,6 +88,7 @@ async function vote(state: VoteType) {
 
 .header,
 .footer {
+  display: block;
   font-size: 0.8em;
 }
 </style>

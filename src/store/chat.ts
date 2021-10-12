@@ -34,7 +34,9 @@ export const useChatStore = defineStore('chat', {
     topic(): Topic | undefined {
       return this.topicId ? this.topics.get(this.topicId) : undefined;
     },
-
+    visibleChannels(): Collection<string, Channel> {
+      return this.channels.filter((channel) => !channel.hidden);
+    },
     visibleTopics(): Collection<string, Topic> {
       return this.topics.filter(
         (topic) => !topic.hidden && topic.tabId === this.tabId

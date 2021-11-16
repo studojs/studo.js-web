@@ -37,4 +37,6 @@ export const useSettingsStore = defineStore('settings', {
 });
 
 // HMR (https://pinia.esm.dev/cookbook/hot-module-replacement.html)
-import.meta.hot?.accept(acceptHMRUpdate(useSettingsStore, import.meta.hot));
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useSettingsStore, import.meta.hot));
+}

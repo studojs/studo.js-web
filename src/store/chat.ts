@@ -132,4 +132,6 @@ export const useChatStore = defineStore('chat', {
 });
 
 // HMR (https://pinia.esm.dev/cookbook/hot-module-replacement.html)
-import.meta.hot?.accept(acceptHMRUpdate(useChatStore, import.meta.hot));
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useChatStore, import.meta.hot));
+}

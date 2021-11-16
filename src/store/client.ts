@@ -35,4 +35,6 @@ export const useClientStore = defineStore('client', {
 });
 
 // HMR (https://pinia.esm.dev/cookbook/hot-module-replacement.html)
-import.meta.hot?.accept(acceptHMRUpdate(useClientStore, import.meta.hot));
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useClientStore, import.meta.hot));
+}

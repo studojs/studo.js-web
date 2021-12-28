@@ -24,11 +24,9 @@ import {
 } from '@vicons/carbon';
 import { MenuOption } from 'naive-ui';
 import { Component, computed, h, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useClientStore } from '../store';
 
-const { t, n } = useI18n();
 const store = useClientStore();
 const router = useRouter();
 const route = useRoute();
@@ -38,24 +36,24 @@ const tabName = computed(() => route.name as string);
 
 function renderRoute(label: string, name: string) {
   const path = router.resolve({ name }).path;
-  return () => <router-link to={path}>{t(label)}</router-link>;
+  return () => <router-link to={path}>{label}</router-link>;
 }
 function renderIcon(icon: Component) {
   return () => <n-icon>{h(icon)}</n-icon>;
 }
 const menuOptions: MenuOption[] = [
   {
-    label: renderRoute('chat', 'chat'),
+    label: renderRoute('Chat', 'chat'),
     key: 'chat',
     icon: renderIcon(ChatIcon),
   },
   {
-    label: renderRoute('settings', 'settings'),
+    label: renderRoute('Einstellungen', 'settings'),
     key: 'settings',
     icon: renderIcon(SettingsIcon),
   },
   {
-    label: () => <p>{n(store.points)}</p>,
+    label: () => <p>{store.points.toLocaleString('de')}</p>,
     key: 'points',
     icon: renderIcon(GrowthIcon),
   },

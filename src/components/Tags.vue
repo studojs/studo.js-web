@@ -1,13 +1,13 @@
 <template>
   <div v-if="ids.length" class="tags">
     <n-tag v-for="id in ids" :key="id" :type="type(id)" size="small">
-      {{ t('tags.' + id, id) }}
+      {{ label(id) }}
     </n-tag>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useI18n } from 'vue-i18n';
+import { useClientStore } from '../store';
 
 interface Props {
   ids: string[];
@@ -15,7 +15,12 @@ interface Props {
 withDefaults(defineProps<Props>(), {
   ids: () => [],
 });
-const { t } = useI18n();
+
+const store = useClientStore();
+
+function label(id: string) {
+  return store.client.cache.chatTags.get(id)?.text || id;
+}
 
 function type(id: string) {
   return ['ACCEPTEDANSWER', 'DONE'].includes(id) ? 'success' : 'info';

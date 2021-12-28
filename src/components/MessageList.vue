@@ -10,7 +10,7 @@
   <n-input-group v-show="chat.allowNewMessages">
     <n-mention
       type="textarea"
-      :placeholder="t('message')"
+      placeholder="Nachricht"
       :options="chat.mentionOptions"
       v-model:value="textInput"
       :autosize="{ maxRows: 15 }"
@@ -39,11 +39,9 @@
 import { Send as SendIcon } from '@vicons/carbon';
 import debounce from 'debounce';
 import { computed, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { useChatStore } from '../store';
 
 const chat = useChatStore();
-const { t } = useI18n();
 
 const textInput = ref('');
 const canSend = computed(() => textInput.value.trim().length > 0);

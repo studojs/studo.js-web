@@ -29,15 +29,15 @@
 import linkify from 'linkify-string';
 import { Message, VoteType } from 'studo.js';
 import { computed, toRef } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { useAction } from '../composables/chatAction';
+import { useClientStore } from '../store/client';
 
 interface Props {
   message: Message;
 }
 const props = defineProps<Props>();
-const { t } = useI18n();
 const sendAction = useAction(toRef(props, 'message'));
+const store = useClientStore();
 
 const htmlText = computed(() => {
   if (props.message.htmlText) return props.message.text;
@@ -51,7 +51,7 @@ const htmlText = computed(() => {
 });
 const actions = computed(() =>
   props.message.actionIds.map((id) => ({
-    label: t('actions.' + id, id),
+    label: store.client.cache.chatActions.get(id)?.text || id,
     value: id,
   }))
 );

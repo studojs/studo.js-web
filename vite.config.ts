@@ -1,4 +1,3 @@
-import vueI18n from '@intlify/vite-plugin-vue-i18n';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { resolve } from 'path';
@@ -10,9 +9,6 @@ import { repository } from './package.json';
 export default defineConfig({
   plugins: [
     vue(),
-    vueI18n({
-      include: resolve(__dirname, 'src/locales/**'),
-    }),
     Components({ dts: true, resolvers: [NaiveUiResolver()] }),
     vueJsx(),
   ],

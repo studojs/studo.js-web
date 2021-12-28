@@ -4,7 +4,6 @@ import { acceptHMRUpdate, defineStore } from 'pinia';
 
 type ThemeName = 'light' | 'dark' | 'system';
 
-const LOCALE = 'locale';
 const SESSION_TOKEN = 'sessionToken';
 const THEME = 'theme';
 
@@ -29,9 +28,6 @@ export const useSettingsStore = defineStore('settings', {
     setTheme(name: ThemeName) {
       this.themeName = name;
       localStorage.setItem(THEME, name);
-    },
-    setLocale(locale: string) {
-      localStorage.setItem(LOCALE, locale);
     },
   },
 });

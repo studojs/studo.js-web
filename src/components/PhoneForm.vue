@@ -7,7 +7,7 @@
     ref="formRef"
     @submit.prevent="validateForm"
   >
-    <n-form-item :label="t('phone')" path="phone">
+    <n-form-item label="Telefonnummer" path="phone">
       <n-input-group>
         <n-input
           class="prefix"
@@ -35,14 +35,11 @@
 <script lang="ts" setup>
 import { FormInst, FormRules, NButton, NForm } from 'naive-ui';
 import { reactive, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
 
 interface Emits {
   (event: 'submit', prefix: string, number: string): void;
 }
 const emit = defineEmits<Emits>();
-
-const { t } = useI18n();
 
 const formRef = ref<FormInst>();
 const model = reactive({

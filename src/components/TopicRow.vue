@@ -20,17 +20,17 @@
 <script lang="ts" setup>
 import { Topic, VoteType } from 'studo.js';
 import { computed, toRef } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { RouteLocation } from 'vue-router';
 import { useAction } from '../composables/chatAction';
 import { useChatStore } from '../store';
+import { useClientStore } from '../store/client';
 
 interface Props {
   topic: Topic;
 }
 const props = defineProps<Props>();
 
-const { t } = useI18n();
+const store = useClientStore();
 const chat = useChatStore();
 const sendAction = useAction(toRef(props, 'topic'));
 
@@ -47,7 +47,7 @@ const route = computed(
 );
 const actions = computed(() =>
   props.topic.actionIds.map((id) => ({
-    label: t('actions.' + id),
+    label: store.client.cache.chatActions.get(id)?.text || id,
     value: id,
   }))
 );

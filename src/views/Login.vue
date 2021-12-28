@@ -24,12 +24,10 @@
 import { useMessage } from 'naive-ui';
 import { SmsVerification } from 'studo.js';
 import { computed, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useClientStore } from '../store';
 import { useSettingsStore } from '../store/settings';
 
-const { t } = useI18n();
 const router = useRouter();
 const message = useMessage();
 const store = useClientStore();

@@ -17,16 +17,16 @@
 import { Pin as PinIcon } from '@vicons/carbon';
 import { Channel } from 'studo.js';
 import { computed, toRef } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { RouteLocation } from 'vue-router';
 import { useAction } from '../composables/chatAction';
 import { useChatStore } from '../store';
+import { useClientStore } from '../store/client';
 
 interface Props {
   channel: Channel;
 }
 const props = defineProps<Props>();
-const { t } = useI18n();
+const store = useClientStore();
 const chat = useChatStore();
 const sendAction = useAction(toRef(props, 'channel'));
 
@@ -42,7 +42,7 @@ const route = computed(
 );
 const actions = computed(() =>
   props.channel.actionIds.map((id) => ({
-    label: t('actions.' + id, id),
+    label: store.client.cache.chatActions.get(id)?.text || id,
     value: id,
   }))
 );

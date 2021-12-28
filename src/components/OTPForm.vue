@@ -7,7 +7,7 @@
     ref="formRef"
     @submit.prevent="validateForm"
   >
-    <n-form-item :label="t('verificationCode')" path="otp">
+    <n-form-item label="Verifizierungscode" path="otp">
       <n-input
         v-model:value="formValue.otp"
         placeholder="1234"
@@ -27,14 +27,11 @@
 <script lang="ts" setup>
 import { FormInst, FormRules, NButton, NForm } from 'naive-ui';
 import { reactive, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
 
 interface Emits {
   (event: 'submit', otp: string): void;
 }
 const emit = defineEmits<Emits>();
-
-const { t } = useI18n();
 
 const formRef = ref<FormInst>();
 const formValue = reactive({

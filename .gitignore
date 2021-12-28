@@ -6,3 +6,4 @@ dist-ssr
 components.d.ts
 
 .netlify
+.env

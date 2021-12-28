@@ -1,7 +1,17 @@
 <template>
   <n-layout-header bordered>
-    <n-menu :value="tabName" :options="menuOptions" mode="horizontal" />
+    <n-button text @click="active = !active">
+      <template #icon>
+        <n-icon class="menu-icon"><MenuIcon /></n-icon>
+      </template>
+    </n-button>
+    <!-- <n-menu :value="tabName" :options="menuOptions" mode="horizontal" /> -->
   </n-layout-header>
+  <n-drawer v-model:show="active" :width="300" placement="left">
+    <n-drawer-content title="Stoner">
+      Stoner is a 1965 novel by the American writer John Williams.
+    </n-drawer-content>
+  </n-drawer>
 </template>
 
 <script lang="tsx" setup>
@@ -9,10 +19,11 @@ import {
   Chat as ChatIcon,
   Growth as GrowthIcon,
   LogoGithub as GithubIcon,
+  Menu as MenuIcon,
   Settings as SettingsIcon,
 } from '@vicons/carbon';
 import { MenuOption } from 'naive-ui';
-import { Component, computed, h } from 'vue';
+import { Component, computed, h, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useClientStore } from '../store';
@@ -22,9 +33,8 @@ const store = useClientStore();
 const router = useRouter();
 const route = useRoute();
 
-const tabName = computed(() =>
-  typeof route.name === 'string' ? route.name : ''
-);
+const active = ref(false);
+const tabName = computed(() => route.name as string);
 
 function renderRoute(label: string, name: string) {
   const path = router.resolve({ name }).path;
@@ -65,7 +75,7 @@ const menuOptions: MenuOption[] = [
 .n-layout-header {
   display: flex;
   align-items: center;
-  justify-content: center;
+  padding: 0 16px;
   height: $header-height;
 }
 </style>

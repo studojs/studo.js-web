@@ -27,7 +27,7 @@
       </n-input-group>
     </n-form-item>
     <n-form-item>
-      <n-button type="primary" attr-type="submit">Send</n-button>
+      <n-button type="primary" attr-type="submit">Senden</n-button>
     </n-form-item>
   </n-form>
 </template>

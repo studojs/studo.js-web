@@ -1,7 +1,6 @@
 import { MentionOption } from 'naive-ui';
 import { acceptHMRUpdate, defineStore } from 'pinia';
 import { Channel, Collection, Message, Tab, Topic } from 'studo.js';
-import { nextTick } from 'vue';
 import router from '../router';
 import { useClientStore } from './client';
 
@@ -10,40 +9,36 @@ function firstQueryParam(name: string): string | null {
   return Array.isArray(query) ? query[0] : query;
 }
 
-const collator = new Intl.Collator();
-
 export const useChatStore = defineStore('chat', {
   state: () => ({
-    channels: new Collection<string, Channel>(),
-    tabs: new Collection<string, Tab>(),
-    topics: new Collection<string, Topic>(),
-    messages: new Collection<string, Message>(),
+    channelId: firstQueryParam('channel'),
+    tabId: firstQueryParam('tab'),
+    topicId: firstQueryParam('topic'),
   }),
   getters: {
-    channelId: () => firstQueryParam('channel'),
-    tabId: () => firstQueryParam('tab'),
-    topicId: () => firstQueryParam('topic'),
-    messageId: () => firstQueryParam('message'),
+    cache: () => useClientStore().client.cache,
 
     channel(): Channel | undefined {
-      return this.channelId ? this.channels.get(this.channelId) : undefined;
+      return this.channelId
+        ? this.cache.channels.get(this.channelId)
+        : undefined;
     },
     tab(): Tab | undefined {
-      return this.tabId ? this.tabs.get(this.tabId) : undefined;
+      return this.tabId ? this.cache.tabs.get(this.tabId) : undefined;
     },
     topic(): Topic | undefined {
-      return this.topicId ? this.topics.get(this.topicId) : undefined;
+      return this.topicId ? this.cache.topics.get(this.topicId) : undefined;
     },
-    visibleChannels(): Collection<string, Channel> {
-      return this.channels.filter((channel) => !channel.hidden);
+    visibleChannels(): Collection<Channel> {
+      return this.cache.channels.filter((channel) => !channel.hidden);
     },
-    visibleTopics(): Collection<string, Topic> {
-      return this.topics.filter(
+    visibleTopics(): Collection<Topic> {
+      return this.cache.topics.filter(
         (topic) => !topic.hidden && topic.tabId === this.tabId
       );
     },
-    visibleMessages(): Collection<string, Message> {
-      return this.messages.filter(
+    visibleMessages(): Collection<Message> {
+      return this.cache.messages.filter(
         (msg) => !msg.hidden && msg.topicId === this.topicId
       );
     },
@@ -67,66 +62,34 @@ export const useChatStore = defineStore('chat', {
     },
   },
   actions: {
-    registerEvents() {
-      const client = useClientStore().client;
-      client.on('channelUpdate', (channel) => this.udpateChannel(channel));
-      client.on('tabUpdate', (tab) => this.updateTab(tab));
-      client.on('topicUpdate', (topic) => this.udpateTopic(topic));
-      client.on('messageUpdate', (message) => this.udpateMessage(message));
-      client.chat.on('UpdateChannels', () =>
-        nextTick(() => this.sortChannels())
-      );
-      client.chat.on('UpdateMessages', () =>
-        nextTick(() => this.sortMessages())
-      );
-    },
     async subscribeChannel(id: string) {
-      const client = useClientStore().client;
-      await client.channels.subscribe(id);
+      const { client } = useClientStore();
+      // Get rid of old cache
+      client.cache.tabs.clear();
+      client.cache.topics.clear();
+      client.cache.messages.clear();
+
+      this.channelId = id;
+      await client.chat.subscribeChannel(id);
       const tab = await client.once('tabUpdate');
       return tab;
     },
     async subscribeTab(id: string) {
-      const client = useClientStore().client;
-      // const oldTopics = client.tabs.get(tabId)?.topics;
-      // if (oldTopics) this.topics = oldTopics;
-      await client.tabs.subscribe(id);
+      const { client } = useClientStore();
+      // Get rid of old cache
+      client.cache.topics.clear();
+      client.cache.messages.clear();
+
+      this.tabId = id;
+      await client.chat.subscribeTab(id);
     },
     async subscribeTopic(id: string) {
-      const client = useClientStore().client;
-      await client.topics.subscribe(id);
-    },
+      const { client } = useClientStore();
+      // Get rid of old cache
+      client.cache.messages.clear();
 
-    udpateChannel(channel: Channel) {
-      this.channels.set(channel.id, channel);
-    },
-    updateTab(tab: Tab) {
-      this.tabs.set(tab.id, tab);
-    },
-    udpateTopic(topic: Topic) {
-      this.topics.set(topic.id, topic);
-    },
-    udpateMessage(message: Message) {
-      this.messages.set(message.id, message);
-    },
-
-    sortChannels() {
-      // clone workaround due to proxy instance errors
-      this.channels = this.channels.clone().sort((a, b) => {
-        if (a.id.startsWith('course') && b.id.startsWith('course')) {
-          return collator.compare(
-            a.name.replace(/^(VO|VU|KU|UE) /, ''),
-            b.name.replace(/^(VO|VU|KU|UE) /, '')
-          );
-        }
-        return b.sortScore - a.sortScore || collator.compare(a.name, b.name);
-      });
-    },
-    sortMessages() {
-      // clone workaround due to proxy instance errors
-      this.messages = this.messages
-        .clone()
-        .sort((a, b) => b.sortScore - a.sortScore);
+      this.topicId = id;
+      await client.chat.subscribeTopic(id);
     },
   },
 });

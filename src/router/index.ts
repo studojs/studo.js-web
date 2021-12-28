@@ -1,6 +1,7 @@
 import Chat from '@/views/Chat.vue';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import { useChatStore, useClientStore } from '../store';
+import { useChatStore } from '../store';
+import { useClientStore } from '../store/client';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -31,39 +32,36 @@ const router = createRouter({
 });
 
 router.afterEach(async (to, from) => {
-  const chat = useChatStore();
-  const client = useClientStore().client;
   if (to.name !== 'chat') return;
 
-  const channel = chat.channel;
-  document.title = (channel ? channel.name + ' - ' : '') + 'studo.js';
-
-  // FIXME: login route
-  // if (to.name === 'chat' && !sessionTokenRef.value)
-  //   return next({ name: 'login' });
-  console.log(to.query);
+  const chat = useChatStore();
+  const { client } = useClientStore();
   if (!client.connected) await client.once('ready');
+  console.log(to.query);
 
-  if (from.query.tab !== to.query.tab && typeof to.query.tab === 'string') {
-    console.log('sub tab', to.query.tab);
-
-    await chat.subscribeTab(to.query.tab);
-  }
-
+  // Channel changed -> subscribe
   if (
     from.query.channel !== to.query.channel &&
     typeof to.query.channel === 'string'
   ) {
-    console.log('sub channel', to.query.channel);
-    const tab = await chat.subscribeChannel(to.query.channel);
-    if (!to.query.tab) router.replace({ query: { ...to.query, tab: tab.id } });
+    const firstTab = await chat.subscribeChannel(to.query.channel);
+    to.query.tab = firstTab.id;
   }
 
+  document.title = `${
+    chat.channel ? `${chat.channel.toolbarTitle} - ` : ''
+  }studo.js`;
+
+  // Tab changed -> subscribe
+  if (from.query.tab !== to.query.tab && typeof to.query.tab === 'string') {
+    await chat.subscribeTab(to.query.tab);
+  }
+
+  // Topic changed -> subscribe
   if (
     from.query.topic !== to.query.topic &&
     typeof to.query.topic === 'string'
   ) {
-    console.log('sub topic', to.query.topic);
     await chat.subscribeTopic(to.query.topic);
   }
 });

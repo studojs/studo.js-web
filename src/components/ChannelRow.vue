@@ -19,8 +19,8 @@ import { Channel } from 'studo.js';
 import { computed, toRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { RouteLocation } from 'vue-router';
+import { useAction } from '../composables/chatAction';
 import { useChatStore } from '../store';
-import { useAction } from '../utils';
 
 interface Props {
   channel: Channel;
@@ -55,8 +55,8 @@ const actions = computed(() =>
   display: flex;
   align-items: center;
   column-gap: 8px;
-  border-radius: 8px;
-  margin: 8px 14px 0px 8px;
+  border-radius: 0px 4px 4px 0px;
+  margin: 8px 14px 0px 0px;
   padding: 4px 8px;
   color: inherit;
   font-size: 14px;

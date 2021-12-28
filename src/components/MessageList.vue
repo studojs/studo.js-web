@@ -20,13 +20,13 @@
         <n-button>Suffix</n-button>
       </template>
     </n-mention>
-    <n-upload v-if="chat.allowFiles">
+    <!-- <n-upload v-if="chat.allowFiles">
       <n-button>
         <template #icon>
           <n-icon><AttachmentIcon /></n-icon>
         </template>
       </n-button>
-    </n-upload>
+    </n-upload> -->
     <n-button @click="send" :disabled="!canSend">
       <template #icon>
         <n-icon><SendIcon /></n-icon>
@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Attachment as AttachmentIcon, Send as SendIcon } from '@vicons/carbon';
+import { Send as SendIcon } from '@vicons/carbon';
 import debounce from 'debounce';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';

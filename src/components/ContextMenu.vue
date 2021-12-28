@@ -1,13 +1,13 @@
 <template>
   <n-popselect
     trigger="manual"
-    placement="top"
+    :show-arrow="true"
     :options="options"
-    :show="isOpen"
-    :on-clickoutside="hide"
+    :show="isShown"
+    @clickoutside="hide"
     @update:value="handleSelect"
   >
-    <div ref="slotElem">
+    <div @contextmenu.prevent="show">
       <slot />
     </div>
   </n-popselect>
@@ -15,7 +15,7 @@
 
 <script lang="ts" setup>
 import { SelectGroupOption, SelectOption } from 'naive-ui';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { ref } from 'vue';
 
 interface Props {
   options: (SelectOption | SelectGroupOption)[];
@@ -27,8 +27,8 @@ interface Emits {
 defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const slotElem = ref<HTMLElement | null>(null);
-const isOpen = ref(false);
+const isShown = ref(false);
+
 function handleSelect(option: string) {
   emit('update:value', option);
   hide();
@@ -39,19 +39,11 @@ function show(e: MouseEvent) {
     e.target.classList.contains('linkified')
   )
     return;
-  isOpen.value = true;
+
+  isShown.value = true;
   e.preventDefault();
 }
 function hide() {
-  isOpen.value = false;
+  isShown.value = false;
 }
-
-onMounted(() => {
-  slotElem.value?.addEventListener('contextmenu', show);
-});
-onUnmounted(() => {
-  slotElem.value?.removeEventListener('contextmenu', show);
-});
 </script>
-
-<style lang="scss" scoped></style>

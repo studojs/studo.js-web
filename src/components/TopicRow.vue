@@ -22,8 +22,8 @@ import { Topic, VoteType } from 'studo.js';
 import { computed, toRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { RouteLocation } from 'vue-router';
+import { useAction } from '../composables/chatAction';
 import { useChatStore } from '../store';
-import { useAction } from '../utils';
 
 interface Props {
   topic: Topic;

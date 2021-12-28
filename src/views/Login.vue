@@ -1,8 +1,10 @@
 <template>
   <div class="container">
     <div v-show="step === 0">
-      <n-h1 class="header">Welcome! 👋</n-h1>
-      <n-text class="header">Please enter your phone number</n-text>
+      <n-h1 class="header">Willkommen! 👋</n-h1>
+      <n-text class="header"
+        >Bestätige deine Ländervorwahl und gib deine Handynummer ein:</n-text
+      >
       <hr />
       <PhoneForm @submit="sendSMS" />
     </div>

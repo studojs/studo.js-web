@@ -4,13 +4,17 @@ import { Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
+/**
+ * Composition API for sending chat actions
+ * @param component Channel, Topic or Message
+ */
 export function useAction(component: Ref<Channel | Topic | Message>) {
-  const message = useMessage();
   const router = useRouter();
+  const message = useMessage();
   const { t } = useI18n();
 
   return async function (action: string) {
-    let copyText = '';
+    // Redirect to private message channel locally
     if (action === 'STARTPRIVATEMESSAGING') {
       const url = new URL(
         component.value.actionParameters.STARTPRIVATEMESSAGING
@@ -20,6 +24,8 @@ export function useAction(component: Ref<Channel | Topic | Message>) {
       return;
     }
 
+    // Copy text locally
+    let copyText = '';
     if (action === 'SHARE') {
       copyText = component.value.shareText;
     } else if (action === 'COPYTEXT' && 'text' in component.value) {
@@ -28,7 +34,10 @@ export function useAction(component: Ref<Channel | Topic | Message>) {
     if (copyText) {
       await navigator.clipboard.writeText(copyText);
       message.info(t('copied'));
+      return;
     }
+
+    // Send any other action
     await component.value.sendActions(action);
   };
 }

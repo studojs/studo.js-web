@@ -1,10 +1,14 @@
 import { acceptHMRUpdate, defineStore } from 'pinia';
-import { Client, RestManager } from 'studo.js';
-import { shallowRef } from 'vue';
+import { Cache, Client as BaseClient, RestManager } from 'studo.js';
+import { reactive, shallowRef } from 'vue';
 import { useChatStore } from './chat';
 import { useSettingsStore } from './settings';
 
 RestManager.proxyURL = `${location.origin}/api/proxy`;
+
+class Client extends BaseClient {
+  cache = reactive(new Cache());
+}
 
 export const useClientStore = defineStore('client', {
   state: () => ({
@@ -22,10 +26,10 @@ export const useClientStore = defineStore('client', {
       if (this.client.connected) this.client.disconnect();
       this.client = new Client(settings.sessionToken);
       await this.client.connect();
+
       this.client.on('pointsUpdate', (points) => {
         this.points = points;
       });
-      chat.registerEvents();
     },
     async logout() {
       await RestManager.signOut(this.client.sessionToken);

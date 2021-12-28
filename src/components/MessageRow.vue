@@ -30,7 +30,7 @@ import linkify from 'linkify-string';
 import { Message, VoteType } from 'studo.js';
 import { computed, toRef } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useAction } from '../utils';
+import { useAction } from '../composables/chatAction';
 
 interface Props {
   message: Message;

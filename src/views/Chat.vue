@@ -8,7 +8,7 @@
         <TopicList />
       </n-layout>
       <n-layout :style="{ flexBasis: messagesWidth }" class="messages-panel">
-        <MessageList />
+        <MessageList v-if="chat.topicId !== undefined" />
       </n-layout>
     </n-layout>
   </n-layout>

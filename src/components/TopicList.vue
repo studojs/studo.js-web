@@ -5,21 +5,29 @@
       :key="id"
       :topic="topic"
     />
-    <n-button v-show="chat.allowNewTopics" type="primary" circle>
+    <n-button
+      @click="showModal = true"
+      v-show="chat.allowNewTopics"
+      type="primary"
+      circle
+    >
       <template #icon>
         <n-icon><AddIcon /></n-icon>
       </template>
     </n-button>
   </n-scrollbar>
+  <NewTopicModal v-model:show="showModal" />
 </template>
 
 <script lang="ts" setup>
 import { Add as AddIcon } from '@vicons/carbon';
 import { debounce } from 'debounce';
+import { ref } from 'vue';
 import { useChatStore } from '../store';
 
 const chat = useChatStore();
 
+const showModal = ref(false);
 const loadTopicsDebounced = debounce(() => chat.tab?.scroll(), 200, true);
 
 function handleScroll(e: Event) {

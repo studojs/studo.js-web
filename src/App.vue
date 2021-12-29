@@ -45,6 +45,10 @@ a:visited {
   color: #00aff4;
   text-decoration: none;
 
+  > .n-icon {
+    color: inherit;
+  }
+
   &:hover {
     text-decoration: underline;
   }

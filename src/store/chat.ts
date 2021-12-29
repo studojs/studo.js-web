@@ -10,12 +10,11 @@ function firstParam(name: string): string {
 }
 
 export const useChatStore = defineStore('chat', {
-  state: () => ({
-    channelId: firstParam('channel'),
-    tabId: firstParam('tab'),
-    topicId: firstParam('topic'),
-  }),
+  // state: () => ({}),
   getters: {
+    channelId: () => firstParam('channel'),
+    tabId: () => firstParam('tab'),
+    topicId: () => firstParam('topic'),
     cache: () => useClientStore().client.cache,
 
     channel(): Channel | undefined {
@@ -70,7 +69,6 @@ export const useChatStore = defineStore('chat', {
       client.cache.topics.clear();
       client.cache.messages.clear();
 
-      this.channelId = id;
       await client.chat.subscribeChannel(id);
     },
     async subscribeTab(id: string) {
@@ -80,7 +78,6 @@ export const useChatStore = defineStore('chat', {
       client.cache.topics.clear();
       client.cache.messages.clear();
 
-      this.tabId = id;
       await client.chat.subscribeTab(id);
     },
     async subscribeTopic(id: string) {
@@ -89,7 +86,6 @@ export const useChatStore = defineStore('chat', {
       // Get rid of old cache
       client.cache.messages.clear();
 
-      this.topicId = id;
       await client.chat.subscribeTopic(id);
     },
   },

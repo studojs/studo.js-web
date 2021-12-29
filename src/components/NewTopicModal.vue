@@ -7,7 +7,7 @@
     @after-leave="hide"
   >
     <n-space vertical>
-      <MessageInput @send="send" :disabled="sending" />
+      <MessageInput @send="send" :sending="sending" />
       <n-select
         v-if="types"
         v-model:value="selectedType"

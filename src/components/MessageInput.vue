@@ -5,15 +5,11 @@
         type="textarea"
         placeholder="Nachricht"
         v-model:value="textInput"
-        :disabled="disabled"
+        :disabled="sending"
         :options="chat.mentionOptions"
         :autosize="{ maxRows: 15 }"
         round
-      >
-        <template #suffix>
-          <n-button>Suffix</n-button>
-        </template>
-      </n-mention>
+      />
       <!-- <n-upload v-if="chat.allowFiles">
       <n-button>
         <template #icon>
@@ -21,7 +17,7 @@
         </template>
       </n-button>
     </n-upload> -->
-      <n-button @click="send" :disabled="!canSend">
+      <n-button @click="send" :loading="sending" :disabled="!canSend">
         <template #icon>
           <n-icon><SendIcon /></n-icon>
         </template>
@@ -36,7 +32,7 @@ import { computed, ref } from 'vue';
 import { useChatStore } from '../store/chat';
 
 interface Props {
-  disabled?: boolean;
+  sending?: boolean;
 }
 interface Emits {
   (event: 'send', text: string): void;
@@ -47,7 +43,7 @@ const chat = useChatStore();
 
 const textInput = ref('');
 const canSend = computed(
-  () => !props.disabled && textInput.value.trim().length > 0
+  () => !props.sending && textInput.value.trim().length > 0
 );
 
 function send() {

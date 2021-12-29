@@ -7,13 +7,12 @@
       </template>
     </n-image-group>
   </n-scrollbar>
-  <div class="input-holder">
-    <MessageInput
-      @send="send"
-      :disabled="sending"
-      v-show="chat.allowNewMessages"
-    />
-  </div>
+  <MessageInput
+    class="message-input"
+    @send="send"
+    :sending="sending"
+    v-show="chat.allowNewMessages"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -33,6 +32,7 @@ async function send(text: string) {
 
   try {
     await chat.topic?.sendMessage(text);
+    // TODO: clear input
   } catch (error: any) {
     console.error(error);
     msg.error(`Nachricht konnte nicht gesendet werden: ${error.message}`);
@@ -59,7 +59,7 @@ async function handleScroll(e: Event) {
   margin: 8px 0px;
 }
 
-.input-holder {
+.message-input {
   margin: 0px 8px 16px 8px;
 }
 </style>

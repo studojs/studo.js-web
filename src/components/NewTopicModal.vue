@@ -4,7 +4,7 @@
     style="width: 600px"
     preset="card"
     title="Neuer Beitrag"
-    @after-leave="$emit('update:show', false)"
+    @after-leave="hide"
   >
     <n-space vertical>
       <MessageInput @send="send" :disabled="sending" />
@@ -20,7 +20,7 @@
 
 <script lang="ts" setup>
 import { useMessage } from 'naive-ui';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useChatStore } from '../store/chat';
 import { useClientStore } from '../store/client';
 
@@ -30,7 +30,7 @@ interface Props {
 interface Emits {
   (event: 'update:show', value: boolean): void;
 }
-defineProps<Props>();
+const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const msg = useMessage();
@@ -38,15 +38,26 @@ const chat = useChatStore();
 const store = useClientStore();
 
 const sending = ref(false);
-const types = computed(() => chat.tab?.allowedTopicTypes);
+const types = computed(() => chat.tab?.allowedTopicTypes ?? []);
 
-const selectedType = ref(types.value?.[0] || '');
+const selectedType = ref('');
 const typeOptions = computed(() =>
   types.value?.map((typeId) => ({
     label: store.client.cache.topicTypeDescriptors.get(typeId)?.text || typeId,
     value: typeId,
   }))
 );
+
+watch(
+  () => props.show,
+  (show) => {
+    if (show) selectedType.value = types.value[0];
+  }
+);
+
+function hide() {
+  emit('update:show', false);
+}
 
 async function send(text: string) {
   sending.value = true;

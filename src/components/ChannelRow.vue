@@ -16,19 +16,18 @@
 <script lang="ts" setup>
 import { Pin as PinIcon } from '@vicons/carbon';
 import { Channel } from 'studo.js';
-import { computed, toRef } from 'vue';
+import { computed } from 'vue';
 import { RouteLocation } from 'vue-router';
 import { useAction } from '../composables/chatAction';
 import { useChatStore } from '../store';
-import { useClientStore } from '../store/client';
 
 interface Props {
   channel: Channel;
+  test: number;
 }
 const props = defineProps<Props>();
-const store = useClientStore();
 const chat = useChatStore();
-const sendAction = useAction(toRef(props, 'channel'));
+const { actions, sendAction } = useAction(props, 'channel');
 
 const isSelected = computed(() => chat.channelId === props.channel.id);
 const route = computed(
@@ -39,12 +38,6 @@ const route = computed(
       tab: props.channel.tabs.first()?.id || '',
     },
   })
-);
-const actions = computed(() =>
-  props.channel.actionIds.map((id) => ({
-    label: store.client.cache.chatActions.get(id)?.text || id,
-    value: id,
-  }))
 );
 </script>
 

@@ -19,20 +19,18 @@
 
 <script lang="ts" setup>
 import { Topic, VoteType } from 'studo.js';
-import { computed, toRef } from 'vue';
+import { computed } from 'vue';
 import { RouteLocation } from 'vue-router';
 import { useAction } from '../composables/chatAction';
 import { useChatStore } from '../store';
-import { useClientStore } from '../store/client';
 
 interface Props {
   topic: Topic;
 }
 const props = defineProps<Props>();
 
-const store = useClientStore();
 const chat = useChatStore();
-const sendAction = useAction(toRef(props, 'topic'));
+const { actions, sendAction } = useAction(props, 'topic');
 
 const isSelected = computed(() => chat.topicId === props.topic.id);
 const route = computed(
@@ -44,12 +42,6 @@ const route = computed(
       topic: props.topic.id,
     },
   })
-);
-const actions = computed(() =>
-  props.topic.actionIds.map((id) => ({
-    label: store.client.cache.chatActions.get(id)?.text || id,
-    value: id,
-  }))
 );
 async function vote(state: VoteType) {
   await props.topic.vote(state);

@@ -28,16 +28,14 @@
 <script lang="ts" setup>
 import linkify from 'linkify-string';
 import { Message, VoteType } from 'studo.js';
-import { computed, toRef } from 'vue';
+import { computed } from 'vue';
 import { useAction } from '../composables/chatAction';
-import { useClientStore } from '../store/client';
 
 interface Props {
   message: Message;
 }
 const props = defineProps<Props>();
-const sendAction = useAction(toRef(props, 'message'));
-const store = useClientStore();
+const { actions, sendAction } = useAction(props, 'message');
 
 const htmlText = computed(() => {
   if (props.message.htmlText) return props.message.text;
@@ -49,12 +47,6 @@ const htmlText = computed(() => {
     attributes: { target: '_blank', rel: 'noopenner noreferrer' },
   });
 });
-const actions = computed(() =>
-  props.message.actionIds.map((id) => ({
-    label: store.client.cache.chatActions.get(id)?.text || id,
-    value: id,
-  }))
-);
 async function vote(state: VoteType) {
   await props.message.vote(state);
 }

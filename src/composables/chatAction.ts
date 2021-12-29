@@ -1,17 +1,37 @@
 import { useMessage } from 'naive-ui';
 import { Channel, Message, Topic } from 'studo.js';
-import { Ref } from 'vue';
+import { computed, Ref, toRef } from 'vue';
 import { useRouter } from 'vue-router';
+import { useClientStore } from '../store';
+
+type Component = Channel | Topic | Message;
 
 /**
  * Composition API for sending chat actions
- * @param component Channel, Topic or Message
+ * @param props Component props
+ * @param prop key that contains either a channel, topic or message
  */
-export function useAction(component: Ref<Channel | Topic | Message>) {
+export function useAction<
+  Props extends Record<Prop, Component> & Record<string, any>,
+  Prop extends keyof Props
+>(props: Props, prop: Prop) {
   const router = useRouter();
   const message = useMessage();
+  const store = useClientStore();
+  const component: Ref<Component> = toRef(props, prop);
 
-  return async function (action: string) {
+  const actions = computed(() =>
+    component.value.actionIds.map((id) => {
+      const action = store.client.cache.chatActions.get(id);
+      return {
+        label: action?.text || id,
+        value: id,
+        disabled: !!action?.nextActionIds.length,
+      };
+    })
+  );
+
+  async function sendAction(action: string) {
     // Redirect to private message channel locally
     if (action === 'STARTPRIVATEMESSAGING') {
       const url = new URL(
@@ -38,5 +58,7 @@ export function useAction(component: Ref<Channel | Topic | Message>) {
 
     // Send any other action
     await component.value.sendActions(action);
-  };
+  }
+
+  return { actions, sendAction };
 }

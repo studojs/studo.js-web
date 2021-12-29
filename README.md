@@ -7,6 +7,10 @@ A web interface for the studo chat (and more in the future).
 
 Based on https://github.com/studojs/studo.js
 
+## Screenshot
+
+![Screenshot Chat](./screenshot.png?raw=true 'Optional Title')
+
 ## FAQ
 
 - Why
@@ -19,10 +23,6 @@ Based on https://github.com/studojs/studo.js
 - Proxy
   - A [serverless function](./api/proxy.ts) is used to interact with the studo API without running into CORS issues.
   - All other connections go directly to their servers
-
-## Screenshot
-
-TODO
 
 ## Development
 

@@ -1,30 +1,33 @@
 <template>
-  <a
-    v-if="!loaded && mimeType"
-    :href="url"
-    target="_blank"
-    rel="noopenner noreferrer"
-  >
-    <n-skeleton width="70%" height="200px" :sharp="false" />
-  </a>
+  <div class="embed">
+    <a
+      v-if="!loaded && mimeType"
+      :href="url"
+      target="_blank"
+      rel="noopenner noreferrer"
+    >
+      <n-skeleton width="70%" height="200px" :sharp="false" />
+    </a>
 
-  <n-image
-    v-if="mimeType?.startsWith('image')"
-    :src="inlineURL || url"
-    :preview-src="url || inlineURL"
-    :alt="fileName"
-    @click.right.stop
-  />
-  <video
-    v-else-if="mimeType?.startsWith('video')"
-    :src="url"
-    controls
-    @load="loaded = true"
-    @click.right.stop
-  />
-  <a v-else :href="url" target="_blank" rel="noopenner noreferrer">
-    <n-button>({{ extension }}) {{ fileName }}</n-button>
-  </a>
+    <n-image
+      v-if="mimeType?.startsWith('image')"
+      :src="inlineURL || url"
+      :preview-src="url || inlineURL"
+      :alt="fileName"
+      @load="loaded = true"
+      @click.right.stop
+    />
+    <video
+      v-else-if="mimeType?.startsWith('video')"
+      :src="url"
+      controls
+      @load="loaded = true"
+      @click.right.stop
+    />
+    <a v-else :href="url" target="_blank" rel="noopenner noreferrer">
+      <n-button>({{ extension }}) {{ fileName }}</n-button>
+    </a>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -49,13 +52,23 @@ const loaded = ref(false);
 </script>
 
 <style lang="scss" scoped>
-.n-image,
-video {
+video,
+:deep(img) {
   max-width: 100%;
-  border-radius: 3px;
+  max-height: 40vh;
+}
 
-  > :deep(img) {
-    max-height: 40vh;
+video,
+.n-image {
+  border-radius: 3px;
+}
+
+.embed {
+  display: grid;
+
+  > * {
+    grid-column-start: 1;
+    grid-row-start: 1;
   }
 }
 </style>

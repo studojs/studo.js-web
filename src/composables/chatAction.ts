@@ -18,7 +18,8 @@ export function useAction(component: Ref<Channel | Topic | Message>) {
         component.value.actionParameters.STARTPRIVATEMESSAGING
       );
       const channelId = url.searchParams.get('channel');
-      if (channelId) router.push({ name: 'channel', params: { channelId } });
+      if (channelId)
+        router.push({ name: 'chat', params: { channel: channelId } });
       return;
     }
 

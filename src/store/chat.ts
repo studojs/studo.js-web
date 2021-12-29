@@ -4,16 +4,16 @@ import { Channel, Collection, Message, Tab, Topic } from 'studo.js';
 import router from '../router';
 import { useClientStore } from './client';
 
-function firstQueryParam(name: string): string | null {
-  const query = router.currentRoute.value.query[name];
-  return Array.isArray(query) ? query[0] : query;
+function firstParam(name: string): string {
+  const param = router.currentRoute.value.params[name];
+  return Array.isArray(param) ? param[0] : param;
 }
 
 export const useChatStore = defineStore('chat', {
   state: () => ({
-    channelId: firstQueryParam('channel'),
-    tabId: firstQueryParam('tab'),
-    topicId: firstQueryParam('topic'),
+    channelId: firstParam('channel'),
+    tabId: firstParam('tab'),
+    topicId: firstParam('topic'),
   }),
   getters: {
     cache: () => useClientStore().client.cache,
@@ -63,6 +63,7 @@ export const useChatStore = defineStore('chat', {
   },
   actions: {
     async subscribeChannel(id: string) {
+      console.log('subscribe channel', id);
       const { client } = useClientStore();
       // Get rid of old cache
       client.cache.tabs.clear();
@@ -71,10 +72,9 @@ export const useChatStore = defineStore('chat', {
 
       this.channelId = id;
       await client.chat.subscribeChannel(id);
-      const tab = await client.once('tabUpdate');
-      return tab;
     },
     async subscribeTab(id: string) {
+      console.log('subscribe tab', id);
       const { client } = useClientStore();
       // Get rid of old cache
       client.cache.topics.clear();
@@ -84,6 +84,7 @@ export const useChatStore = defineStore('chat', {
       await client.chat.subscribeTab(id);
     },
     async subscribeTopic(id: string) {
+      console.log('subscribe topic', id);
       const { client } = useClientStore();
       // Get rid of old cache
       client.cache.messages.clear();

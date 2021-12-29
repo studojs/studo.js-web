@@ -38,7 +38,7 @@ const isSelected = computed(() => chat.topicId === props.topic.id);
 const route = computed(
   (): Partial<RouteLocation> => ({
     name: 'chat',
-    query: {
+    params: {
       channel: props.topic.channelId,
       tab: props.topic.tabId,
       topic: props.topic.id,

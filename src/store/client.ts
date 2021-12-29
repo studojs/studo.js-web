@@ -20,11 +20,12 @@ export const useClientStore = defineStore('client', {
       const settings = useSettingsStore();
       const chat = useChatStore();
       if (!settings.sessionToken) return;
+      if (this.client.connected) this.client.disconnect();
+
       this.$reset();
       chat.$reset();
 
-      if (this.client.connected) this.client.disconnect();
-      this.client = new Client(settings.sessionToken);
+      this.client.sessionToken = settings.sessionToken;
       await this.client.connect();
 
       this.client.on('pointsUpdate', (points) => {
@@ -34,6 +35,7 @@ export const useClientStore = defineStore('client', {
     async logout() {
       await RestManager.signOut(this.client.sessionToken);
       this.$reset();
+      useChatStore().$reset();
     },
   },
 });

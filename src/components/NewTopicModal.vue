@@ -20,7 +20,6 @@
 
 <script lang="ts" setup>
 import { useMessage } from 'naive-ui';
-import { TopicType } from 'studo.js';
 import { computed, ref } from 'vue';
 import { useChatStore } from '../store/chat';
 import { useClientStore } from '../store/client';
@@ -53,7 +52,7 @@ async function send(text: string) {
   sending.value = true;
 
   try {
-    await chat.tab?.sendTopic(text, selectedType.value as TopicType);
+    await chat.tab?.sendTopic(text, selectedType.value);
     emit('update:show', false);
   } catch (error: any) {
     console.error(error);

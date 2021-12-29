@@ -26,6 +26,7 @@ const msg = useMessage();
 const topicsWidth = computed(() => (chat.isPrivateChannel ? '0' : '40%'));
 const messagesWidth = computed(() => (chat.isPrivateChannel ? '100%' : '60%'));
 
+// FIXME: refactor to router
 store.$onAction(({ name, store, args, after, onError }) => {
   if (name !== 'connect') return;
   after(() => {

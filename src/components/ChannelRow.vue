@@ -23,7 +23,6 @@ import { useChatStore } from '../store';
 
 interface Props {
   channel: Channel;
-  test: number;
 }
 const props = defineProps<Props>();
 const chat = useChatStore();

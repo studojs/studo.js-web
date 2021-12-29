@@ -2,7 +2,14 @@
   <n-layout-header bordered>
     <n-button text @click="active = !active">
       <template #icon>
-        <n-icon class="menu-icon"><MenuIcon /></n-icon>
+        <n-icon size="20" class="menu-icon"><MenuIcon /></n-icon>
+      </template>
+    </n-button>
+    <n-button text @click="toggleTheme">
+      <template #icon>
+        <n-icon size="20" class="menu-icon"
+          ><MoonIcon v-if="settings.theme" /> <SunIcon v-else
+        /></n-icon>
       </template>
     </n-button>
     <!-- <n-menu :value="tabName" :options="menuOptions" mode="horizontal" /> -->
@@ -20,18 +27,24 @@ import {
   Growth as GrowthIcon,
   LogoGithub as GithubIcon,
   Menu as MenuIcon,
+  Moon as MoonIcon,
   Settings as SettingsIcon,
+  Sun as SunIcon,
 } from '@vicons/carbon';
 import { MenuOption } from 'naive-ui';
 import { Component, computed, h, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useClientStore } from '../store';
+import { useClientStore, useSettingsStore } from '../store';
 
+const settings = useSettingsStore();
 const store = useClientStore();
 const router = useRouter();
 const route = useRoute();
 
 const active = ref(false);
+function toggleTheme() {
+  settings.setTheme(settings.theme ? 'light' : 'dark');
+}
 const tabName = computed(() => route.name as string);
 
 function renderRoute(label: string, name: string) {
@@ -73,6 +86,7 @@ const menuOptions: MenuOption[] = [
 .n-layout-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0 16px;
   height: $header-height;
 }

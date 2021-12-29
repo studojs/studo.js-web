@@ -1,6 +1,6 @@
 <template>
   <n-modal
-    v-model:show="show"
+    v-model:show="showRef"
     style="width: 600px"
     preset="card"
     title="Neuer Beitrag"
@@ -37,6 +37,10 @@ const msg = useMessage();
 const chat = useChatStore();
 const store = useClientStore();
 
+const showRef = computed({
+  get: () => props.show,
+  set: (value) => emit('update:show', value),
+});
 const sending = ref(false);
 const types = computed(() => chat.tab?.allowedTopicTypes ?? []);
 
@@ -48,15 +52,12 @@ const typeOptions = computed(() =>
   }))
 );
 
-watch(
-  () => props.show,
-  (show) => {
-    if (show) selectedType.value = types.value[0];
-  }
-);
+watch(showRef, (show) => {
+  if (show) selectedType.value = types.value[0];
+});
 
 function hide() {
-  emit('update:show', false);
+  showRef.value = false;
 }
 
 async function send(text: string) {

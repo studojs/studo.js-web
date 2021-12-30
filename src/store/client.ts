@@ -15,6 +15,14 @@ export const useClientStore = defineStore('client', {
     client: shallowRef(new Client('')),
     points: 0,
   }),
+  getters: {
+    username: (state) => {
+      const channel = state.client.cache.channels.get('uiframe_channel');
+      return channel?.actionParameters.COPYCHATPROFILEURL.match(
+        /(?<=\/u\/).+/
+      )?.[0];
+    },
+  },
   actions: {
     async connect() {
       const settings = useSettingsStore();

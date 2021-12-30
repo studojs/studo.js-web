@@ -2,8 +2,8 @@
   <n-config-provider :theme="settings.theme" abstract>
     <n-element>
       <n-global-style />
-      <NavBar />
       <n-message-provider>
+        <NavBar />
         <router-view />
       </n-message-provider>
     </n-element>

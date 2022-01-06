@@ -54,7 +54,6 @@ const loaded = ref(false);
 <style lang="scss" scoped>
 video,
 :deep(img) {
-  max-width: 100%;
   max-height: 40vh;
 }
 
@@ -63,6 +62,7 @@ video,
   border-radius: 3px;
 }
 
+// grid so the loading skeleton is behind the image
 .embed {
   display: grid;
 

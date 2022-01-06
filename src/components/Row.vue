@@ -1,9 +1,9 @@
 <template>
   <ContextMenu :options="actions" @update:value="sendAction">
-    <router-link
-      :to="route ?? $router.currentRoute"
+    <component
+      :is="route ? 'router-link' : 'div'"
+      :to="route"
       :class="['row', { selected: isSelected }]"
-      :style="{ cursor: route ? 'pointer' : 'initial' }"
     >
       <n-avatar v-if="icon" circle>{{ icon }}</n-avatar>
       <div class="content">
@@ -16,7 +16,7 @@
         }}</n-text>
       </div>
       <slot name="right"></slot>
-    </router-link>
+    </component>
   </ContextMenu>
 </template>
 
@@ -66,10 +66,8 @@ const isSelected = computed(() =>
 
 .row:hover {
   background: var(--hover-color);
-  .text {
-    color: var(--primary-color-hover);
-  }
 }
+
 .selected {
   background: rgba(99, 226, 183, 0.2);
   .text {

@@ -49,12 +49,13 @@ function toggleVote(state: 'UP' | 'DOWN') {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-left: auto;
+}
 
-  > .n-icon {
-    cursor: pointer;
-    &.voted {
-      color: var(--primary-color);
-    }
+.n-icon {
+  cursor: pointer;
+  &.voted {
+    color: var(--primary-color);
   }
 }
 </style>

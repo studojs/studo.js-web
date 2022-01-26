@@ -47,6 +47,7 @@ function toggleVote(state: 'UP' | 'DOWN') {
 <style lang="scss" scoped>
 .vote {
   display: flex;
+  flex-shrink: 0;
   flex-direction: column;
   align-items: center;
   margin-left: auto;

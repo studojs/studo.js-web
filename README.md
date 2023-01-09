@@ -31,7 +31,6 @@ Based on https://github.com/studojs/studo.js
 Setup:
 
 ```js
-npm install netlify-cli -g
 npm install
 ```
 

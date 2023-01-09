@@ -7,7 +7,7 @@
     @clickoutside="hide"
     @update:value="handleSelect"
   >
-    <div @contextmenu.prevent="show">
+    <div @contextmenu="show">
       <slot />
     </div>
   </n-popselect>

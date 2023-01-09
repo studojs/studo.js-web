@@ -40,8 +40,9 @@ const htmlText = computed(() => {
   // also escapes html entities
   return linkify(props.message.text.replace(/☺/g, ':)'), {
     className: 'linkified',
-    defaultProtocol: 'https',
-    attributes: { target: '_blank', rel: 'noopenner noreferrer' },
+    validate: { url: (value) => /^https?:\/\//.test(value) },
+    target: '_blank',
+    rel: 'noopenner noreferrer',
   });
 });
 </script>

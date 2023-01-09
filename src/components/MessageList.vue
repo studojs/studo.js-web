@@ -32,13 +32,11 @@ async function send(text: string) {
 
   try {
     await chat.topic?.sendMessage(text);
-    // TODO: clear input
   } catch (error: any) {
     console.error(error);
     msg.error(`Nachricht konnte nicht gesendet werden: ${error.message}`);
-  } finally {
-    sending.value = false;
   }
+  sending.value = false;
 }
 
 async function handleScroll(e: Event) {

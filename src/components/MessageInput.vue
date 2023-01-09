@@ -28,7 +28,7 @@
 
 <script lang="ts" setup>
 import { Send as SendIcon } from '@vicons/carbon';
-import { computed, ref } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import { useChatStore } from '../store/chat';
 
 interface Props {
@@ -46,6 +46,9 @@ const canSend = computed(
   () => !props.sending && textInput.value.trim().length > 0
 );
 
+watchEffect(() => {
+  if (!props.sending) textInput.value = '';
+});
 function send() {
   emit('send', textInput.value.trim());
 }

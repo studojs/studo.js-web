@@ -35,3 +35,9 @@ const route = computed(
   })
 );
 </script>
+
+<style lang="scss" scoped>
+.text {
+  white-space: pre-wrap;
+}
+</style>

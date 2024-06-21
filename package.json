@@ -16,7 +16,7 @@
     "linkifyjs": "^4.1.0",
     "naive-ui": "^2.34.3",
     "pinia": "^2.0.28",
-    "studo.js": "^1.0.0",
+    "studo.js": "^1.0.1",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },
